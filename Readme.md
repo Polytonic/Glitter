@@ -30,11 +30,11 @@ cmake -G "Visual Studio 12 Win64" ..
 ## Documentation
 Glitter provides the most basic windowing example. It is a starting point, and tries very hard not to enforce any sort of directory structure. Feel free to edit the include paths in `CMakeLists.txt`. Glitter bundles most of the dependencies needed to implement a basic rendering engine. This includes:
 
- - assimp
- - glad
- - glfw
- - glm
- - stb
+ - [assimp](https://github.com/assimp/assimp)
+ - [glad](https://github.com/Dav1dde/glad)
+ - [glfw](https://github.com/glfw/glfw)
+ - [glm](https://github.com/g-truc/glm)
+ - [stb](https://github.com/nothings/stb)
 
 You can use Glitter as a starting point for the tutorials on [learnopengl.com](http://learnopengl.com/). I have provided sample implementations of an intrusive tree mesh and shader class. These were used to generate the screenshot above, but will not compile out-of-the-box. I leave that exercise to the reader. :smiley:
 
