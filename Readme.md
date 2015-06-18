@@ -1,11 +1,11 @@
 # [Glitter](https://github.com/Polytonic/Glitter)
---- Screenshot ---
+![Screenshot](http://i.imgur.com/MDo2rsy.jpg)
 
 ## Summary
 Glitter is a dead-simple boilerplate for OpenGL. Many people tend to overlook how frustrating it is to install dependencies, especially in environments lacking package managers or when your account lacks administrative privileges. Instead, Glitter compiles and statically links every required dependency. This wastes a ton of space and a bit of time upfront, but it vastly simplifies what most people probably want: how to get started with OpenGL.
 
 ## Getting Started
-Glitter has a single dependency: [cmake](http://www.cmake.org/download/), which is used to generate platform-specific makefiles or project files. Start by cloning this repository, making sure to pass the `--recursive` flag to grab all the dependencies.
+Glitter has a single dependency: [cmake](http://www.cmake.org/download/), which is used to generate platform-specific makefiles or project files. Start by cloning this repository, making sure to pass the `--recursive` flag to grab all the dependencies. If you forgot, then you can `git submodule update --init` instead.
 
 ```bash
 git clone --recursive https://github.com/Polytonic/Glitter
@@ -28,7 +28,9 @@ cmake -G "Visual Studio 12 Win64" ..
 ```
 
 ## Documentation
-Glitter provides the most basic windowing example. It is a starting point, and tries very hard not to enforce any sort of directory structure. Feel free to edit the include paths in the `CMakeLists.txt` configuration file.
+Glitter provides the most basic windowing example. It is a starting point, and tries very hard not to enforce any sort of directory structure. Feel free to edit the include paths in `CMakeLists.txt`.
+
+You can also use Glitter as a starting point for the tutorials on [learnopengl.com](http://learnopengl.com/). I have provided sample implementations of an intrusive tree mesh and shader class. These were used to generate the screenshot above, but will not compile out-of-the-box. I leave that exercise to the reader. :smiley:
 
 ## License
 >The MIT License (MIT)
