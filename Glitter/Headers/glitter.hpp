@@ -2,7 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 // System Headers
-#include <assimp/importer.hpp>
+#include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <glad/glad.h>
