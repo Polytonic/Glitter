@@ -20,7 +20,7 @@
 
     <section class="main-content">
       <h1>
-<a id="glitter" class="anchor" href="#glitter" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/Polytonic/Glitter">Glitter</a>
+<a id="glitter" class="anchor" href="#glitter" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="http://polytonic.github.io/Glitter/">Glitter</a>
 </h1>
 
 <p><img src="http://i.imgur.com/MDo2rsy.jpg" alt="Screenshot"></p>
@@ -28,7 +28,7 @@
 <h2>
 <a id="summary" class="anchor" href="#summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary</h2>
 
-<p>Glitter is a dead-simple boilerplate for OpenGL. Many people tend to overlook how frustrating it is to install dependencies, especially in environments lacking package managers or when your account lacks administrative privileges. Instead, Glitter compiles and statically links every required dependency. This wastes a ton of space and a bit of time upfront, but it vastly simplifies what most people probably want: how to get started with OpenGL.</p>
+<p>Glitter is a dead simple boilerplate for OpenGL, intended as a starting point for the tutorials on <a href="http://www.learnopengl.com">learnopengl.com</a> and <a href="https://open.gl">open.gl</a>. Glitter compiles and statically links every required library, so you can jump right into doing what you probably want: how to get started with OpenGL.</p>
 
 <h2>
 <a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started</h2>
@@ -47,12 +47,16 @@ cmake ..
 cmake -G <span class="pl-s"><span class="pl-pds">"</span>Xcode<span class="pl-pds">"</span></span> ..
 
 <span class="pl-c"># Microsoft Windows</span>
-cmake -G <span class="pl-s"><span class="pl-pds">"</span>Visual Studio 12<span class="pl-pds">"</span></span> ..
-cmake -G <span class="pl-s"><span class="pl-pds">"</span>Visual Studio 12 Win64<span class="pl-pds">"</span></span> ..
+cmake -G <span class="pl-s"><span class="pl-pds">"</span>Visual Studio 14<span class="pl-pds">"</span></span> ..
+cmake -G <span class="pl-s"><span class="pl-pds">"</span>Visual Studio 14 Win64<span class="pl-pds">"</span></span> ..
 ...</pre></div>
+
+<p>If you compile and run, you should now be at the same point as the <a href="http://www.learnopengl.com/#!Getting-started/Hello-Window">Hello Window</a> or <a href="https://open.gl/context">Context Creation</a> sections of the tutorials. Open <a href="https://github.com/Polytonic/Glitter/blob/master/Glitter/Sources/main.cpp">main.cpp</a> on your computer and start writing code!</p>
 
 <h2>
 <a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<p>Many people overlook how frustrating it is to install dependencies, especially in environments lacking package managers or administrative privileges. For beginners, just getting set up properly set up can be a huge challenge. Glitter is meant to help you overcome that roadblock.</p>
 
 <p>Glitter provides the most basic windowing example. It is a starting point, and tries very hard not to enforce any sort of directory structure. Feel free to edit the include paths in <code>CMakeLists.txt</code>. Glitter bundles most of the dependencies needed to implement a basic rendering engine. This includes:</p>
 
@@ -64,7 +68,7 @@ cmake -G <span class="pl-s"><span class="pl-pds">"</span>Visual Studio 12 Win64<
 <li><a href="https://github.com/nothings/stb">stb</a></li>
 </ul>
 
-<p>You can use Glitter as a starting point for the tutorials on <a href="http://learnopengl.com/">learnopengl.com</a>. I have provided sample implementations of an intrusive tree mesh and shader class. These were used to generate the screenshot above, but will not compile out-of-the-box. I leave that exercise to the reader. <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle"></p>
+<p>I have provided sample implementations of an intrusive tree mesh and shader class. These were used to generate the screenshot above, but will not compile out-of-the-box. I leave that exercise to the reader. <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle"></p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
