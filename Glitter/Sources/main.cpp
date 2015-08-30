@@ -20,6 +20,13 @@ int main(int argc, char * argv[]) {
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     auto mWindow = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
 
+    // Check for Valid Context
+    if (mWindow == nullptr)
+    {
+        fprintf(stderr, "Failed to Create OpenGL Context");
+        return EXIT_FAILURE;
+    }
+
     // Create Context and Load OpenGL Functions
     glfwMakeContextCurrent(mWindow);
     gladLoadGL();
