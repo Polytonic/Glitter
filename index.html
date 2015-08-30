@@ -36,6 +36,7 @@
 <p>Glitter has a single dependency: <a href="http://www.cmake.org/download/">cmake</a>, which is used to generate platform-specific makefiles or project files. Start by cloning this repository, making sure to pass the <code>--recursive</code> flag to grab all the dependencies. If you forgot, then you can <code>git submodule update --init</code> instead.</p>
 
 <div class="highlight highlight-bash"><pre>git clone --recursive https://github.com/Polytonic/Glitter
+<span class="pl-c1">cd</span> Glitter
 mkdir -p Build <span class="pl-k">&amp;&amp;</span> <span class="pl-c1">cd</span> Build</pre></div>
 
 <p>Now generate a project file or makefile for your platform. If you want to use a particular IDE, make sure it is installed; don't forget to set the Start-Up Project in Visual Studio or the Target in Xcode.</p>
