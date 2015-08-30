@@ -9,6 +9,7 @@ Glitter has a single dependency: [cmake](http://www.cmake.org/download/), which 
 
 ```bash
 git clone --recursive https://github.com/Polytonic/Glitter
+cd Glitter
 mkdir -p Build && cd Build
 ```
 
