@@ -17,6 +17,6 @@ There is some basic error handling to help you out if you get stuck.
 
 ### Mesh
 
-Model loading is a bit harder. Most standard models are actually comprised of multiple, "sub-models" (or sub-meshes). For example, a character model in a video game might have a "torso" section, a "left arm" and a "right arm" section, and so on, all inside the same model file. Here I provide a sample mesh class that will handle multi-meshes; the screenshot on the main page is one of them!
+Model loading is a bit harder. Most standard models are actually comprised of multiple, "sub-models" (or sub-meshes). For example, a character model in a video game might have a "torso" section, a "left arm" and a "right arm" section, and so on, all inside the same model file. Here I provide a sample [mesh class](https://github.com/Polytonic/Glitter/blob/master/Samples/mesh.hpp) that will handle multi-meshes; the screenshot on the main page is one of them!
 
 Most OpenGL tutorials will guide you through writing a standard "Mesh" class, which involves writing a standard tree containing a set of nodes. This entails a containing "tree" class, and a "node" class containing data. As an alternative, I wrote an intrusive tree implementation, which stores the tree relation directly inside the nodes. This [Quora post](http://qr.ae/RFzeSU) might be helpful in understanding what an intrusive data structure is, and why they are used.
