@@ -43,9 +43,9 @@ Windowing and Input     | [glfw](https://github.com/glfw/glfw)
 OpenGL Mathematics      | [glm](https://github.com/g-truc/glm)
 Texture Loading         | [stb](https://github.com/nothings/stb)
 
-If you started the tutorials by installing [SDL](https://www.libsdl.org/), [GLEW](https://github.com/nigels-com/glew) or [SOIL](http://www.lonesock.net/soil.html), *stop*. The libraries bundled with Glitter supersede or are functional replacements for these libraries.
+If you started the tutorials by installing [SDL](https://www.libsdl.org/), [GLEW](https://github.com/nigels-com/glew), or [SOIL](http://www.lonesock.net/soil.html), *stop*. The libraries bundled with Glitter supersede or are functional replacements for these libraries.
 
-I have provided sample implementations of an intrusive tree mesh and shader class, if you're following along with the tutorials and need another reference point to look at when stuck. These were used to generate the screenshot above, but will not compile out-of-the-box. I leave that exercise for the reader. :smiley:
+I have provided sample implementations of an intrusive tree mesh and shader class, if you're following along with the tutorials and need a reference point to look at when stuck. These were used to generate the screenshot above, but will not compile out-of-the-box. I leave that exercise for the reader. :smiley:
 
 ## License
 >The MIT License (MIT)
