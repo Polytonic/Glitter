@@ -37,7 +37,7 @@
 
 <div class="highlight highlight-bash"><pre>git clone --recursive https://github.com/Polytonic/Glitter
 <span class="pl-c1">cd</span> Glitter
-mkdir -p Build <span class="pl-k">&amp;&amp;</span> <span class="pl-c1">cd</span> Build</pre></div>
+<span class="pl-c1">cd</span> Build</pre></div>
 
 <p>Now generate a project file or makefile for your platform. If you want to use a particular IDE, make sure it is installed; don't forget to set the Start-Up Project in Visual Studio or the Target in Xcode.</p>
 
@@ -61,15 +61,40 @@ cmake -G <span class="pl-s"><span class="pl-pds">"</span>Visual Studio 14 Win64<
 
 <p>Glitter provides the most basic windowing example. It is a starting point, and tries very hard not to enforce any sort of directory structure. Feel free to edit the include paths in <code>CMakeLists.txt</code>. Glitter bundles most of the dependencies needed to implement a basic rendering engine. This includes:</p>
 
-<ul>
-<li><a href="https://github.com/assimp/assimp">assimp</a></li>
-<li><a href="https://github.com/Dav1dde/glad">glad</a></li>
-<li><a href="https://github.com/glfw/glfw">glfw</a></li>
-<li><a href="https://github.com/g-truc/glm">glm</a></li>
-<li><a href="https://github.com/nothings/stb">stb</a></li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Functionality</th>
+<th>Library</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mesh Loading</td>
+<td><a href="https://github.com/assimp/assimp">assimp</a></td>
+</tr>
+<tr>
+<td>OpenGL Function Loader</td>
+<td><a href="https://github.com/Dav1dde/glad">glad</a></td>
+</tr>
+<tr>
+<td>Windowing and Input</td>
+<td><a href="https://github.com/glfw/glfw">glfw</a></td>
+</tr>
+<tr>
+<td>OpenGL Mathematics</td>
+<td><a href="https://github.com/g-truc/glm">glm</a></td>
+</tr>
+<tr>
+<td>Texture Loading</td>
+<td><a href="https://github.com/nothings/stb">stb</a></td>
+</tr>
+</tbody>
+</table>
 
-<p>I have provided sample implementations of an intrusive tree mesh and shader class. These were used to generate the screenshot above, but will not compile out-of-the-box. I leave that exercise to the reader. <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle"></p>
+<p>If you started the tutorials by installing <a href="https://www.libsdl.org/">SDL</a>, <a href="https://github.com/nigels-com/glew">GLEW</a>, or <a href="http://www.lonesock.net/soil.html">SOIL</a>, <em>stop</em>. The libraries bundled with Glitter supersede or are functional replacements for these libraries.</p>
+
+<p>I have provided sample implementations of an intrusive tree mesh and shader class, if you're following along with the tutorials and need another reference point. These were used to generate the screenshot above, but will not compile out-of-the-box. I leave that exercise for the reader. <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle"></p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
