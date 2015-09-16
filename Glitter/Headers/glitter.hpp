@@ -1,6 +1,3 @@
-// Preprocessor Directives
-#define STB_IMAGE_IMPLEMENTATION
-
 // System Headers
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
