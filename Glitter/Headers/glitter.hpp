@@ -1,4 +1,7 @@
 // Preprocessor Directives
+#ifndef GLITTER
+#define GLITTER
+#pragma once
 #define STB_IMAGE_IMPLEMENTATION
 
 // System Headers
@@ -13,3 +16,5 @@
 // Define Some Constants
 const int mWidth = 1280;
 const int mHeight = 800;
+
+#endif //~ Glitter Header
