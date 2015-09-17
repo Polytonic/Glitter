@@ -1,8 +1,8 @@
-// Local Headers
-#include "glitter.hpp"
-
 // Implementation of stb_image (only add to one .cpp file)
 #define STB_IMAGE_IMPLEMENTATION
+
+// Local Headers
+#include "glitter.hpp"
 
 // System Headers
 #include <glad/glad.h>
