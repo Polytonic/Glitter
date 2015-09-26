@@ -18,3 +18,7 @@
     path = Glitter/Vendor/stb
     url = https://github.com/nothings/stb.git
     branch = master
+[submodule "Glitter/Vendor/bullet"]
+    path = Glitter/Vendor/bullet
+    url = https://github.com/bulletphysics/bullet3.git
+    branch = master
