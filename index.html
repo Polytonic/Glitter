@@ -35,13 +35,13 @@
 
 <p>Glitter has a single dependency: <a href="http://www.cmake.org/download/">cmake</a>, which is used to generate platform-specific makefiles or project files. Start by cloning this repository, making sure to pass the <code>--recursive</code> flag to grab all the dependencies. If you forgot, then you can <code>git submodule update --init</code> instead.</p>
 
-<div class="highlight highlight-bash"><pre>git clone --recursive https://github.com/Polytonic/Glitter
+<div class="highlight highlight-source-shell"><pre>git clone --recursive https://github.com/Polytonic/Glitter
 <span class="pl-c1">cd</span> Glitter
 <span class="pl-c1">cd</span> Build</pre></div>
 
 <p>Now generate a project file or makefile for your platform. If you want to use a particular IDE, make sure it is installed; don't forget to set the Start-Up Project in Visual Studio or the Target in Xcode.</p>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c"># UNIX Makefile</span>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># UNIX Makefile</span>
 cmake ..
 
 <span class="pl-c"># Mac OSX</span>
@@ -72,6 +72,10 @@ cmake -G <span class="pl-s"><span class="pl-pds">"</span>Visual Studio 14 Win64<
 <tr>
 <td>Mesh Loading</td>
 <td><a href="https://github.com/assimp/assimp">assimp</a></td>
+</tr>
+<tr>
+<td>Physics</td>
+<td><a href="https://github.com/bulletphysics/bullet3">bullet</a></td>
 </tr>
 <tr>
 <td>OpenGL Function Loader</td>
