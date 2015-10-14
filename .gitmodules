@@ -22,3 +22,6 @@
     path = Glitter/Vendor/bullet
     url = https://github.com/bulletphysics/bullet3.git
     branch = master
+[submodule "Glitter/Vendor/sdl"]
+	path = Glitter/Vendor/sdl
+	url = https://github.com/zach2good/SDL.git

@@ -3,12 +3,17 @@
 #define GLITTER
 #pragma once
 
+//#if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
+//#define _CRT_SECURE_NO_WARNINGS
+//#endif
+
 // System Headers
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-#include <btBulletDynamicsCommon.h>
+
 #include <glad/glad.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
