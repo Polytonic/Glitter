@@ -7,7 +7,8 @@
 
 // Standard Headers
 #include <cstdio>
-#include <cstdlib>
+
+GLFWwindow* create_window();
 
 int main(int argc, char * argv[]) {
 
@@ -18,7 +19,7 @@ int main(int argc, char * argv[]) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    auto mWindow = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
+    auto mWindow = create_window();
 
     // Check for Valid Context
     if (mWindow == nullptr) {
@@ -45,4 +46,30 @@ int main(int argc, char * argv[]) {
         glfwPollEvents();
     }   glfwTerminate();
     return EXIT_SUCCESS;
+}
+
+GLFWwindow* create_window()
+{
+    GLFWwindow* window = nullptr;
+
+    auto TryVersion = [&window](int major, int minor)
+    {
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
+
+        window = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
+        return (window != nullptr);
+    };
+
+    // OpenGL 4.5 - 4.0
+    for (int minorVersion = 5; minorVersion >= 0; minorVersion--)
+    {
+        if (TryVersion(4, minorVersion)) return window;
+    }
+
+    // OpenGL 3.3 Core
+    if (TryVersion(3, 3)) return window;
+
+    // Failed to create an OpenGL context
+    return nullptr;
 }
