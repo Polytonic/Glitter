@@ -3,46 +3,70 @@
 
 // System Headers
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <SDL.h>
 
 // Standard Headers
 #include <cstdio>
 #include <cstdlib>
 
-int main(int argc, char * argv[]) {
+int main(int argc, char * argv[]) 
+{
+	//Start SDL
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+		printf("SDL Error");
+		return EXIT_FAILURE;
+	}
 
-    // Load GLFW and Create a Window
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    auto mWindow = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
+	// Start a Window
+	SDL_Window* m_Window = SDL_CreateWindow("OpenGL Skeleton",
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		mWidth, mHeight,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
-    // Check for Valid Context
-    if (mWindow == nullptr) {
-        fprintf(stderr, "Failed to Create OpenGL Context");
-        return EXIT_FAILURE;
-    }
+	if (!m_Window) {
+		printf("Window Error");
+		return EXIT_FAILURE;
+	}
 
-    // Create Context and Load OpenGL Functions
-    glfwMakeContextCurrent(mWindow);
-    gladLoadGL();
-    fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
+	// Start OpenGL Context
+	SDL_GLContext m_Context = SDL_GL_CreateContext(m_Window);
+	if (!m_Context) {
+		printf("Context Error");
+		return EXIT_FAILURE;
+	}
 
-    // Rendering Loop
-    while (glfwWindowShouldClose(mWindow) == false) {
-        if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-            glfwSetWindowShouldClose(mWindow, true);
+	// Load GLAD Extentions
+	if (!gladLoadGL()) {
+		printf("GLAD Error");
+		return EXIT_FAILURE;
+	}
 
-        // Background Fill Color
-        glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+	// Print Info
+	printf("GL_VERSION: %s \n", glGetString(GL_VERSION));
+	printf("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
+	printf("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-        // Flip Buffers and Draw
-        glfwSwapBuffers(mWindow);
-        glfwPollEvents();
-    }   glfwTerminate();
+	bool running = true;
+	while (running) {
+
+		// Poll inputs
+		SDL_Event e;
+		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE) {
+				running = false;
+			}
+		}
+
+		glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		SDL_GL_SwapWindow(m_Window);
+
+	}
+
+	SDL_GL_DeleteContext(m_Context);
+	SDL_DestroyWindow(m_Window);
+	SDL_Quit();
     return EXIT_SUCCESS;
 }
