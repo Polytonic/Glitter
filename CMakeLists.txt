@@ -28,7 +28,8 @@ else()
 endif()
 
 include_directories(Glitter/Headers/
-                    Glitter/Vendor/assimp/include/
+                    ${CMAKE_CURRENT_BINARY_DIR}/Glitter/Vendor/assimp/include/
+                    ${CMAKE_CURRENT_SOURCE_DIR}/Glitter/Vendor/assimp/include/
                     Glitter/Vendor/bullet/src/
                     Glitter/Vendor/glad/include/
                     Glitter/Vendor/glfw/include/
