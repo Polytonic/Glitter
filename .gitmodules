@@ -2,29 +2,23 @@
     path = Glitter/Vendor/assimp
     url = https://github.com/assimp/assimp.git
     branch = master
-    shallow = true
 [submodule "Glitter/Vendor/glad"]
     path = Glitter/Vendor/glad
     url = https://github.com/Dav1dde/glad.git
     branch = c
-    shallow = true
 [submodule "Glitter/Vendor/glfw"]
     path = Glitter/Vendor/glfw
     url = https://github.com/glfw/glfw.git
     branch = master
-    shallow = true
 [submodule "Glitter/Vendor/glm"]
     path = Glitter/Vendor/glm
     url = https://github.com/g-truc/glm.git
     branch = master
-    shallow = true
 [submodule "Glitter/Vendor/stb"]
     path = Glitter/Vendor/stb
     url = https://github.com/nothings/stb.git
     branch = master
-    shallow = true
 [submodule "Glitter/Vendor/bullet"]
     path = Glitter/Vendor/bullet
     url = https://github.com/bulletphysics/bullet3.git
     branch = master
-    shallow = true
