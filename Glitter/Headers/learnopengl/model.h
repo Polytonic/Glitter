@@ -51,11 +51,9 @@ private:
     // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
     void loadModel(string const &path)
     {
-        std::cout << "In loadModel" << std::endl;
         // read file via ASSIMP
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-	std::cout << "Read file with importer" << std::endl;
         // check for errors
         if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
         {
@@ -65,10 +63,8 @@ private:
         // retrieve the directory path of the filepath
         directory = path.substr(0, path.find_last_of('/'));
 
-	std::cout << "About to process nodes" << std::endl;
         // process ASSIMP's root node recursively
         processNode(scene->mRootNode, scene);
-	std::cout << "Returned from root processNode" << std::endl;
     }
 
     // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
