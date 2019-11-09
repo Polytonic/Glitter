@@ -218,8 +218,19 @@ private:
 
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma)
 {
+    const char kPathSeparator =
+#ifdef _WIN32
+      '\\';
+#else
+      '/';
+#endif
     string filename = string(path);
-    filename = directory + '/' + filename;
+    filename = directory + kPathSeparator + filename;
+#ifdef _WIN32
+    std::replace(filename.begin(), filename.end(), '/', '\\');
+#else
+    std::replace(filename.begin(), filename.end(), '\\', '/');
+#endif
 
     unsigned int textureID;
     glGenTextures(1, &textureID);
