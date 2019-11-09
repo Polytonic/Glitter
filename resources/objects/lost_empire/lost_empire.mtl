@@ -1,0 +1,516 @@
+Wavefront OBJ material file
+# Contains 45 materials
+
+newmtl Stone
+Ns 0
+Ka 0.0941176 0.0941176 0.0941176
+Kd 0.470588 0.470588 0.470588
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Grass
+Ns 0
+Ka 0.0941176 0.140392 0.0603922
+Kd 0.470588 0.701961 0.301961
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Dirt
+Ns 0
+Ka 0.109804 0.0776471 0.0533333
+Kd 0.54902 0.388235 0.266667
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Cobblestone
+Ns 0
+Ka 0.101961 0.101961 0.101961
+Kd 0.509804 0.509804 0.509804
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Wooden_Plank
+Ns 0
+Ka 0.124706 0.101176 0.0627451
+Kd 0.623529 0.505882 0.313726
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Stationary_Water
+Ns 0
+Ka 0.0321569 0.0729412 0.199216
+Kd 0.160784 0.364706 0.996078
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 4
+# d 0.535
+# Tr 0.535
+Tf 0.91398 0.804882 0.467098
+
+newmtl Stationary_Lava
+Ns 0
+Ka 0.192157 0.0854902 0
+Kd 0.960784 0.427451 0
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+Ke 0.3 0.05 0.01
+# d 1
+# Tr 1
+
+newmtl Sand
+Ns 0
+Ka 0.175686 0.169412 0.130196
+Kd 0.878431 0.847059 0.65098
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Gravel
+Ns 0
+Ka 0.104314 0.0964706 0.0964706
+Kd 0.521569 0.482353 0.482353
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Iron_Ore
+Ns 0
+Ka 0.147451 0.12 0.100392
+Kd 0.737255 0.6 0.501961
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Coal_Ore
+Ns 0
+Ka 0.0407843 0.0407843 0.0407843
+Kd 0.203922 0.203922 0.203922
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Log
+Ns 0
+Ka 0.138824 0.112941 0.0705882
+Kd 0.694118 0.564706 0.352941
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Leaves
+Ns 0
+Ka 0.0447059 0.134118 0.0305882
+Kd 0.223529 0.670588 0.152941
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Bed
+Ns 0
+Ka 0.2 0.04 0.04
+Kd 1 0.2 0.2
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Powered_Rail
+Ns 0
+Ka 0.0823529 0.0439216 0.0439216
+Kd 0.411765 0.219608 0.219608
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Detector_Rail
+Ns 0
+Ka 0.0823529 0.0603922 0.0454902
+Kd 0.411765 0.301961 0.227451
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Sticky_Piston
+Ns 0
+Ka 0.0886275 0.123922 0.0752941
+Kd 0.443137 0.619608 0.376471
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Dandelion
+Ns 0
+Ka 0.199216 0.199216 0.00156863
+Kd 0.996078 0.996078 0.00784314
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Rose
+Ns 0
+Ka 0.2 0.0117647 0.0117647
+Kd 1 0.0588235 0.0588235
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Brown_Mushroom
+Ns 0
+Ka 0.151373 0.113725 0.0886275
+Kd 0.756863 0.568627 0.443137
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Double_Slab
+Ns 0
+Ka 0.130196 0.130196 0.130196
+Kd 0.65098 0.65098 0.65098
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Stone_Slab
+Ns 0
+Ka 0.129412 0.129412 0.129412
+Kd 0.647059 0.647059 0.647059
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Obsidian
+Ns 0
+Ka 0.0211765 0.0180392 0.0321569
+Kd 0.105882 0.0901961 0.160784
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Torch
+Ns 0
+Ka 0.197647 0.197647 0
+Kd 0.988235 0.988235 0
+#Ke 0.9 0.9 0.6
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Wooden_Stairs
+Ns 0
+Ka 0.123922 0.100392 0.0619608
+Kd 0.619608 0.501961 0.309804
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Chest
+Ns 0
+Ka 0.12549 0.0870588 0.027451
+Kd 0.627451 0.435294 0.137255
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Redstone_Wire
+Ns 0
+Ka 0.167843 0 0
+Kd 0.839216 0 0
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Diamond_Block
+Ns 0
+Ka 0.0996078 0.178039 0.174902
+Kd 0.498039 0.890196 0.87451
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Crafting_Table
+Ns 0
+Ka 0.101961 0.0658824 0.0392157
+Kd 0.509804 0.329412 0.196078
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Furnace
+Ns 0
+Ka 0.092549 0.092549 0.0933333
+Kd 0.462745 0.462745 0.466667
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Sign_Post
+Ns 0
+Ka 0.124706 0.101176 0.0619608
+Kd 0.623529 0.505882 0.309804
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Ladder
+Ns 0
+Ka 0.133333 0.105098 0.0635294
+Kd 0.666667 0.52549 0.317647
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Rail
+Ns 0
+Ka 0.0815686 0.0815686 0.0815686
+Kd 0.407843 0.407843 0.407843
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Cobblestone_Stairs
+Ns 0
+Ka 0.101176 0.101176 0.101176
+Kd 0.505882 0.505882 0.505882
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Wall_Sign
+Ns 0
+Ka 0.130196 0.108235 0.054902
+Kd 0.65098 0.541176 0.27451
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Lever
+Ns 0
+Ka 0.108235 0.0831373 0.0478431
+Kd 0.541176 0.415686 0.239216
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Iron_Door
+Ns 0
+Ka 0.139608 0.139608 0.139608
+Kd 0.698039 0.698039 0.698039
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Redstone_Torch_(off)
+Ns 0
+Ka 0.067451 0 0
+Kd 0.337255 0 0
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Redstone_Torch_(on)
+Ns 0
+Ka 0.198431 0 0
+Kd 0.992157 0 0
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Stone_Button
+Ns 0
+Ka 0.134902 0.134902 0.134902
+Kd 0.67451 0.67451 0.67451
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Fence
+Ns 0
+Ka 0.124706 0.101176 0.0611765
+Kd 0.623529 0.505882 0.305882
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Portal
+Ns 0
+Ka 0.0556863 0.0266667 0.0894118
+Kd 0.278431 0.133333 0.447059
+Ks 0 0 0
+map_Ka lost_empire-RGBA.png
+map_Kd lost_empire-RGBA.png
+map_d lost_empire-Alpha.png
+illum 4
+# d 0.8
+# Tr 0.8
+Tf 0.777255 0.893333 0.642353
+
+newmtl Repeater_(off)
+Ns 0
+Ka 0.067451 0 0
+Kd 0.337255 0 0
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl Repeater_(on)
+Ns 0
+Ka 0.186667 0.0666667 0.0666667
+Kd 0.933333 0.333333 0.333333
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+
+newmtl White_Wool
+Ns 0
+Ka 0.173333 0.173333 0.173333
+Kd 0.866667 0.866667 0.866667
+Ks 0 0 0
+map_Ka lost_empire-RGB.png
+map_Kd lost_empire-RGB.png
+illum 2
+# d 1
+# Tr 1
+

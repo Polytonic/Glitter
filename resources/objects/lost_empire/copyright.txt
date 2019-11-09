@@ -1,0 +1,11 @@
+Underground city in the 
+"Lost Empire" area from the Vokselia Minecraft world
+http://vokselia.com
+CC BY 3.0 License http://creativecommons.org/licenses/by/3.0/
+
+224,998 faces
+449,992 vertices 
+after loading and welding colocated vertices
+
+------------------
+Converted to OBJ by Morgan McGuire using Mineways (http://mineways.com)
