@@ -27,6 +27,9 @@ else()
     endif()
 endif()
 
+configure_file(configuration/root_directory.h.in configuration/root_directory.h)
+include_directories(${CMAKE_BINARY_DIR}/configuration)
+
 include_directories(Glitter/Headers/
                     Glitter/Vendor/assimp/include/
                     Glitter/Vendor/bullet/src/
@@ -41,7 +44,9 @@ file(GLOB PROJECT_SOURCES Glitter/Sources/*.cpp)
 file(GLOB PROJECT_SHADERS Glitter/Shaders/*.comp
                           Glitter/Shaders/*.frag
                           Glitter/Shaders/*.geom
-                          Glitter/Shaders/*.vert)
+                          Glitter/Shaders/*.vert
+			  Glitter/Shaders/*.vs
+			  Glitter/Shaders/*.fs)
 file(GLOB PROJECT_CONFIGS CMakeLists.txt
                           Readme.md
                          .gitattributes
