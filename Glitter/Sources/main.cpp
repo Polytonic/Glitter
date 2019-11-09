@@ -83,7 +83,14 @@ int main()
 
     // load models
     // -----------
-    Model ourModel(FileSystem::getPath("resources/objects/nanosuit/nanosuit.obj"));
+    std::string objects_dir = "resources/objects/";
+    std::string model_dir = "nanosuit";
+    std::string object_file = model_dir;
+    std::string file_type = ".obj";
+    std::string file_path;
+    file_path.append(objects_dir).append(model_dir).append("/")
+      .append(object_file).append(file_type);
+    Model ourModel(FileSystem::getPath(file_path));
 
     
     // draw in wireframe
@@ -120,7 +127,8 @@ int main()
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+        // model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f)); // scale sponza model
+	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f)); // scale nanosuit model
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
@@ -152,6 +160,10 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        camera.ProcessKeyboard(UP, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+        camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
