@@ -84,7 +84,7 @@ int main()
     // load models
     // -----------
     std::string objects_dir = "resources/objects/";
-    std::string model_dir = "nanosuit";
+    std::string model_dir = "lost_empire";
     std::string object_file = model_dir;
     std::string file_type = ".obj";
     std::string file_path;
