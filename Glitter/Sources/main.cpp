@@ -34,15 +34,26 @@ int main()
 
     // load models
     // -----------
-    std::string objects_dir = "resources/objects/";
-    std::string model_dir = "lost_empire";
-    std::string object_file = model_dir;
-    std::string file_type = ".obj";
-    std::string file_path;
-    file_path.append(objects_dir).append(model_dir).append("/")
-      .append(object_file).append(file_type);
-    renderer->AddModel(file_path);
-
+    {
+      std::string objects_dir = "resources/objects/";
+      std::string model_dir = "lost_empire";
+      std::string object_file = model_dir;
+      std::string file_type = ".obj";
+      std::string file_path;
+      file_path.append(objects_dir).append(model_dir).append("/")
+	.append(object_file).append(file_type);
+      renderer->AddModel(file_path);
+    }
+    {
+      std::string objects_dir = "resources/objects/";
+      std::string model_dir = "nanosuit";
+      std::string object_file = model_dir;
+      std::string file_type = ".obj";
+      std::string file_path;
+      file_path.append(objects_dir).append(model_dir).append("/")
+	.append(object_file).append(file_type);
+      renderer->AddModel(file_path);
+    }
     
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
