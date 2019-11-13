@@ -9,6 +9,8 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <point_shadows_rt_renderer.hpp>
+#include <rt_renderer.hpp>
 #include <simple_rt_renderer.hpp>
 #include <learnopengl/shader_m.h>
 #include <learnopengl/camera.h>
@@ -29,12 +31,12 @@ int main()
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-  std::unique_ptr<SimpleRtRenderer> renderer(new SimpleRtRenderer());
-  GLFWwindow* window = renderer->OpenWindow();
+  std::unique_ptr<RtRenderer> renderer(new PointShadowsRtRenderer());
+  GLFWwindow* window = renderer->OpenWindow("RT Render");
 
   // load models
   // -----------
-  {
+/*  {
     std::string objects_dir = "resources/objects/";
     std::string model_dir = "lost_empire";
     std::string object_file = model_dir;
@@ -43,7 +45,7 @@ int main()
     file_path.append(objects_dir).append(model_dir).append("/")
       .append(object_file).append(file_type);
     renderer->AddModel(file_path);
-  }
+    }*/
   {
     std::string objects_dir = "resources/objects/";
     std::string model_dir = "nanosuit";
@@ -55,9 +57,6 @@ int main()
     renderer->AddModel(file_path);
   }
     
-  // draw in wireframe
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
   // render loop
   // -----------
   while (!glfwWindowShouldClose(window))
@@ -65,8 +64,6 @@ int main()
     renderer->Render();
   }
 
-  // glfw: terminate, clearing all previously allocated GLFW resources.
-  // ------------------------------------------------------------------
   glfwTerminate();
   return 0;
 }
