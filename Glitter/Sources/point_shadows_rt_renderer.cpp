@@ -4,15 +4,15 @@
 
 namespace {
 
-  constexpr unsigned int SCR_WIDTH = 800;
-  constexpr unsigned int SCR_HEIGHT = 600;
-  constexpr unsigned int SHADOW_WIDTH = 1024;
-  constexpr unsigned int SHADOW_HEIGHT = 1024;
+  constexpr unsigned int SCR_WIDTH = 1350;
+  constexpr unsigned int SCR_HEIGHT = 900;
+  constexpr unsigned int SHADOW_WIDTH = 4096;
+  constexpr unsigned int SHADOW_HEIGHT = 4096;
   float lastX = SCR_WIDTH / 2.0f;
   float lastY = SCR_HEIGHT / 2.0f;
   bool firstMouse = true;
 
-  Camera camera_(glm::vec3(0.0f, 0.0f, 3.0f));
+  Camera camera_(glm::vec3(0.5f, 0.5f, 0.5f));
 
   void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width and 
@@ -107,9 +107,11 @@ GLFWwindow* PointShadowsRtRenderer::OpenWindow(const std::string& window_name) {
   return window_;
 }
 
-void PointShadowsRtRenderer::AddModel(const std::string& file_path) {
+void PointShadowsRtRenderer::AddModel(const std::string& file_path,
+				      glm::mat4 model_matrix) {
   models_.push_back(std::unique_ptr<Model>(
 		      new Model(FileSystem::getPath(file_path))));
+  model_matrices_.push_back(model_matrix);
 }
 
 void PointShadowsRtRenderer::Render() {
@@ -123,14 +125,14 @@ void PointShadowsRtRenderer::Render() {
 
   // move light position over time
   if(!pause_) {
-    lightPos.x = cos(glfwGetTime() * 0.5) * 1.5;
-    lightPos.z = sin(glfwGetTime() * 0.5) * 1.5;
+    lightPos.x = cos(glfwGetTime() * 0.25) * 2;
+    lightPos.z = sin(glfwGetTime() * 0.25) * 2;
   }
   
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  float near_plane = 1.0f;
+  float near_plane = 0.1f;
   float far_plane  = 25.0f;
   glm::mat4 shadowProj =
     glm::perspective(glm::radians(90.0f),
@@ -138,12 +140,30 @@ void PointShadowsRtRenderer::Render() {
 		     near_plane,
 		     far_plane);
   std::vector<glm::mat4> shadowTransforms;
-  shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)));
-  shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)));
-  shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)));
-  shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)));
-  shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)));
-  shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f)));
+  shadowTransforms.push_back(shadowProj *
+			     glm::lookAt(lightPos,
+					 lightPos + glm::vec3( 1.0f,  0.0f,  0.0f),
+					 glm::vec3(0.0f, -1.0f,  0.0f)));
+  shadowTransforms.push_back(shadowProj *
+			     glm::lookAt(lightPos,
+					 lightPos + glm::vec3(-1.0f,  0.0f,  0.0f),
+					 glm::vec3(0.0f, -1.0f,  0.0f)));
+  shadowTransforms.push_back(shadowProj *
+			     glm::lookAt(lightPos,
+					 lightPos + glm::vec3( 0.0f,  1.0f,  0.0f),
+					 glm::vec3(0.0f,  0.0f,  1.0f)));
+  shadowTransforms.push_back(shadowProj *
+			     glm::lookAt(lightPos,
+					 lightPos + glm::vec3( 0.0f, -1.0f,  0.0f),
+					 glm::vec3(0.0f,  0.0f, -1.0f)));
+  shadowTransforms.push_back(shadowProj *
+			     glm::lookAt(lightPos,
+					 lightPos + glm::vec3( 0.0f,  0.0f,  1.0f),
+					 glm::vec3(0.0f, -1.0f,  0.0f)));
+  shadowTransforms.push_back(shadowProj *
+			     glm::lookAt(lightPos,
+					 lightPos + glm::vec3( 0.0f,  0.0f, -1.0f),
+					 glm::vec3(0.0f, -1.0f,  0.0f)));
 
   // 1. render scene to depth cubemap
   // --------------------------------
@@ -155,12 +175,13 @@ void PointShadowsRtRenderer::Render() {
     depth_shader_->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
   depth_shader_->setFloat("far_plane", far_plane);
   depth_shader_->setVec3("lightPos", lightPos);
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
-  model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
-  depth_shader_->setMat4("model", model);
-  for(auto& model : models_) {
-    model->Draw(shader_.get());
+  {
+    glm::mat4 model_mat;
+    for(int i = 0; i < models_.size(); i++) {
+      model_mat = model_matrices_[i];
+      depth_shader_->setMat4("model", model_mat);
+      models_[i]->Draw(shader_.get());
+    }
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -180,21 +201,27 @@ void PointShadowsRtRenderer::Render() {
   shader_->setFloat("far_plane", far_plane);
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
-  shader_->setMat4("model", model);
-  for(auto& model : models_) {
-    model->Draw(shader_.get());
+  {
+    glm::mat4 model_mat;
+    for(int i = 0; i < models_.size(); i++) {
+      model_mat = model_matrices_[i];
+      shader_->setMat4("model", model_mat);
+      models_[i]->Draw(shader_.get());
+    }
   }
 
-  light_box_shader_->use();
-  light_box_shader_->setMat4("projection", projection);
-  light_box_shader_->setMat4("view", view);
-  model = glm::mat4(1.0f);
-  model = glm::translate(model, lightPos);
-  model = glm::scale(model, glm::vec3(0.125f));
-  light_box_shader_->setMat4("model", model);
-  light_box_shader_->setVec3("lightColor", glm::vec3(1.0f));
-  RenderCube();
-
+  {
+    light_box_shader_->use();
+    light_box_shader_->setMat4("projection", projection);
+    light_box_shader_->setMat4("view", view);
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, lightPos);
+    model = glm::scale(model, glm::vec3(0.05f));
+    light_box_shader_->setMat4("model", model);
+    light_box_shader_->setVec3("lightColor", glm::vec3(1.0f));
+    RenderCube();
+  }
+  
   glfwSwapBuffers(window_);
   glfwPollEvents();
 }

@@ -73,8 +73,11 @@ GLFWwindow* SimpleRtRenderer::OpenWindow(const std::string& window_name) {
   return window_;
 }
 
-void SimpleRtRenderer::AddModel(const std::string& file_path) {
-  models_.push_back(std::unique_ptr<Model>(new Model(FileSystem::getPath(file_path))));
+void SimpleRtRenderer::AddModel(const std::string& file_path,
+				      glm::mat4 model_matrix) {
+  models_.push_back(std::unique_ptr<Model>(
+		      new Model(FileSystem::getPath(file_path))));
+  model_matrices_.push_back(model_matrix);
 }
 
 void SimpleRtRenderer::Render() {
@@ -97,14 +100,11 @@ void SimpleRtRenderer::Render() {
   shader_->setMat4("projection", projection);
   shader_->setMat4("view", view);
 
-  // render the loaded model
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-  // model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f)); // scale sponza model
-  model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f)); // scale nanosuit model
-  shader_->setMat4("model", model);
-  for(auto& model : models_) {
-    model->Draw(shader_.get());
+  glm::mat4 model_mat;
+  for(int i = 0; i < models_.size(); i++) {
+    model_mat = model_matrices_[i];
+    shader_->setMat4("model", model_mat);
+    models_[i]->Draw(shader_.get());
   }
 
   glfwSwapBuffers(window_);

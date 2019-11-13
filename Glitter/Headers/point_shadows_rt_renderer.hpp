@@ -19,7 +19,8 @@ class PointShadowsRtRenderer : public RtRenderer {
 public:
   PointShadowsRtRenderer();
   GLFWwindow* OpenWindow(const std::string& window_name = "RT Render") override;
-  void AddModel(const std::string& file_path) override;
+  void AddModel(const std::string& file_path,
+		glm::mat4 model_matrix) override;
   void Render() override;
 
 private:
@@ -30,6 +31,7 @@ private:
   std::unique_ptr<Shader> depth_shader_;
   std::unique_ptr<Shader> light_box_shader_;
   std::vector<std::unique_ptr<Model>> models_;
+  std::vector<glm::mat4> model_matrices_;
 
   bool pause_ = false;
   bool pause_key_pressed_ = false;

@@ -32,6 +32,7 @@ int main()
 #endif
 
   std::unique_ptr<RtRenderer> renderer(new PointShadowsRtRenderer());
+  // std::unique_ptr<RtRenderer> renderer(new SimpleRtRenderer());
   GLFWwindow* window = renderer->OpenWindow("RT Render");
 
   // load models
@@ -54,7 +55,23 @@ int main()
     std::string file_path;
     file_path.append(objects_dir).append(model_dir).append("/")
       .append(object_file).append(file_type);
-    renderer->AddModel(file_path);
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    model_mat = glm::translate(model_mat, glm::vec3(0.0f, -1.0f, 0.0f));
+    model_mat = glm::scale(model_mat, glm::vec3(0.1f, 0.1f, 0.1f)); // scale nanosuit model
+    renderer->AddModel(file_path, model_mat);
+  }
+    {
+    std::string objects_dir = "resources/objects/";
+    std::string model_dir = "sponza";
+    std::string object_file = model_dir;
+    std::string file_type = ".obj";
+    std::string file_path;
+    file_path.append(objects_dir).append(model_dir).append("/")
+      .append(object_file).append(file_type);
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    model_mat = glm::translate(model_mat, glm::vec3(0.0f, -1.0f, 0.0f));
+    model_mat = glm::scale(model_mat, glm::vec3(0.005f, 0.005f, 0.005f)); // scale sponza model
+    renderer->AddModel(file_path, model_mat);
   }
     
   // render loop

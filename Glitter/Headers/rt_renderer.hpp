@@ -11,7 +11,8 @@
 class RtRenderer {
 public:
   virtual GLFWwindow* OpenWindow(const std::string& window_name) = 0;
-  virtual void AddModel(const std::string& file_path) = 0;
+  virtual void AddModel(const std::string& file_path,
+			glm::mat4 model_matrix) = 0;
   virtual void Render() = 0;
 };
 
