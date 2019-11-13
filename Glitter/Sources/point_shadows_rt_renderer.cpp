@@ -6,8 +6,8 @@ namespace {
 
   constexpr unsigned int SCR_WIDTH = 1350;
   constexpr unsigned int SCR_HEIGHT = 900;
-  constexpr unsigned int SHADOW_WIDTH = 4096;
-  constexpr unsigned int SHADOW_HEIGHT = 4096;
+  constexpr unsigned int SHADOW_WIDTH = 1024;
+  constexpr unsigned int SHADOW_HEIGHT = 1024;
   float lastX = SCR_WIDTH / 2.0f;
   float lastY = SCR_HEIGHT / 2.0f;
   bool firstMouse = true;
