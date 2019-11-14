@@ -34,7 +34,11 @@ class Model {
       textures_loaded;  // stores all the textures loaded so far, optimization
                         // to make sure textures aren't loaded more than once.
   string directory;
-  bool gammaCorrection;
+  bool gammaCorrection = false;
+
+  Model(std::vector<Mesh> meshes){
+    this->meshes = std::move(meshes);
+  }
 
   /*  Functions   */
   // constructor, expects a filepath to a 3D model.
