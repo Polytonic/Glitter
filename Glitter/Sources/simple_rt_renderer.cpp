@@ -2,42 +2,42 @@
 
 namespace {
 
-  constexpr unsigned int SCR_WIDTH = 800;
-  constexpr unsigned int SCR_HEIGHT = 600;
-  float lastX = SCR_WIDTH / 2.0f;
-  float lastY = SCR_HEIGHT / 2.0f;
-  bool firstMouse = true;
+constexpr unsigned int SCR_WIDTH = 800;
+constexpr unsigned int SCR_HEIGHT = 600;
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
 
-  Camera camera_(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera_(glm::vec3(0.0f, 0.0f, 3.0f));
 
-  void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
-  }
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+  // make sure the viewport matches the new window dimensions; note that width
+  // and height will be significantly larger than specified on retina displays.
+  glViewport(0, 0, width, height);
+}
 
-  void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-    if (firstMouse)
-    {
-      lastX = xpos;
-      lastY = ypos;
-      firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+  if (firstMouse) {
     lastX = xpos;
     lastY = ypos;
-
-    camera_.ProcessMouseMovement(xoffset, yoffset);
+    firstMouse = false;
   }
 
-  void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    camera_.ProcessMouseScroll(yoffset);
-  }
+  float xoffset = xpos - lastX;
+  float yoffset =
+      lastY - ypos;  // reversed since y-coordinates go from bottom to top
 
+  lastX = xpos;
+  lastY = ypos;
+
+  camera_.ProcessMouseMovement(xoffset, yoffset);
 }
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+  camera_.ProcessMouseScroll(yoffset);
+}
+
+}  // namespace
 
 SimpleRtRenderer::SimpleRtRenderer() {}
 
@@ -52,10 +52,10 @@ GLFWwindow* SimpleRtRenderer::OpenWindow(const std::string& window_name) {
   glfwSetFramebufferSizeCallback(window_, &framebuffer_size_callback);
   glfwSetCursorPosCallback(window_, &mouse_callback);
   glfwSetScrollCallback(window_, &scroll_callback);
-    
+
   // tell GLFW to capture our mouse
   glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    
+
   // glad: load all OpenGL function pointers
   // ---------------------------------------
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -74,9 +74,9 @@ GLFWwindow* SimpleRtRenderer::OpenWindow(const std::string& window_name) {
 }
 
 void SimpleRtRenderer::AddModel(const std::string& file_path,
-				      glm::mat4 model_matrix) {
-  models_.push_back(std::unique_ptr<Model>(
-		      new Model(FileSystem::getPath(file_path))));
+                                glm::mat4 model_matrix) {
+  models_.push_back(
+      std::unique_ptr<Model>(new Model(FileSystem::getPath(file_path))));
   model_matrices_.push_back(model_matrix);
 }
 
@@ -95,13 +95,15 @@ void SimpleRtRenderer::Render() {
   shader_->use();
 
   // view/projection transformations
-  glm::mat4 projection = glm::perspective(glm::radians(camera_.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+  glm::mat4 projection =
+      glm::perspective(glm::radians(camera_.Zoom),
+                       (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
   glm::mat4 view = camera_.GetViewMatrix();
   shader_->setMat4("projection", projection);
   shader_->setMat4("view", view);
 
   glm::mat4 model_mat;
-  for(int i = 0; i < models_.size(); i++) {
+  for (int i = 0; i < models_.size(); i++) {
     model_mat = model_matrices_[i];
     shader_->setMat4("model", model_mat);
     models_[i]->Draw(shader_.get());

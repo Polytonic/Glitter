@@ -1,19 +1,18 @@
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 
-#include <string>
 #include <cstdlib>
+#include <string>
 
-class FileSystem
-{
-public:
-  typedef std::string (*Builder) (const std::string& path);
+class FileSystem {
+ public:
+  typedef std::string (*Builder)(const std::string& path);
   static std::string getPath(const std::string& path);
 
-private:
+ private:
   static const std::string& getRoot();
 
-  //static std::string(*foo (std::string const &)) getPathBuilder()
+  // static std::string(*foo (std::string const &)) getPathBuilder()
   static Builder getPathBuilder();
 
   static std::string getPathRelativeRoot(const std::string& path);

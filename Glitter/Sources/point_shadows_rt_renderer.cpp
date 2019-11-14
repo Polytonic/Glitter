@@ -4,44 +4,44 @@
 
 namespace {
 
-  constexpr unsigned int SCR_WIDTH = 1350;
-  constexpr unsigned int SCR_HEIGHT = 900;
-  constexpr unsigned int SHADOW_WIDTH = 1024;
-  constexpr unsigned int SHADOW_HEIGHT = 1024;
-  float lastX = SCR_WIDTH / 2.0f;
-  float lastY = SCR_HEIGHT / 2.0f;
-  bool firstMouse = true;
+constexpr unsigned int SCR_WIDTH = 1350;
+constexpr unsigned int SCR_HEIGHT = 900;
+constexpr unsigned int SHADOW_WIDTH = 1024;
+constexpr unsigned int SHADOW_HEIGHT = 1024;
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
 
-  Camera camera_(glm::vec3(0.5f, 0.5f, 0.5f));
+Camera camera_(glm::vec3(0.5f, 0.5f, 0.5f));
 
-  void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
-  }
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+  // make sure the viewport matches the new window dimensions; note that width
+  // and height will be significantly larger than specified on retina displays.
+  glViewport(0, 0, width, height);
+}
 
-  void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-    if (firstMouse)
-    {
-      lastX = xpos;
-      lastY = ypos;
-      firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+  if (firstMouse) {
     lastX = xpos;
     lastY = ypos;
-
-    camera_.ProcessMouseMovement(xoffset, yoffset);
+    firstMouse = false;
   }
 
-  void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    camera_.ProcessMouseScroll(yoffset);
-  }
+  float xoffset = xpos - lastX;
+  float yoffset =
+      lastY - ypos;  // reversed since y-coordinates go from bottom to top
 
+  lastX = xpos;
+  lastY = ypos;
+
+  camera_.ProcessMouseMovement(xoffset, yoffset);
 }
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+  camera_.ProcessMouseScroll(yoffset);
+}
+
+}  // namespace
 
 PointShadowsRtRenderer::PointShadowsRtRenderer() {}
 
@@ -56,10 +56,10 @@ GLFWwindow* PointShadowsRtRenderer::OpenWindow(const std::string& window_name) {
   glfwSetFramebufferSizeCallback(window_, &framebuffer_size_callback);
   glfwSetCursorPosCallback(window_, &mouse_callback);
   glfwSetScrollCallback(window_, &scroll_callback);
-    
+
   // tell GLFW to capture our mouse
   glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    
+
   // glad: load all OpenGL function pointers
   // ---------------------------------------
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -75,18 +75,18 @@ GLFWwindow* PointShadowsRtRenderer::OpenWindow(const std::string& window_name) {
   // -------------------------
   shader_.reset(new Shader("3.2.1.point_shadows.vs", "3.2.1.point_shadows.fs"));
   depth_shader_.reset(new Shader("3.2.1.point_shadows_depth.vs",
-				 "3.2.1.point_shadows_depth.fs",
-				 "3.2.1.point_shadows_depth.gs"));
-  light_box_shader_.reset(new Shader("8.1.deferred_light_box.vs",
-				     "8.1.deferred_light_box.fs"));
+                                 "3.2.1.point_shadows_depth.fs",
+                                 "3.2.1.point_shadows_depth.gs"));
+  light_box_shader_.reset(
+      new Shader("8.1.deferred_light_box.vs", "8.1.deferred_light_box.fs"));
 
   glGenFramebuffers(1, &depthMapFBO);
   glGenTextures(1, &depthCubemap);
   glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
   for (unsigned int i = 0; i < 6; ++i) {
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-		 GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT,
-		 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+                 SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
+                 NULL);
   }
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -103,14 +103,14 @@ GLFWwindow* PointShadowsRtRenderer::OpenWindow(const std::string& window_name) {
   shader_->use();
   shader_->setInt("diffuseTexture", 0);
   shader_->setInt("depthMap", 1);
-  
+
   return window_;
 }
 
 void PointShadowsRtRenderer::AddModel(const std::string& file_path,
-				      glm::mat4 model_matrix) {
-  models_.push_back(std::unique_ptr<Model>(
-		      new Model(FileSystem::getPath(file_path))));
+                                      glm::mat4 model_matrix) {
+  models_.push_back(
+      std::unique_ptr<Model>(new Model(FileSystem::getPath(file_path))));
   model_matrices_.push_back(model_matrix);
 }
 
@@ -124,46 +124,41 @@ void PointShadowsRtRenderer::Render() {
   processInput(deltaTime);
 
   // move light position over time
-  if(!pause_) {
+  if (!pause_) {
     lightPos.x = cos(glfwGetTime() * 0.25) * 2;
     lightPos.z = sin(glfwGetTime() * 0.25) * 2;
   }
-  
+
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   float near_plane = 0.1f;
-  float far_plane  = 25.0f;
-  glm::mat4 shadowProj =
-    glm::perspective(glm::radians(90.0f),
-		     (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT,
-		     near_plane,
-		     far_plane);
+  float far_plane = 25.0f;
+  glm::mat4 shadowProj = glm::perspective(
+      glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT,
+      near_plane, far_plane);
   std::vector<glm::mat4> shadowTransforms;
-  shadowTransforms.push_back(shadowProj *
-			     glm::lookAt(lightPos,
-					 lightPos + glm::vec3( 1.0f,  0.0f,  0.0f),
-					 glm::vec3(0.0f, -1.0f,  0.0f)));
-  shadowTransforms.push_back(shadowProj *
-			     glm::lookAt(lightPos,
-					 lightPos + glm::vec3(-1.0f,  0.0f,  0.0f),
-					 glm::vec3(0.0f, -1.0f,  0.0f)));
-  shadowTransforms.push_back(shadowProj *
-			     glm::lookAt(lightPos,
-					 lightPos + glm::vec3( 0.0f,  1.0f,  0.0f),
-					 glm::vec3(0.0f,  0.0f,  1.0f)));
-  shadowTransforms.push_back(shadowProj *
-			     glm::lookAt(lightPos,
-					 lightPos + glm::vec3( 0.0f, -1.0f,  0.0f),
-					 glm::vec3(0.0f,  0.0f, -1.0f)));
-  shadowTransforms.push_back(shadowProj *
-			     glm::lookAt(lightPos,
-					 lightPos + glm::vec3( 0.0f,  0.0f,  1.0f),
-					 glm::vec3(0.0f, -1.0f,  0.0f)));
-  shadowTransforms.push_back(shadowProj *
-			     glm::lookAt(lightPos,
-					 lightPos + glm::vec3( 0.0f,  0.0f, -1.0f),
-					 glm::vec3(0.0f, -1.0f,  0.0f)));
+  shadowTransforms.push_back(
+      shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f),
+                               glm::vec3(0.0f, -1.0f, 0.0f)));
+  shadowTransforms.push_back(
+      shadowProj * glm::lookAt(lightPos,
+                               lightPos + glm::vec3(-1.0f, 0.0f, 0.0f),
+                               glm::vec3(0.0f, -1.0f, 0.0f)));
+  shadowTransforms.push_back(
+      shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f),
+                               glm::vec3(0.0f, 0.0f, 1.0f)));
+  shadowTransforms.push_back(
+      shadowProj * glm::lookAt(lightPos,
+                               lightPos + glm::vec3(0.0f, -1.0f, 0.0f),
+                               glm::vec3(0.0f, 0.0f, -1.0f)));
+  shadowTransforms.push_back(
+      shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f),
+                               glm::vec3(0.0f, -1.0f, 0.0f)));
+  shadowTransforms.push_back(
+      shadowProj * glm::lookAt(lightPos,
+                               lightPos + glm::vec3(0.0f, 0.0f, -1.0f),
+                               glm::vec3(0.0f, -1.0f, 0.0f)));
 
   // 1. render scene to depth cubemap
   // --------------------------------
@@ -172,12 +167,13 @@ void PointShadowsRtRenderer::Render() {
   glClear(GL_DEPTH_BUFFER_BIT);
   depth_shader_->use();
   for (unsigned int i = 0; i < 6; ++i)
-    depth_shader_->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+    depth_shader_->setMat4("shadowMatrices[" + std::to_string(i) + "]",
+                           shadowTransforms[i]);
   depth_shader_->setFloat("far_plane", far_plane);
   depth_shader_->setVec3("lightPos", lightPos);
   {
     glm::mat4 model_mat;
-    for(int i = 0; i < models_.size(); i++) {
+    for (int i = 0; i < models_.size(); i++) {
       model_mat = model_matrices_[i];
       depth_shader_->setMat4("model", model_mat);
       models_[i]->Draw(shader_.get());
@@ -185,25 +181,28 @@ void PointShadowsRtRenderer::Render() {
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-  // 2. render scene as normal 
+  // 2. render scene as normal
   // -------------------------
   glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   shader_->use();
-  glm::mat4 projection = glm::perspective(glm::radians(camera_.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+  glm::mat4 projection =
+      glm::perspective(glm::radians(camera_.Zoom),
+                       (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
   glm::mat4 view = camera_.GetViewMatrix();
   shader_->setMat4("projection", projection);
   shader_->setMat4("view", view);
   // set lighting uniforms
   shader_->setVec3("lightPos", lightPos);
   shader_->setVec3("viewPos", camera_.Position);
-  shader_->setInt("shadows", true); // enable/disable shadows by pressing 'SPACE'
+  shader_->setInt("shadows",
+                  true);  // enable/disable shadows by pressing 'SPACE'
   shader_->setFloat("far_plane", far_plane);
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
   {
     glm::mat4 model_mat;
-    for(int i = 0; i < models_.size(); i++) {
+    for (int i = 0; i < models_.size(); i++) {
       model_mat = model_matrices_[i];
       shader_->setMat4("model", model_mat);
       models_[i]->Draw(shader_.get());
@@ -221,7 +220,7 @@ void PointShadowsRtRenderer::Render() {
     light_box_shader_->setVec3("lightColor", glm::vec3(1.0f));
     RenderCube();
   }
-  
+
   glfwSwapBuffers(window_);
   glfwPollEvents();
 }

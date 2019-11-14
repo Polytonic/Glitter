@@ -6,26 +6,25 @@
 
 #include "glitter.hpp"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
-#include <learnopengl/filesystem.h>
-#include <learnopengl/shader.h>
 #include <learnopengl/camera.h>
+#include <learnopengl/filesystem.h>
 #include <learnopengl/model.h>
+#include <learnopengl/shader.h>
 #include <rt_renderer.hpp>
 
 class PointShadowsRtRenderer : public RtRenderer {
-public:
+ public:
   PointShadowsRtRenderer();
   GLFWwindow* OpenWindow(const std::string& window_name = "RT Render") override;
-  void AddModel(const std::string& file_path,
-		glm::mat4 model_matrix) override;
+  void AddModel(const std::string& file_path, glm::mat4 model_matrix) override;
   void Render() override;
 
-private:
+ private:
   void processInput(float deltaTime);
-  
+
   GLFWwindow* window_;
   std::unique_ptr<Shader> shader_;
   std::unique_ptr<Shader> depth_shader_;

@@ -5,14 +5,14 @@
 
 #include "glitter.hpp"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 class RtRenderer {
-public:
+ public:
   virtual GLFWwindow* OpenWindow(const std::string& window_name) = 0;
   virtual void AddModel(const std::string& file_path,
-			glm::mat4 model_matrix) = 0;
+                        glm::mat4 model_matrix) = 0;
   virtual void Render() = 0;
 };
 
