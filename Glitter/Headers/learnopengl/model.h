@@ -19,18 +19,20 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
 using namespace std;
 
-unsigned int TextureFromFile(const char* path, const string& directory,
-                             bool gamma = false);
+void BuildGlTexture(Texture* texture);
+Texture TextureFromFile(const char* path, const string& directory,
+			const string& typeName, bool gamma = false);
 
 class Model {
  public:
   /*  Model Data */
+  vector<Mesh> meshes;
   vector<Texture>
       textures_loaded;  // stores all the textures loaded so far, optimization
                         // to make sure textures aren't loaded more than once.
-  vector<Mesh> meshes;
   string directory;
   bool gammaCorrection;
 
@@ -206,10 +208,8 @@ class Model {
         }
       }
       if (!skip) {  // if texture hasn't been loaded already, load it
-        Texture texture;
-        texture.id = TextureFromFile(str.C_Str(), this->directory);
-        texture.type = typeName;
-        texture.path = str.C_Str();
+        Texture texture =
+	  TextureFromFile(str.C_Str(), this->directory, typeName);
         textures.push_back(texture);
         textures_loaded.push_back(
             texture);  // store it as texture loaded for entire model, to ensure

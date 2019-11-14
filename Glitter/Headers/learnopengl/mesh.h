@@ -29,9 +29,13 @@ struct Vertex {
 };
 
 struct Texture {
-  unsigned int id;
+  unsigned int id = 0;
   string type;
   string path;
+  int width = 0;
+  int height = 0;
+  int num_components = 0;
+  unsigned char* data = nullptr;
 };
 
 class Mesh {

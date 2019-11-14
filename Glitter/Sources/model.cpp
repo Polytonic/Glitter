@@ -1,7 +1,41 @@
 #include <learnopengl/model.h>
 
-unsigned int TextureFromFile(const char* path, const string& directory,
-                             bool gamma) {
+void BuildGlTexture(Texture* texture) {
+  unsigned int textureID;
+  glGenTextures(1, &textureID);
+  texture->id = textureID;
+  GLenum format;
+  switch (texture->num_components) {
+    case 1:
+      format = GL_RED;
+      break;
+    case 3:
+      format = GL_RGB;
+      break;
+    case 4:
+      format = GL_RGBA;
+      break;
+    default:
+      std::cerr << "Unexpected number of components " << texture->num_components
+                << " in texture from " << texture->path << std::endl;
+      exit(-1);
+      break;
+  }
+
+  glBindTexture(GL_TEXTURE_2D, textureID);
+  glTexImage2D(GL_TEXTURE_2D, 0, format, texture->width, texture->height, 0,
+               format, GL_UNSIGNED_BYTE, texture->data);
+  glGenerateMipmap(GL_TEXTURE_2D);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                  GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+Texture TextureFromFile(const char* path, const string& directory,
+                        const string& typeName, bool gamma) {
   const char kPathSeparator =
 #ifdef _WIN32
       '\\';
@@ -16,37 +50,20 @@ unsigned int TextureFromFile(const char* path, const string& directory,
   std::replace(filename.begin(), filename.end(), '\\', '/');
 #endif
 
-  unsigned int textureID;
-  glGenTextures(1, &textureID);
+  Texture texture;
+  texture.type = typeName;
+  texture.path = path;
 
-  int width, height, nrComponents;
-  unsigned char* data =
-      stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+  unsigned char* data = stbi_load(filename.c_str(), &texture.width,
+                                  &texture.height, &texture.num_components, 0);
   if (data) {
-    GLenum format;
-    if (nrComponents == 1)
-      format = GL_RED;
-    else if (nrComponents == 3)
-      format = GL_RGB;
-    else if (nrComponents == 4)
-      format = GL_RGBA;
-
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
-                 GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    stbi_image_free(data);
+    texture.data = data;
+    BuildGlTexture(&texture);
   } else {
-    std::cout << "Texture failed to load at path: " << path << std::endl;
+    std::cerr << "Texture failed to load at path: " << path << std::endl;
     stbi_image_free(data);
+    exit(-1);
   }
 
-  return textureID;
+  return texture;
 }
