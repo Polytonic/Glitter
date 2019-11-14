@@ -53,17 +53,6 @@ int main() {
     renderer->AddModel(file_path, model_mat);
     }*/
   {
-    Texture box_tex = TextureFromFile(
-      "back.jpg",
-      "/home/jalexander/git/RoboRender/resources/objects/nanosuit",
-      "texture_diffuse");
-    std::unique_ptr<Model> box_model = BuildBoxModel(box_tex);
-    glm::mat4 model_mat = glm::mat4(1.0f);
-    model_mat = glm::scale(
-      model_mat, glm::vec3(0.5f, 0.5f, 0.5f));
-    renderer->AddModel(std::move(box_model), model_mat);
-  }
-  {
     std::string objects_dir = "resources/objects/";
     std::string model_dir = "sponza";
     std::string object_file = model_dir;
@@ -80,9 +69,21 @@ int main() {
         model_mat, glm::vec3(0.005f, 0.005f, 0.005f));  // scale sponza model
     renderer->AddModel(file_path, model_mat);
   }
+  {
+    Texture box_tex = TextureFromFile(
+      "lion.png",
+      "C:/Users/jalex/git/RoboRender/resources/objects/sponza/textures",
+      "texture_diffuse");
+    std::unique_ptr<Model> box_model = BuildBoxModel(box_tex);
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    model_mat = glm::scale(
+      model_mat, glm::vec3(0.5f, 0.5f, 0.5f));
+    renderer->AddModel(std::move(box_model), model_mat);
+  }
 
   // render loop
   // -----------
+  std::cerr << "Starting rendering" << std::endl;
   while (!glfwWindowShouldClose(window)) {
     renderer->Render();
   }
