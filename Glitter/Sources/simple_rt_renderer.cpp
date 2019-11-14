@@ -80,6 +80,12 @@ void SimpleRtRenderer::AddModel(const std::string& file_path,
   model_matrices_.push_back(model_matrix);
 }
 
+void SimpleRtRenderer::AddModel(std::unique_ptr<Model> model,
+                                      glm::mat4 model_matrix) {
+  models_.push_back(std::move(model));
+  model_matrices_.push_back(model_matrix);
+}
+
 void SimpleRtRenderer::Render() {
   glfwMakeContextCurrent(window_);
 

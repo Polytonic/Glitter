@@ -15,6 +15,7 @@
 #include <point_shadows_rt_renderer.hpp>
 #include <rt_renderer.hpp>
 #include <simple_rt_renderer.hpp>
+#include <box_builder.hpp>
 
 #include <iostream>
 
@@ -30,23 +31,11 @@ int main() {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-  std::unique_ptr<RtRenderer> renderer(new PointShadowsRtRenderer());
-  // std::unique_ptr<RtRenderer> renderer(new SimpleRtRenderer());
+  // std::unique_ptr<RtRenderer> renderer(new PointShadowsRtRenderer());
+  std::unique_ptr<RtRenderer> renderer(new SimpleRtRenderer());
   GLFWwindow* window = renderer->OpenWindow("RT Render");
-
-  // load models
-  // -----------
-  /*  {
-      std::string objects_dir = "resources/objects/";
-      std::string model_dir = "lost_empire";
-      std::string object_file = model_dir;
-      std::string file_type = ".obj";
-      std::string file_path;
-      file_path.append(objects_dir).append(model_dir).append("/")
-        .append(object_file).append(file_type);
-      renderer->AddModel(file_path);
-      }*/
-  {
+  
+  /*{
     std::string objects_dir = "resources/objects/";
     std::string model_dir = "nanosuit";
     std::string object_file = model_dir;
@@ -62,6 +51,17 @@ int main() {
     model_mat = glm::scale(
         model_mat, glm::vec3(0.1f, 0.1f, 0.1f));  // scale nanosuit model
     renderer->AddModel(file_path, model_mat);
+    }*/
+  {
+    Texture box_tex = TextureFromFile(
+      "back.jpg",
+      "/home/jalexander/git/RoboRender/resources/objects/nanosuit",
+      "texture_diffuse");
+    std::unique_ptr<Model> box_model = BuildBoxModel(box_tex);
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    model_mat = glm::scale(
+      model_mat, glm::vec3(0.5f, 0.5f, 0.5f));
+    renderer->AddModel(std::move(box_model), model_mat);
   }
   {
     std::string objects_dir = "resources/objects/";

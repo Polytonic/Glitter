@@ -20,6 +20,7 @@ class SimpleRtRenderer : public RtRenderer {
   SimpleRtRenderer();
   GLFWwindow* OpenWindow(const std::string& window_name = "RT Render") override;
   void AddModel(const std::string& file_path, glm::mat4 model_matrix) override;
+  void AddModel(std::unique_ptr<Model> model, glm::mat4 model_matrix) override;
   void Render() override;
 
  private:
