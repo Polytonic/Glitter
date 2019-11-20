@@ -1,5 +1,5 @@
-#ifndef BOX_BUILDER_HPP
-#define BOX_BUILDER_HPP
+#ifndef ELEMENTARY_MODELS_HPP
+#define ELEMENTARY_MODELS_HPP
 
 #include <memory>
 

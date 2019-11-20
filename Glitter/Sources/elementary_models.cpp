@@ -1,6 +1,8 @@
-#include "box_builder.hpp"
+#include "elementary_models.hpp"
 
 #include <vector>
+
+#include "glitter.hpp"
 
 namespace {
 
@@ -80,7 +82,7 @@ std::vector<Vertex> GetCubeVertices() {
                    {0.0f, 1.0f},
                    glm::vec3(),
                    glm::vec3()});  // bottom-left
-    verts.push_back({{1.0f, -1.0f, -1.0f},
+  verts.push_back({{1.0f, -1.0f, -1.0f},
                    {1.0f, 0.0f, 0.0f},
                    {1.0f, 1.0f},
                    glm::vec3(),

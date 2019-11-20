@@ -16,7 +16,7 @@ class RtRenderer {
   virtual void AddModel(const std::string& file_path,
                         glm::mat4 model_matrix) = 0;
   virtual void AddModel(std::unique_ptr<Model> model,
-			glm::mat4 model_matrix) = 0;
+                        glm::mat4 model_matrix) = 0;
   virtual void Render() = 0;
 };
 

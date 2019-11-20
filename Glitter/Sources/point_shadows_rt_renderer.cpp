@@ -12,7 +12,7 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-Camera camera_(glm::vec3(0.5f, 0.5f, 0.5f));
+Camera camera_(glm::vec3(0.0f, 0.0f, 2.0f));
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
   // make sure the viewport matches the new window dimensions; note that width
@@ -70,6 +70,7 @@ GLFWwindow* PointShadowsRtRenderer::OpenWindow(const std::string& window_name) {
   // configure global opengl state
   // -----------------------------
   glEnable(GL_DEPTH_TEST);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   // build and compile shaders
   // -------------------------
@@ -131,8 +132,8 @@ void PointShadowsRtRenderer::Render() {
 
   // move light position over time
   if (!pause_) {
-    lightPos.x = cos(glfwGetTime() * 0.25) * 2;
-    lightPos.z = sin(glfwGetTime() * 0.25) * 2;
+    lightPos.x = cos(glfwGetTime() * 0.5) * 2;
+    lightPos.z = sin(glfwGetTime() * 0.5) * 2;
   }
 
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

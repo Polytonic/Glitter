@@ -24,7 +24,7 @@ using namespace std;
 
 void BuildGlTexture(Texture* texture);
 Texture TextureFromFile(const char* path, const string& directory,
-			const string& typeName, bool gamma = false);
+                        const string& typeName, bool gamma = false);
 
 class Model {
  public:
@@ -36,9 +36,7 @@ class Model {
   string directory;
   bool gammaCorrection = false;
 
-  Model(std::vector<Mesh> meshes){
-    this->meshes = std::move(meshes);
-  }
+  Model(std::vector<Mesh> meshes) { this->meshes = std::move(meshes); }
 
   /*  Functions   */
   // constructor, expects a filepath to a 3D model.
@@ -213,7 +211,7 @@ class Model {
       }
       if (!skip) {  // if texture hasn't been loaded already, load it
         Texture texture =
-	  TextureFromFile(str.C_Str(), this->directory, typeName);
+            TextureFromFile(str.C_Str(), this->directory, typeName);
         textures.push_back(texture);
         textures_loaded.push_back(
             texture);  // store it as texture loaded for entire model, to ensure

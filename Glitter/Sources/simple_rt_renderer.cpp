@@ -8,7 +8,7 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-Camera camera_(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera_(glm::vec3(0.0f, 0.0f, 2.0f));
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
   // make sure the viewport matches the new window dimensions; note that width
@@ -66,6 +66,7 @@ GLFWwindow* SimpleRtRenderer::OpenWindow(const std::string& window_name) {
   // configure global opengl state
   // -----------------------------
   glEnable(GL_DEPTH_TEST);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   // build and compile shaders
   // -------------------------
@@ -81,7 +82,7 @@ void SimpleRtRenderer::AddModel(const std::string& file_path,
 }
 
 void SimpleRtRenderer::AddModel(std::unique_ptr<Model> model,
-                                      glm::mat4 model_matrix) {
+                                glm::mat4 model_matrix) {
   models_.push_back(std::move(model));
   model_matrices_.push_back(model_matrix);
 }
