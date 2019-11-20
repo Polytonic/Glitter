@@ -1,6 +1,8 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "iterable_mesh.hpp"
 
-#include <math.h>
 #include <iostream>
 
 #include "glm/gtx/transform.hpp"

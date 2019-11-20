@@ -1,3 +1,6 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 // Local Headers
 #include "glitter.hpp"
 
