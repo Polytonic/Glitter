@@ -7,6 +7,20 @@
 
 #include "glm/gtx/transform.hpp"
 
+IterableRectPlane::IterableRectPlane(float length, float width)
+    : length_(length), width_(width) {}
+
+ComputedVertex IterableRectPlane::GetVertex(float u, float v) {
+  ComputedVertex vertex;
+  vertex.position.x = (u * length_) - (length_ / 2.0f);
+  vertex.position.y = 0;
+  vertex.position.z = (v * width_) - (width_ / 2.0f);
+  vertex.normal.x = 0;
+  vertex.normal.y = 1;
+  vertex.normal.z = 0;
+  return vertex;
+}
+
 IterableCylinder::IterableCylinder(float height, float radius)
     : height_(height), radius_(radius) {}
 

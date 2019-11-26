@@ -11,6 +11,20 @@ struct ComputedVertex {
 class IterableMesh {
  public:
   virtual ComputedVertex GetVertex(float u, float v) = 0;
+  virtual bool IsClosed() = 0;
+};
+
+class IterableRectPlane : public IterableMesh {
+ public:
+  IterableRectPlane(float length, float width);
+
+  ComputedVertex GetVertex(float u, float v) override;
+
+  bool IsClosed() override { return false; }
+
+ private:
+  float length_;
+  float width_;
 };
 
 class IterableCylinder : public IterableMesh {
@@ -18,6 +32,8 @@ class IterableCylinder : public IterableMesh {
   IterableCylinder(float height, float radius);
 
   ComputedVertex GetVertex(float u, float v) override;
+
+  bool IsClosed() override { return true; }
 
  private:
   float height_;
@@ -30,6 +46,8 @@ class IterableSphere : public IterableMesh {
 
   ComputedVertex GetVertex(float u, float v) override;
 
+  bool IsClosed() override { return true; }
+
  private:
   float radius_;
 };
@@ -41,6 +59,8 @@ class IterableHelix : public IterableMesh {
                 float loops_per_unit);
 
   ComputedVertex GetVertex(float u, float v) override;
+
+  bool IsClosed() override { return true; }
 
  private:
   float helix_radius_;

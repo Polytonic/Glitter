@@ -71,6 +71,7 @@ GLFWwindow* PointShadowsRtRenderer::OpenWindow(const std::string& window_name) {
   // -----------------------------
   glEnable(GL_DEPTH_TEST);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   // build and compile shaders
   // -------------------------
