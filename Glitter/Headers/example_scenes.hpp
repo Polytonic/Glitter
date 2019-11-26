@@ -1,6 +1,9 @@
 #ifndef EXAMPLE_SCENES_HPP
 #define EXAMPLE_SCENES_HPP
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include <functional>
 #include <memory>
 #include <random>

@@ -3,6 +3,9 @@
 #define GLITTER
 #pragma once
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 // System Headers
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
