@@ -8,7 +8,6 @@
 namespace {
 
 constexpr float kInitVal = 1000.0f;
-
 }
 
 FractalNoiseGenerator::FractalNoiseGenerator(
@@ -87,15 +86,14 @@ void FractalNoiseGenerator::InitArea(int x_min, int y_min, int x_max, int y_max,
 
 float FractalNoiseGenerator::GetRandDisplacement(int iteration) {
   float min, max;
-  if(iteration == 0){
+  if (iteration == 0) {
     min = peak_min_height_;
     max = peak_max_height_;
-  }else{
-  iteration -= 1;
-  iteration = std::max(iteration, 0);
-  min =
-      -1.0f * ((peak_max_height_ - peak_min_height_) / (1 << iteration));
-  max = (peak_max_height_ - peak_min_height_) / (1 << iteration);
+  } else {
+    iteration -= 1;
+    iteration = std::max(iteration, 0);
+    min = -1.0f * ((peak_max_height_ - peak_min_height_) / (1 << iteration));
+    max = (peak_max_height_ - peak_min_height_) / (1 << iteration);
   }
   std::uniform_real_distribution<float> dist(min, max);
   return dist(*random_gen_);
