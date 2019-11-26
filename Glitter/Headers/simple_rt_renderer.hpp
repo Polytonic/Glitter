@@ -22,6 +22,7 @@ class SimpleRtRenderer : public RtRenderer {
   void AddModel(const std::string& file_path, glm::mat4 model_matrix) override;
   void AddModel(std::unique_ptr<Model> model, glm::mat4 model_matrix) override;
   void Render() override;
+  bool WindowShouldClose() override;
 
  private:
   void processInput(float deltaTime);

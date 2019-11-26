@@ -233,6 +233,10 @@ void PointShadowsRtRenderer::Render() {
   glfwPollEvents();
 }
 
+bool PointShadowsRtRenderer::WindowShouldClose() {
+  return glfwWindowShouldClose(window_);
+}
+
 void PointShadowsRtRenderer::processInput(float deltaTime) {
   if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window_, true);

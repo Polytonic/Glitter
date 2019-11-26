@@ -120,6 +120,10 @@ void SimpleRtRenderer::Render() {
   glfwPollEvents();
 }
 
+bool SimpleRtRenderer::WindowShouldClose() {
+  return glfwWindowShouldClose(window_);
+}
+
 void SimpleRtRenderer::processInput(float deltaTime) {
   if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window_, true);

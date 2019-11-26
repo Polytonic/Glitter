@@ -18,6 +18,7 @@ class RtRenderer {
   virtual void AddModel(std::unique_ptr<Model> model,
                         glm::mat4 model_matrix) = 0;
   virtual void Render() = 0;
+  virtual bool WindowShouldClose() = 0;
 };
 
 #endif
