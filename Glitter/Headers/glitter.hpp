@@ -24,4 +24,12 @@
 const int mWidth = 1280;
 const int mHeight = 800;
 
+typedef glm::dvec2 DVec2;
+typedef glm::dvec3 DVec3;
+typedef glm::dvec4 DVec4;
+
+typedef glm::dmat2 DMat2;
+typedef glm::dmat3 DMat3;
+typedef glm::dmat4 DMat4;
+
 #endif  //~ Glitter Header
