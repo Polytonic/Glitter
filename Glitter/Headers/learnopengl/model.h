@@ -10,8 +10,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <learnopengl/mesh.h>
-#include <learnopengl/shader.h>
+#include "learnopengl/mesh.h"
+#include "learnopengl/shader.h"
+#include "renderable.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -26,7 +27,7 @@ void BuildGlTexture(Texture* texture);
 Texture TextureFromFile(const char* path, const string& directory,
                         const string& typeName, bool gamma = false);
 
-class Model {
+class Model : public Renderable {
  public:
   /*  Model Data */
   vector<Mesh> meshes;
@@ -45,8 +46,8 @@ class Model {
   }
 
   // draws the model, and thus all its meshes
-  void Draw(Shader* shader) {
-    for (unsigned int i = 0; i < meshes.size(); i++) meshes[i].Draw(shader);
+  void Draw(ShaderSet shaders) override {
+    for (unsigned int i = 0; i < meshes.size(); i++) meshes[i].Draw(shaders);
   }
 
  private:

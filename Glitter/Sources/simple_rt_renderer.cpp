@@ -113,7 +113,7 @@ void SimpleRtRenderer::Render() {
   for (int i = 0; i < models_.size(); i++) {
     model_mat = model_matrices_[i];
     shader_->setMat4("model", model_mat);
-    models_[i]->Draw(shader_.get());
+    models_[i]->Draw({shader_.get()});
   }
 
   glfwSwapBuffers(window_);

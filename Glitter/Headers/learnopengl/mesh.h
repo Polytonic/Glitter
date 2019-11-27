@@ -6,7 +6,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <learnopengl/shader.h>
+#include "learnopengl/shader.h"
+#include "renderable.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -38,7 +39,7 @@ struct Texture {
   unsigned char* data = nullptr;
 };
 
-class Mesh {
+class Mesh : public Renderable {
  public:
   /*  Mesh Data  */
   vector<Vertex> vertices;
@@ -60,7 +61,7 @@ class Mesh {
   }
 
   // render the mesh
-  void Draw(Shader* shader) {
+  void Draw(ShaderSet shaders) override {
     // bind appropriate textures
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -83,7 +84,7 @@ class Mesh {
         number = std::to_string(heightNr++);  // transfer unsigned int to stream
 
       // now set the sampler to the correct texture unit
-      glUniform1i(glGetUniformLocation(shader->ID, (name + number).c_str()), i);
+      glUniform1i(glGetUniformLocation(shaders.texture_shader->ID, (name + number).c_str()), i);
       // and finally bind the texture
       glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
