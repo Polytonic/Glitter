@@ -11,14 +11,14 @@ std::string InterParam::DebugString() const {
   return stream.str();
 }
 
-float InterpolateValue(float x1, float x2, float v1, float v2, float x) {
+double InterpolateValue(double x1, double x2, double v1, double v2, double x) {
   if (x1 == x2) {
     return (v1 + v2) / 2.0f;
   }
   return (((x2 - x) / (x2 - x1)) * v1) + (((x - x1) / (x2 - x1)) * v2);
 }
 
-float InterpolateValue(InterParam known, glm::vec2 point) {
+double InterpolateValue(InterParam known, DVec2 point) {
   if (known.x1 == known.x2 && known.y1 == known.y2) {
     return (known.v11 + known.v12 + known.v21 + known.v22) / 4.0f;
   }
@@ -30,10 +30,10 @@ float InterpolateValue(InterParam known, glm::vec2 point) {
     return InterpolateValue(known.x1, known.x2, (known.v11 + known.v12) / 2.0f,
                             (known.v21 + known.v22) / 2.0f, point.x);
   }
-  float inv = 1.0f / ((known.x2 - known.x1) * (known.y2 - known.y1));
-  glm::vec2 x_vec = {known.x2 - point.x, point.x - known.x1};
-  glm::vec2 y_vec = {known.y2 - point.y, point.y - known.y1};
+  double inv = 1.0f / ((known.x2 - known.x1) * (known.y2 - known.y1));
+  DVec2 x_vec = {known.x2 - point.x, point.x - known.x1};
+  DVec2 y_vec = {known.y2 - point.y, point.y - known.y1};
   // glm uses column-first order.
-  glm::mat2 val_mat(known.v11, known.v21, known.v12, known.v22);
+  DMat2 val_mat(known.v11, known.v21, known.v12, known.v22);
   return inv * glm::dot(x_vec, val_mat * y_vec);
 }

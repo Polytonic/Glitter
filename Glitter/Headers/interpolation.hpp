@@ -4,20 +4,20 @@
 #include "glitter.hpp"
 
 struct InterParam {
-  float x1;
-  float y1;
-  float x2;
-  float y2;
-  float v11;
-  float v12;
-  float v21;
-  float v22;
+  double x1;
+  double y1;
+  double x2;
+  double y2;
+  double v11;
+  double v12;
+  double v21;
+  double v22;
 
   std::string DebugString() const;
 };
 
-float InterpolateValue(float x1, float x2, float v1, float v2, float x);
+double InterpolateValue(double x1, double x2, double v1, double v2, double x);
 
-float InterpolateValue(InterParam known, glm::vec2 point);
+double InterpolateValue(InterParam known, DVec2 point);
 
 #endif

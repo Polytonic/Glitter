@@ -12,13 +12,13 @@ MeshVertices BasicMeshIterator::GetMesh() {
     exit(-1);
   }
   MeshVertices mesh;
-  float u_step = 1.0f / u_texels_;
-  float v_step = 1.0f / v_texels_;
+  double u_step = 1.0 / u_texels_;
+  double v_step = 1.0 / v_texels_;
   for (unsigned int u_ind = 0;
        is_closed_ ? u_ind < u_texels_ : u_ind <= u_texels_; u_ind++) {
-    float u = u_ind * u_step;
+    double u = u_ind * u_step;
     for (unsigned int v_ind = 0; v_ind <= v_texels_; v_ind++) {
-      float v = v_ind * v_step;
+      double v = v_ind * v_step;
       Vertex new_vert;
       ComputedVertex comp_vert = iterable_model_->GetVertex(u, v);
       new_vert.Position = comp_vert.position;
@@ -57,7 +57,7 @@ MeshVertices BasicMeshIterator::GetMesh() {
 
 MutationMeshIterator::MutationMeshIterator(
     unsigned int u_texels, unsigned int v_texels,
-    std::shared_ptr<MutationGenerator> generator, float epsilon)
+    std::shared_ptr<MutationGenerator> generator, double epsilon)
     : u_texels_(u_texels),
       v_texels_(v_texels),
       generator_(std::move(generator)),
@@ -69,13 +69,13 @@ MeshVertices MutationMeshIterator::GetMesh() {
     exit(-1);
   }
   MeshVertices mesh;
-  float u_step = 1.0f / u_texels_;
-  float v_step = 1.0f / v_texels_;
+  double u_step = 1.0 / u_texels_;
+  double v_step = 1.0 / v_texels_;
   for (unsigned int u_ind = 0;
        is_closed_ ? u_ind < u_texels_ : u_ind <= u_texels_; u_ind++) {
-    float u = u_ind * u_step;
+    double u = u_ind * u_step;
     for (unsigned int v_ind = 0; v_ind <= v_texels_; v_ind++) {
-      float v = v_ind * v_step;
+      double v = v_ind * v_step;
       Vertex new_vert;
       new_vert.Position = GetMeshPos(u, v);
       new_vert.Normal = GetMeshNorm(u, v);
@@ -111,18 +111,18 @@ MeshVertices MutationMeshIterator::GetMesh() {
   return mesh;
 }
 
-glm::vec3 MutationMeshIterator::GetMeshPos(float u, float v) {
+DVec3 MutationMeshIterator::GetMeshPos(double u, double v) {
   ComputedVertex comp_vert = iterable_model_->GetVertex(u, v);
   return comp_vert.position + comp_vert.normal * generator_->GetMutation(u, v);
 }
 
-glm::vec3 MutationMeshIterator::GetMeshNorm(float u, float v) {
-  glm::vec3 x_forward = GetMeshPos(u + epsilon_, v);
-  glm::vec3 x_back = GetMeshPos(u - epsilon_, v);
-  glm::vec3 y_forward = GetMeshPos(u, v + epsilon_);
-  glm::vec3 y_back = GetMeshPos(u, v - epsilon_);
-  glm::vec3 x_diff = x_forward - x_back;
-  glm::vec3 y_diff = y_forward - y_back;
-  glm::vec3 norm = glm::cross(y_diff, x_diff);
+DVec3 MutationMeshIterator::GetMeshNorm(double u, double v) {
+  DVec3 x_forward = GetMeshPos(u + epsilon_, v);
+  DVec3 x_back = GetMeshPos(u - epsilon_, v);
+  DVec3 y_forward = GetMeshPos(u, v + epsilon_);
+  DVec3 y_back = GetMeshPos(u, v - epsilon_);
+  DVec3 x_diff = x_forward - x_back;
+  DVec3 y_diff = y_forward - y_back;
+  DVec3 norm = glm::cross(y_diff, x_diff);
   return glm::normalize(norm);
 }

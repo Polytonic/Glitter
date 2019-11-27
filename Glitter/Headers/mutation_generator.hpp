@@ -8,28 +8,28 @@
 
 class MutationGenerator {
  public:
-  virtual float GetMutation(float u, float v) = 0;
+  virtual double GetMutation(double u, double v) = 0;
 };
 
 class FractalNoiseGenerator : public MutationGenerator {
  public:
   // Note, not the actual max height!
   FractalNoiseGenerator(std::default_random_engine* random_gen, int iterations,
-                        float peak_min_height, float peak_max_height);
-  float GetMutation(float u, float v) override;
+                        double peak_min_height, double peak_max_height);
+  double GetMutation(double u, double v) override;
 
  private:
   void InitArea(int x_down, int y_down, int x_up, int y_up, int iteration);
-  float GetRandDisplacement(int iteration);
+  double GetRandDisplacement(int iteration);
 
   // Constructor parameters.
   std::default_random_engine* random_gen_;
   int iterations_;
   int num_points_;
-  float peak_min_height_;
-  float peak_max_height_;
+  double peak_min_height_;
+  double peak_max_height_;
 
-  std::vector<std::vector<float>> data_;
+  std::vector<std::vector<double>> data_;
 };
 
 #endif

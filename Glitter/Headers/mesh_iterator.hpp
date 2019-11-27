@@ -42,18 +42,18 @@ class MutationMeshIterator : public MeshIterator {
  public:
   MutationMeshIterator(unsigned int u_texels, unsigned int v_texels,
                        std::shared_ptr<MutationGenerator> generator,
-                       float epsilon = 1e-6);
+                       double epsilon = 1e-10);
 
   MeshVertices GetMesh() override;
 
  private:
-  glm::vec3 GetMeshPos(float u, float v);
-  glm::vec3 GetMeshNorm(float u, float v);
+  DVec3 GetMeshPos(double u, double v);
+  DVec3 GetMeshNorm(double u, double v);
 
   unsigned int u_texels_;
   unsigned int v_texels_;
   std::shared_ptr<MutationGenerator> generator_;
-  float epsilon_;
+  double epsilon_;
 };
 
 #endif

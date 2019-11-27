@@ -4,69 +4,69 @@
 #include "glitter.hpp"
 
 struct ComputedVertex {
-  glm::vec3 position = glm::vec3(0);
-  glm::vec3 normal = glm::vec3(0);
+  DVec3 position = DVec3(0);
+  DVec3 normal = DVec3(0);
 };
 
 class IterableMesh {
  public:
-  virtual ComputedVertex GetVertex(float u, float v) = 0;
+  virtual ComputedVertex GetVertex(double u, double v) = 0;
   virtual bool IsClosed() = 0;
 };
 
 class IterableRectPlane : public IterableMesh {
  public:
-  IterableRectPlane(float length, float width);
+  IterableRectPlane(double length, double width);
 
-  ComputedVertex GetVertex(float u, float v) override;
+  ComputedVertex GetVertex(double u, double v) override;
 
   bool IsClosed() override { return false; }
 
  private:
-  float length_;
-  float width_;
+  double length_;
+  double width_;
 };
 
 class IterableCylinder : public IterableMesh {
  public:
-  IterableCylinder(float height, float radius);
+  IterableCylinder(double height, double radius);
 
-  ComputedVertex GetVertex(float u, float v) override;
+  ComputedVertex GetVertex(double u, double v) override;
 
   bool IsClosed() override { return true; }
 
  private:
-  float height_;
-  float radius_;
+  double height_;
+  double radius_;
 };
 
 class IterableSphere : public IterableMesh {
  public:
-  IterableSphere(float radius);
+  IterableSphere(double radius);
 
-  ComputedVertex GetVertex(float u, float v) override;
+  ComputedVertex GetVertex(double u, double v) override;
 
   bool IsClosed() override { return true; }
 
  private:
-  float radius_;
+  double radius_;
 };
 
 // Will have 2 * loops_per_unit loops.
 class IterableHelix : public IterableMesh {
  public:
-  IterableHelix(float helix_radius, float helix_height, float fiber_radius,
-                float loops_per_unit);
+  IterableHelix(double helix_radius, double helix_height, double fiber_radius,
+                double loops_per_unit);
 
-  ComputedVertex GetVertex(float u, float v) override;
+  ComputedVertex GetVertex(double u, double v) override;
 
   bool IsClosed() override { return true; }
 
  private:
-  float helix_radius_;
-  float helix_height_;
-  float fiber_radius_;
-  float loops_per_unit_;
+  double helix_radius_;
+  double helix_height_;
+  double fiber_radius_;
+  double loops_per_unit_;
 };
 
 #endif
