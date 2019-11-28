@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
+#include "dynamic_renderable.hpp"
 #include "renderable.hpp"
 
 class RtRenderer {
@@ -17,6 +18,7 @@ class RtRenderer {
                         glm::mat4 model_matrix) = 0;
   virtual void AddModel(std::unique_ptr<Renderable> model,
                         glm::mat4 model_matrix) = 0;
+  virtual void AddDynamicModel(std::unique_ptr<DynamicRenderable> model) = 0;
   virtual void Render() = 0;
   virtual bool WindowShouldClose() = 0;
 };

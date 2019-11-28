@@ -42,7 +42,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 SimpleRtRenderer::SimpleRtRenderer() {}
 
 GLFWwindow* SimpleRtRenderer::OpenWindow(const std::string& window_name) {
-  window_ = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+  window_ = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, window_name.c_str(), NULL, NULL);
   if (window_ == NULL) {
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
@@ -85,6 +85,11 @@ void SimpleRtRenderer::AddModel(std::unique_ptr<Renderable> model,
                                 glm::mat4 model_matrix) {
   models_.push_back(std::move(model));
   model_matrices_.push_back(model_matrix);
+}
+
+void SimpleRtRenderer::AddDynamicModel(std::unique_ptr<DynamicRenderable> model) {
+  models_.push_back(std::move(model));
+  model_matrices_.push_back(model->GetModelMatrix());
 }
 
 void SimpleRtRenderer::Render() {

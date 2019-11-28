@@ -1,8 +1,14 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <glad/glad.h>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
+#include <glad/glad.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <stb_image.h>
@@ -13,13 +19,6 @@
 #include "learnopengl/mesh.h"
 #include "learnopengl/shader.h"
 #include "renderable.hpp"
-
-#include <fstream>
-#include <iostream>
-#include <map>
-#include <sstream>
-#include <string>
-#include <vector>
 
 using namespace std;
 
