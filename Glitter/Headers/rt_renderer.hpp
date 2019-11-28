@@ -8,14 +8,14 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include <learnopengl/model.h>
+#include "renderable.hpp"
 
 class RtRenderer {
  public:
   virtual GLFWwindow* OpenWindow(const std::string& window_name) = 0;
   virtual void AddModel(const std::string& file_path,
                         glm::mat4 model_matrix) = 0;
-  virtual void AddModel(std::unique_ptr<Model> model,
+  virtual void AddModel(std::unique_ptr<Renderable> model,
                         glm::mat4 model_matrix) = 0;
   virtual void Render() = 0;
   virtual bool WindowShouldClose() = 0;

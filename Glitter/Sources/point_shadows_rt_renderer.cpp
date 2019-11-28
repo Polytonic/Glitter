@@ -116,7 +116,7 @@ void PointShadowsRtRenderer::AddModel(const std::string& file_path,
   model_matrices_.push_back(model_matrix);
 }
 
-void PointShadowsRtRenderer::AddModel(std::unique_ptr<Model> model,
+void PointShadowsRtRenderer::AddModel(std::unique_ptr<Renderable> model,
                                       glm::mat4 model_matrix) {
   models_.push_back(std::move(model));
   model_matrices_.push_back(model_matrix);
