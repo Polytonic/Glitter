@@ -187,9 +187,7 @@ void PointShadowsRtRenderer::Render() {
   {
     glm::mat4 model_mat;
     for (int i = 0; i < models_.size(); i++) {
-      model_mat = model_matrices_[i];
-      depth_shader_->setMat4("model", model_mat);
-      models_[i]->Draw({depth_shader_.get()});
+      models_[i]->Draw({depth_shader_.get()}, model_matrices_[i]);
     }
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -216,9 +214,7 @@ void PointShadowsRtRenderer::Render() {
   {
     glm::mat4 model_mat;
     for (int i = 0; i < models_.size(); i++) {
-      model_mat = model_matrices_[i];
-      shader_->setMat4("model", model_mat);
-      models_[i]->Draw({shader_.get()});
+      models_[i]->Draw({shader_.get()}, model_matrices_[i]);
     }
   }
 

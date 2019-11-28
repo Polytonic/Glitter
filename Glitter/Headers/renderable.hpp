@@ -9,7 +9,7 @@ struct ShaderSet {
 
 class Renderable {
 public:
-  virtual void Draw(ShaderSet shaders) = 0;
+  virtual void Draw(ShaderSet shaders, glm::mat4 model_mat) = 0;
 };
 
 #endif

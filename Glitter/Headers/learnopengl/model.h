@@ -45,8 +45,10 @@ class Model : public Renderable {
   }
 
   // draws the model, and thus all its meshes
-  void Draw(ShaderSet shaders) override {
-    for (unsigned int i = 0; i < meshes.size(); i++) meshes[i].Draw(shaders);
+  void Draw(ShaderSet shaders, glm::mat4 model_mat) override {
+    for (unsigned int i = 0; i < meshes.size(); i++){
+      meshes[i].Draw(shaders, model_mat);
+    }
   }
 
  private:

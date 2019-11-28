@@ -61,7 +61,7 @@ class Mesh : public Renderable {
   }
 
   // render the mesh
-  void Draw(ShaderSet shaders) override {
+  void Draw(ShaderSet shaders, glm::mat4 model_mat) override {
     // bind appropriate textures
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -89,6 +89,7 @@ class Mesh : public Renderable {
       glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
 
+    shaders.texture_shader->setMat4("model", model_mat);
     // draw mesh
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

@@ -185,13 +185,11 @@ void PointShadowsDynamicRenderer::Render() {
   depth_shader_->setVec3("lightPos", lightPos);
   {
     for (int i = 0; i < static_models_.size(); i++) {
-      depth_shader_->setMat4("model", static_model_matrices_[i]);
-      static_models_[i]->Draw({depth_shader_.get()});
+      static_models_[i]->Draw({depth_shader_.get()}, static_model_matrices_[i]);
     }
     for(const std::unique_ptr<DynamicRenderable>& model :
 	  dynamic_models_){
-      depth_shader_->setMat4("model", model->GetModelMatrix());
-      model->Draw({depth_shader_.get()});
+      model->Draw({depth_shader_.get()}, model->GetModelMatrix());
     }
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -218,13 +216,11 @@ void PointShadowsDynamicRenderer::Render() {
   {
     glm::mat4 model_mat;
     for (int i = 0; i < static_models_.size(); i++) {
-      shader_->setMat4("model", static_model_matrices_[i]);
-      static_models_[i]->Draw({shader_.get()});
+      static_models_[i]->Draw({shader_.get()}, static_model_matrices_[i]);
     }
     for(const std::unique_ptr<DynamicRenderable>& model :
 	  dynamic_models_){
-      shader_->setMat4("model", model->GetModelMatrix());
-      model->Draw({shader_.get()});
+      model->Draw({shader_.get()}, model->GetModelMatrix());
     }
   }
 
