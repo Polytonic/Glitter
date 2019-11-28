@@ -8,9 +8,9 @@
 #include <string>
 #include <vector>
 
-#include <glad/glad.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+#include <glad/glad.h>
 #include <stb_image.h>
 #include <assimp/Importer.hpp>
 #include <glm/glm.hpp>
@@ -46,7 +46,7 @@ class Model : public Renderable {
 
   // draws the model, and thus all its meshes
   void Draw(ShaderSet shaders, glm::mat4 model_mat) override {
-    for (unsigned int i = 0; i < meshes.size(); i++){
+    for (unsigned int i = 0; i < meshes.size(); i++) {
       meshes[i].Draw(shaders, model_mat);
     }
   }

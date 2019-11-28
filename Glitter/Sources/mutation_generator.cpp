@@ -8,7 +8,6 @@
 namespace {
 
 constexpr double kInitVal = 1000.0;
-
 }
 
 FractalNoiseGenerator::FractalNoiseGenerator(

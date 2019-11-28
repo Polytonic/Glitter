@@ -62,10 +62,10 @@ using VBoundsFn = std::function<std::pair<double, double>(double u)>;
 
 // Note: cannot be used for closed meshes.
 class BoundedMeshIterator : public MeshIterator {
-public:
+ public:
   BoundedMeshIterator(unsigned int u_texels, unsigned int v_texels,
-		      double u_min, double u_max,
-		      VBoundsFn bounds_fn, bool reverse_normals = false);
+                      double u_min, double u_max, VBoundsFn bounds_fn,
+                      bool reverse_normals = false);
 
   MeshVertices GetMesh() override;
 

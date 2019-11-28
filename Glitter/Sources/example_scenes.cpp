@@ -22,9 +22,7 @@ std::unique_ptr<RtRenderer> InProgressScene(
     std::default_random_engine* random_gen) {
   std::unique_ptr<RtRenderer> renderer(new PointShadowsDynamicRenderer());
   renderer->OpenWindow("In-Progress Scene");
-  {
-    renderer->AddModel(GetBoidCharacter(random_gen), glm::mat4(1.0f));
-  }
+  { renderer->AddModel(GetBoidCharacter(random_gen), glm::mat4(1.0f)); }
   return renderer;
 }
 

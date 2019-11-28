@@ -7,6 +7,7 @@
 #include "tex_canvas.hpp"
 
 Texture GetWhiteTexture(int width = 100, int height = 100);
-Texture GetColorTexture(TexCanvas::RgbPix color, int width = 100, int height = 100);
+Texture GetColorTexture(TexCanvas::RgbPix color, int width = 100,
+                        int height = 100);
 
 #endif

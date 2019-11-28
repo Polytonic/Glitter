@@ -46,7 +46,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 PointShadowsRtRenderer::PointShadowsRtRenderer() {}
 
 GLFWwindow* PointShadowsRtRenderer::OpenWindow(const std::string& window_name) {
-  window_ = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, window_name.c_str(), NULL, NULL);
+  window_ =
+      glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, window_name.c_str(), NULL, NULL);
   if (window_ == NULL) {
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
@@ -122,7 +123,8 @@ void PointShadowsRtRenderer::AddModel(std::unique_ptr<Renderable> model,
   model_matrices_.push_back(model_matrix);
 }
 
-void PointShadowsRtRenderer::AddDynamicModel(std::unique_ptr<DynamicRenderable> model) {
+void PointShadowsRtRenderer::AddDynamicModel(
+    std::unique_ptr<DynamicRenderable> model) {
   models_.push_back(std::move(model));
   model_matrices_.push_back(glm::mat4(1.0f));
 }

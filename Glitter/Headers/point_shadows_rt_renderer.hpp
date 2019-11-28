@@ -20,7 +20,8 @@ class PointShadowsRtRenderer : public RtRenderer {
   PointShadowsRtRenderer();
   GLFWwindow* OpenWindow(const std::string& window_name = "RT Render") override;
   void AddModel(const std::string& file_path, glm::mat4 model_matrix) override;
-  void AddModel(std::unique_ptr<Renderable> model, glm::mat4 model_matrix) override;
+  void AddModel(std::unique_ptr<Renderable> model,
+                glm::mat4 model_matrix) override;
   void AddDynamicModel(std::unique_ptr<DynamicRenderable> model) override;
   void Render() override;
   bool WindowShouldClose() override;

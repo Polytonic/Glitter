@@ -45,8 +45,10 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 
 PointShadowsDynamicRenderer::PointShadowsDynamicRenderer() {}
 
-GLFWwindow* PointShadowsDynamicRenderer::OpenWindow(const std::string& window_name) {
-  window_ = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, window_name.c_str(), NULL, NULL);
+GLFWwindow* PointShadowsDynamicRenderer::OpenWindow(
+    const std::string& window_name) {
+  window_ =
+      glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, window_name.c_str(), NULL, NULL);
   if (window_ == NULL) {
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
@@ -110,19 +112,20 @@ GLFWwindow* PointShadowsDynamicRenderer::OpenWindow(const std::string& window_na
 }
 
 void PointShadowsDynamicRenderer::AddModel(const std::string& file_path,
-                                      glm::mat4 model_matrix) {
+                                           glm::mat4 model_matrix) {
   static_models_.push_back(
       std::unique_ptr<Model>(new Model(FileSystem::getPath(file_path))));
   static_model_matrices_.push_back(model_matrix);
 }
 
 void PointShadowsDynamicRenderer::AddModel(std::unique_ptr<Renderable> model,
-                                      glm::mat4 model_matrix) {
+                                           glm::mat4 model_matrix) {
   static_models_.push_back(std::move(model));
   static_model_matrices_.push_back(model_matrix);
 }
 
-void PointShadowsDynamicRenderer::AddDynamicModel(std::unique_ptr<DynamicRenderable> model) {
+void PointShadowsDynamicRenderer::AddDynamicModel(
+    std::unique_ptr<DynamicRenderable> model) {
   dynamic_models_.push_back(std::move(model));
 }
 
@@ -187,8 +190,7 @@ void PointShadowsDynamicRenderer::Render() {
     for (int i = 0; i < static_models_.size(); i++) {
       static_models_[i]->Draw({depth_shader_.get()}, static_model_matrices_[i]);
     }
-    for(const std::unique_ptr<DynamicRenderable>& model :
-	  dynamic_models_){
+    for (const std::unique_ptr<DynamicRenderable>& model : dynamic_models_) {
       model->Draw({depth_shader_.get()}, glm::mat4(1.0f));
     }
   }
@@ -218,8 +220,7 @@ void PointShadowsDynamicRenderer::Render() {
     for (int i = 0; i < static_models_.size(); i++) {
       static_models_[i]->Draw({shader_.get()}, static_model_matrices_[i]);
     }
-    for(const std::unique_ptr<DynamicRenderable>& model :
-	  dynamic_models_){
+    for (const std::unique_ptr<DynamicRenderable>& model : dynamic_models_) {
       model->Draw({shader_.get()}, glm::mat4(1.0f));
     }
   }

@@ -7,10 +7,10 @@ Texture GetWhiteTexture(int width, int height) {
   return canvas.ToTexture();
 }
 
-Texture GetColorTexture(TexCanvas::RgbPix color, int width, int height){
+Texture GetColorTexture(TexCanvas::RgbPix color, int width, int height) {
   TexCanvas canvas(width, height);
-  for(int i = 0; i < width; i++){
-    for(int j = 0; j < width; j++){
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < width; j++) {
       canvas.SetPix(i, j, color);
     }
   }
