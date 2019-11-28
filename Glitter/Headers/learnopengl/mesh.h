@@ -50,10 +50,11 @@ class Mesh : public Renderable {
   /*  Functions  */
   // constructor
   Mesh(vector<Vertex> vertices, vector<unsigned int> indices,
-       vector<Texture> textures) {
+       vector<Texture> textures, glm::mat4 local_model_mat = glm::mat4(1.0f)) {
     this->vertices = std::move(vertices);
     this->indices = std::move(indices);
     this->textures = std::move(textures);
+    this->local_model_mat = local_model_mat;
 
     // now that we have all the required data, set the vertex buffers and its
     // attribute pointers.
@@ -89,7 +90,7 @@ class Mesh : public Renderable {
       glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
 
-    shaders.texture_shader->setMat4("model", model_mat);
+    shaders.texture_shader->setMat4("model", model_mat * local_model_mat);
     // draw mesh
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -102,6 +103,7 @@ class Mesh : public Renderable {
  private:
   /*  Render data  */
   unsigned int VBO, EBO;
+  glm::mat4 local_model_mat;
 
   /*  Functions    */
   // initializes all the buffer objects/arrays

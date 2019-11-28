@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include "boids/character.hpp"
 #include "box_textures.hpp"
 #include "elementary_models.hpp"
 #include "interpolation.hpp"
@@ -20,42 +21,9 @@
 std::unique_ptr<RtRenderer> InProgressScene(
     std::default_random_engine* random_gen) {
   std::unique_ptr<RtRenderer> renderer(new PointShadowsDynamicRenderer());
-  renderer->OpenWindow("Fractal Noise Demo");
+  renderer->OpenWindow("In-Progress Scene");
   {
-    Texture texture = GetTestBoxTexture(random_gen);
-    std::unique_ptr<IterableMesh> it_mesh(
-      new IterableRectPlane(2.0, 2.0));
-    BoundedMeshIterator mesh_iterator(1000, 10, 0.0, 1.0,
-				      [](double u){
-					if(u < 0.25){
-					  return std::pair<double, double>(
-					    0.5 - u,
-					    0.5 + u
-					    );
-					} else if(u < 0.5){
-					  return std::pair<double, double>(
-					    0.5 - (0.5 - u),
-					    0.5 + (0.5 - u)
-					    );
-					} else if(u < 0.75){
-					  return std::pair<double, double>(
-					    0.5 - (u - 0.5),
-					    0.5 + (u - 0.5)
-					    );
-					} else {
-					  return std::pair<double, double>(
-					    0.5 - (1 - u),
-					    0.5 + (1 - u)
-					    );
-					}
-				      });
-    mesh_iterator.SetIterableMesh(std::move(it_mesh));
-    MeshVertices mesh_vert = mesh_iterator.GetMesh();
-    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {texture});
-    std::unique_ptr<Model> generated_model(new Model({mesh}));
-    glm::mat4 model_mat = glm::mat4(1.0f);
-    model_mat = glm::translate(model_mat, glm::vec3(0, -1, 0));
-    renderer->AddModel(std::move(generated_model), model_mat);
+    renderer->AddModel(GetBoidCharacter(random_gen), glm::mat4(1.0f));
   }
   return renderer;
 }

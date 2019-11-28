@@ -65,7 +65,7 @@ class BoundedMeshIterator : public MeshIterator {
 public:
   BoundedMeshIterator(unsigned int u_texels, unsigned int v_texels,
 		      double u_min, double u_max,
-		      VBoundsFn bounds_fn);
+		      VBoundsFn bounds_fn, bool reverse_normals = false);
 
   MeshVertices GetMesh() override;
 
@@ -75,6 +75,7 @@ public:
   double u_min_;
   double u_max_;
   VBoundsFn bounds_fn_;
+  bool reverse_normals_;
 };
 
 #endif

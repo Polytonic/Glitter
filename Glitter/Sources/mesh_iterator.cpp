@@ -131,9 +131,11 @@ DVec3 MutationMeshIterator::GetMeshNorm(double u, double v) {
 BoundedMeshIterator::BoundedMeshIterator(unsigned int u_texels,
 					 unsigned int v_texels,
 					 double u_min, double u_max,
-					 VBoundsFn bounds_fn)
+					 VBoundsFn bounds_fn,
+					 bool reverse_normals)
   : u_texels_(u_texels), v_texels_(v_texels),
-    u_min_(u_min), u_max_(u_max), bounds_fn_(bounds_fn){}
+    u_min_(u_min), u_max_(u_max), bounds_fn_(bounds_fn),
+    reverse_normals_(reverse_normals){}
 
 MeshVertices BoundedMeshIterator::GetMesh() {
   if (iterable_model_ == nullptr) {
@@ -151,6 +153,10 @@ MeshVertices BoundedMeshIterator::GetMesh() {
       u = u_max_;
     }
     std::pair<double, double> v_bounds = bounds_fn_(u);
+    if(v_bounds.first == v_bounds.second && v_bounds.second == -1){
+      last_v_to_index.clear();
+      continue;
+    }
     double v_ind_max = (v_bounds.second - v_bounds.first) * v_texels_;
     std::vector<std::pair<double, int>> curr_v_to_index;
     auto next_point_to_match = last_v_to_index.begin();
@@ -162,14 +168,14 @@ MeshVertices BoundedMeshIterator::GetMesh() {
       Vertex new_vert;
       ComputedVertex comp_vert = iterable_model_->GetVertex(u, v);
       new_vert.Position = comp_vert.position;
-      new_vert.Normal = comp_vert.normal;
+      new_vert.Normal = reverse_normals_ ? -1.0 * comp_vert.normal : comp_vert.normal;
       new_vert.TexCoords = {u, v};
       mesh.vertices.push_back(new_vert);
 
       size_t vert_num = mesh.vertices.size() - 1;
       curr_v_to_index.push_back({v, vert_num});
 
-      if (u_ind != 0 && v_ind != 0) {
+      if (u_ind != 0 && v_ind != 0 && !last_v_to_index.empty()) {
 	if(next_point_to_match == last_v_to_index.end()){
 	  mesh.indices.push_back(vert_num);
 	  mesh.indices.push_back(last_v_to_index.rbegin()->second);

@@ -89,7 +89,7 @@ void SimpleRtRenderer::AddModel(std::unique_ptr<Renderable> model,
 
 void SimpleRtRenderer::AddDynamicModel(std::unique_ptr<DynamicRenderable> model) {
   models_.push_back(std::move(model));
-  model_matrices_.push_back(model->GetModelMatrix());
+  model_matrices_.push_back(glm::mat4(1.0f));
 }
 
 void SimpleRtRenderer::Render() {

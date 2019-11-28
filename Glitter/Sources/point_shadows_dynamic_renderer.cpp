@@ -189,7 +189,7 @@ void PointShadowsDynamicRenderer::Render() {
     }
     for(const std::unique_ptr<DynamicRenderable>& model :
 	  dynamic_models_){
-      model->Draw({depth_shader_.get()}, model->GetModelMatrix());
+      model->Draw({depth_shader_.get()}, glm::mat4(1.0f));
     }
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -220,7 +220,7 @@ void PointShadowsDynamicRenderer::Render() {
     }
     for(const std::unique_ptr<DynamicRenderable>& model :
 	  dynamic_models_){
-      model->Draw({shader_.get()}, model->GetModelMatrix());
+      model->Draw({shader_.get()}, glm::mat4(1.0f));
     }
   }
 
