@@ -1,6 +1,7 @@
 #include "mesh_iterator.hpp"
 
 #include <iostream>
+#include <map>
 
 BasicMeshIterator::BasicMeshIterator(unsigned int u_texels,
                                      unsigned int v_texels)
@@ -125,4 +126,85 @@ DVec3 MutationMeshIterator::GetMeshNorm(double u, double v) {
   DVec3 y_diff = y_forward - y_back;
   DVec3 norm = glm::cross(y_diff, x_diff);
   return glm::normalize(norm);
+}
+
+BoundedMeshIterator::BoundedMeshIterator(unsigned int u_texels,
+					 unsigned int v_texels,
+					 double u_min, double u_max,
+					 VBoundsFn bounds_fn)
+  : u_texels_(u_texels), v_texels_(v_texels),
+    u_min_(u_min), u_max_(u_max), bounds_fn_(bounds_fn){}
+
+MeshVertices BoundedMeshIterator::GetMesh() {
+  if (iterable_model_ == nullptr) {
+    std::cerr << "GetMesh() called on unset mesh iterator" << std::endl;
+    exit(-1);
+  }
+  MeshVertices mesh;
+  double u_step = 1.0 / u_texels_;
+  double u_ind_max = (u_max_ - u_min_) * u_texels_;
+  double v_step = 1.0 / v_texels_;
+  std::vector<std::pair<double, int>> last_v_to_index;
+  for (unsigned int u_ind = 0; u_ind < u_ind_max + 1; u_ind++) {
+    double u = u_min_ + u_ind * u_step;
+    if(u > u_max_){
+      u = u_max_;
+    }
+    std::pair<double, double> v_bounds = bounds_fn_(u);
+    double v_ind_max = (v_bounds.second - v_bounds.first) * v_texels_;
+    std::vector<std::pair<double, int>> curr_v_to_index;
+    auto next_point_to_match = last_v_to_index.begin();
+    for (unsigned int v_ind = 0; v_ind < v_ind_max + 1; v_ind++) {
+      double v = v_bounds.first + v_ind * v_step;
+      if(v > v_bounds.second) {
+	v = v_bounds.second;
+      }
+      Vertex new_vert;
+      ComputedVertex comp_vert = iterable_model_->GetVertex(u, v);
+      new_vert.Position = comp_vert.position;
+      new_vert.Normal = comp_vert.normal;
+      new_vert.TexCoords = {u, v};
+      mesh.vertices.push_back(new_vert);
+
+      size_t vert_num = mesh.vertices.size() - 1;
+      curr_v_to_index.push_back({v, vert_num});
+
+      if (u_ind != 0 && v_ind != 0) {
+	if(next_point_to_match == last_v_to_index.end()){
+	  mesh.indices.push_back(vert_num);
+	  mesh.indices.push_back(last_v_to_index.rbegin()->second);
+	  mesh.indices.push_back(vert_num - 1);
+	} else{
+	  mesh.indices.push_back(vert_num);
+	  mesh.indices.push_back(next_point_to_match->second);
+	  mesh.indices.push_back(vert_num - 1);
+	}
+	while(next_point_to_match != last_v_to_index.end() &&
+	      next_point_to_match->first <= v){
+	  auto last_match_point = next_point_to_match;
+	  next_point_to_match++;
+	  if(next_point_to_match == last_v_to_index.end()){
+	    break;
+	  }
+	  mesh.indices.push_back(vert_num);
+	  mesh.indices.push_back(next_point_to_match->second);
+	  mesh.indices.push_back(last_match_point->second);
+	}
+      }
+    }
+    size_t vert_num = mesh.vertices.size() - 1;
+    while(next_point_to_match != last_v_to_index.end()){
+      auto last_match_point = next_point_to_match;
+      next_point_to_match++;
+      if(next_point_to_match == last_v_to_index.end()){
+	break;
+      }
+      mesh.indices.push_back(vert_num);
+      mesh.indices.push_back(next_point_to_match->second);
+      mesh.indices.push_back(last_match_point->second);
+    }
+    last_v_to_index = std::move(curr_v_to_index);
+  }
+
+  return mesh;
 }
