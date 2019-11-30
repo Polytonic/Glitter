@@ -43,7 +43,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 
 }  // namespace
 
-PointShadowsDynamicRenderer::PointShadowsDynamicRenderer() {}
+PointShadowsDynamicRenderer::PointShadowsDynamicRenderer() : lightPos(0) {}
 
 GLFWwindow* PointShadowsDynamicRenderer::OpenWindow(
     const std::string& window_name) {
@@ -135,20 +135,25 @@ void PointShadowsDynamicRenderer::Render() {
   float currentFrame = glfwGetTime();
   float deltaTime = currentFrame - lastFrameTime;
   lastFrameTime = currentFrame;
+  for (std::unique_ptr<DynamicRenderable>& model : dynamic_models_) {
+    model->Tick(deltaTime);
+  }
 
   processInput(deltaTime);
 
   // move light position over time
+  /*
   if (!pause_) {
     lightPos.x = cos(glfwGetTime() * 0.5) * 2;
     lightPos.z = sin(glfwGetTime() * 0.5) * 2;
   }
+  */
 
-  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   float near_plane = 0.1f;
-  float far_plane = 25.0f;
+  float far_plane = 100.0f;
   glm::mat4 shadowProj = glm::perspective(
       glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT,
       near_plane, far_plane);
@@ -181,9 +186,10 @@ void PointShadowsDynamicRenderer::Render() {
   glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
   glClear(GL_DEPTH_BUFFER_BIT);
   depth_shader_->use();
-  for (unsigned int i = 0; i < 6; ++i)
+  for (unsigned int i = 0; i < 6; ++i) {
     depth_shader_->setMat4("shadowMatrices[" + std::to_string(i) + "]",
                            shadowTransforms[i]);
+  }
   depth_shader_->setFloat("far_plane", far_plane);
   depth_shader_->setVec3("lightPos", lightPos);
   {

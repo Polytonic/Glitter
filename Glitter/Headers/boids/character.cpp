@@ -4,6 +4,8 @@
 
 namespace {
 
+const glm::vec3 kBoidScaleVec(0.3, 0.3, 0.3);
+
 std::pair<double, double> WingVFunc(double u) {
   if (u < 0.25) {
     return std::pair<double, double>(0.25 + 0.5 * u, 3 * u);
@@ -26,6 +28,7 @@ Mesh GetWingOuterMesh(std::default_random_engine* random_gen) {
   mesh_iterator.SetIterableMesh(std::move(it_mesh));
   MeshVertices mesh_vert = mesh_iterator.GetMesh();
   glm::mat4 mesh_model_mat = glm::mat4(1.0f);
+  mesh_model_mat = glm::scale(mesh_model_mat, kBoidScaleVec);
   mesh_model_mat =
       glm::rotate(mesh_model_mat, (float)M_PI / 2.0f, glm::vec3(1.0f, 0, 0));
   return Mesh(mesh_vert.vertices, mesh_vert.indices, {texture}, mesh_model_mat);
@@ -38,6 +41,7 @@ Mesh GetWingInnerMesh(std::default_random_engine* random_gen) {
   mesh_iterator.SetIterableMesh(std::move(it_mesh));
   MeshVertices mesh_vert = mesh_iterator.GetMesh();
   glm::mat4 mesh_model_mat = glm::mat4(1.0f);
+  mesh_model_mat = glm::scale(mesh_model_mat, kBoidScaleVec);
   mesh_model_mat =
       glm::rotate(mesh_model_mat, (float)M_PI / 2.0f, glm::vec3(1.0f, 0, 0));
   return Mesh(mesh_vert.vertices, mesh_vert.indices, {texture}, mesh_model_mat);
@@ -49,8 +53,9 @@ Mesh GetBody(std::default_random_engine* random_gen) {
   BasicMeshIterator mesh_iterator(50, 50);
   mesh_iterator.SetIterableMesh(std::move(it_mesh));
   MeshVertices mesh_vert = mesh_iterator.GetMesh();
-  glm::mat4 mesh_model_mat =
-      glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -0.5f));
+  glm::mat4 mesh_model_mat = glm::mat4(1.0f);
+  mesh_model_mat = glm::scale(mesh_model_mat, kBoidScaleVec);
+  mesh_model_mat = glm::translate(mesh_model_mat, glm::vec3(0, 0, -0.5f));
   return Mesh(mesh_vert.vertices, mesh_vert.indices, {texture}, mesh_model_mat);
 }
 

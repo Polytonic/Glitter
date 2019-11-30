@@ -1,8 +1,9 @@
 #include "example_scenes.hpp"
 
+#include <memory>
 #include <utility>
 
-#include "boids/character.hpp"
+#include "boids/simulation.hpp"
 #include "box_textures.hpp"
 #include "elementary_models.hpp"
 #include "interpolation.hpp"
@@ -22,7 +23,8 @@ std::unique_ptr<RtRenderer> InProgressScene(
     std::default_random_engine* random_gen) {
   std::unique_ptr<RtRenderer> renderer(new PointShadowsDynamicRenderer());
   renderer->OpenWindow("In-Progress Scene");
-  { renderer->AddModel(GetBoidCharacter(random_gen), glm::mat4(1.0f)); }
+  renderer->AddDynamicModel(
+      std::unique_ptr<BoidsSimulation>(new BoidsSimulation(*random_gen, 15)));
   return renderer;
 }
 

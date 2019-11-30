@@ -9,6 +9,7 @@
 #include <glad/glad.h>
 
 // Standard Headers
+#include <time.h>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -18,7 +19,7 @@
 #include "rt_renderer.hpp"
 
 int main() {
-  std::default_random_engine random_gen(10);
+  std::default_random_engine random_gen(time(NULL));
   random_gen.discard(64);
 
   // glfw: initialize and configure
