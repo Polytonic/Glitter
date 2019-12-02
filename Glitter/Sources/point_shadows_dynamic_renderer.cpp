@@ -129,6 +129,10 @@ void PointShadowsDynamicRenderer::AddDynamicModel(
   dynamic_models_.push_back(std::move(model));
 }
 
+void PointShadowsDynamicRenderer::AddEventHandler(CameraEventHandler* event_handler) {
+  event_handlers_.push_back(event_handler);
+}
+
 void PointShadowsDynamicRenderer::Render() {
   glfwMakeContextCurrent(window_);
 
@@ -140,6 +144,9 @@ void PointShadowsDynamicRenderer::Render() {
   }
 
   processInput(deltaTime);
+  for(CameraEventHandler* handler : event_handlers_) {
+    handler->TickUpdateCamera(&camera_, deltaTime);
+  }
 
   // move light position over time
   /*
@@ -276,5 +283,9 @@ void PointShadowsDynamicRenderer::processInput(float deltaTime) {
   }
   if (glfwGetKey(window_, GLFW_KEY_P) == GLFW_RELEASE) {
     pause_key_pressed_ = false;
+  }
+
+  for(CameraEventHandler* handler : event_handlers_) {
+    handler->KeyboardEvents(window_);
   }
 }

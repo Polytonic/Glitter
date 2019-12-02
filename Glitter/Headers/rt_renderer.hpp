@@ -19,6 +19,7 @@ class RtRenderer {
   virtual void AddModel(std::unique_ptr<Renderable> model,
                         glm::mat4 model_matrix) = 0;
   virtual void AddDynamicModel(std::unique_ptr<DynamicRenderable> model) = 0;
+  virtual void AddEventHandler(CameraEventHandler* event_handler) = 0;
   virtual void Render() = 0;
   virtual bool WindowShouldClose() = 0;
 };

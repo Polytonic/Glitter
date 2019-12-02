@@ -23,6 +23,7 @@ class PointShadowsDynamicRenderer : public RtRenderer {
   void AddModel(std::unique_ptr<Renderable> model,
                 glm::mat4 model_matrix) override;
   void AddDynamicModel(std::unique_ptr<DynamicRenderable> model) override;
+  void AddEventHandler(CameraEventHandler* event_handler) override;
   void Render() override;
   bool WindowShouldClose() override;
 
@@ -36,6 +37,7 @@ class PointShadowsDynamicRenderer : public RtRenderer {
   std::vector<std::unique_ptr<Renderable>> static_models_;
   std::vector<glm::mat4> static_model_matrices_;
   std::vector<std::unique_ptr<DynamicRenderable>> dynamic_models_;
+  std::vector<CameraEventHandler*> event_handlers_;
 
   bool pause_ = false;
   bool pause_key_pressed_ = false;

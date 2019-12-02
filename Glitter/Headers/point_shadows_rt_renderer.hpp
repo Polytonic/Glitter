@@ -23,6 +23,7 @@ class PointShadowsRtRenderer : public RtRenderer {
   void AddModel(std::unique_ptr<Renderable> model,
                 glm::mat4 model_matrix) override;
   void AddDynamicModel(std::unique_ptr<DynamicRenderable> model) override;
+  void AddEventHandler(CameraEventHandler* event_handler) override {}
   void Render() override;
   bool WindowShouldClose() override;
 
