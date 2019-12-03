@@ -80,3 +80,15 @@ void RenderCube() {
   glDrawArrays(GL_TRIANGLES, 0, 36);
   glBindVertexArray(0);
 }
+
+bool KeyNewlyPressed(GLFWwindow* window, std::unordered_map<int, bool>* key_states, int key) {
+  bool& key_state = (*key_states)[key];
+  if (glfwGetKey(window, key) == GLFW_PRESS && !key_state) {
+    key_state = true;
+    return true;
+  }
+  if (glfwGetKey(window, key) == GLFW_RELEASE) {
+    key_state = false;
+  }
+  return false;
+}

@@ -14,7 +14,7 @@ class DynamicRenderable : public Renderable {
 };
 
 class CameraEventHandler {
-public:
+ public:
   virtual void KeyboardEvents(GLFWwindow* window) = 0;
   virtual void TickUpdateCamera(Camera* camera, double delta_time) = 0;
 };

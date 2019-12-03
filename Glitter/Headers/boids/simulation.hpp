@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <random>
+#include <unordered_map>
 
 #include "glitter.hpp"
 
@@ -26,18 +27,24 @@ class BoidActor {
   DVec3 last_acceleration_ = DVec3(0.0);
 };
 
-class BoidsSimulation : public DynamicRenderable {
+class BoidsSimulation : public DynamicRenderable, public CameraEventHandler {
  public:
   BoidsSimulation(std::default_random_engine random_gen,
                   unsigned int num_boids);
 
-  void Tick(double delta_sec);
-  void Draw(ShaderSet shaders, glm::mat4 model_mat);
+  void Tick(double delta_sec) override;
+  void Draw(ShaderSet shaders, glm::mat4 model_mat) override;
+  void KeyboardEvents(GLFWwindow* window) override;
+  void TickUpdateCamera(Camera* camera, double delta_time) override;
 
  private:
   std::default_random_engine random_gen_;
   std::vector<BoidActor> boids_;
   std::unique_ptr<Model> boid_model_;
+  std::unordered_map<int, bool> key_states_;
+
+  bool follow_boid_ = false;
+  int boid_to_follow_ = 0;
 };
 
 #endif

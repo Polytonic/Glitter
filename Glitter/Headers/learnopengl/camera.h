@@ -71,6 +71,19 @@ class Camera {
     updateCameraVectors();
   }
 
+  void SetPosition(glm::vec3 pos){
+    Position = pos;
+  }
+
+  void SetFront(glm::vec3 front){
+    Front = glm::normalize(front);
+    Right = glm::normalize(glm::cross(
+			     Front, WorldUp));
+    Up = glm::normalize(glm::cross(Right, Front));
+    Pitch = glm::degrees(std::asin(Front.y));
+    Yaw = glm::degrees(std::atan2(Front.z, Front.x));
+  }
+
   // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
   glm::mat4 GetViewMatrix() {
     return glm::lookAt(Position, Position + Front, Up);

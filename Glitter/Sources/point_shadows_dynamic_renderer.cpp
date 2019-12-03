@@ -129,7 +129,8 @@ void PointShadowsDynamicRenderer::AddDynamicModel(
   dynamic_models_.push_back(std::move(model));
 }
 
-void PointShadowsDynamicRenderer::AddEventHandler(CameraEventHandler* event_handler) {
+void PointShadowsDynamicRenderer::AddEventHandler(
+    CameraEventHandler* event_handler) {
   event_handlers_.push_back(event_handler);
 }
 
@@ -139,12 +140,14 @@ void PointShadowsDynamicRenderer::Render() {
   float currentFrame = glfwGetTime();
   float deltaTime = currentFrame - lastFrameTime;
   lastFrameTime = currentFrame;
-  for (std::unique_ptr<DynamicRenderable>& model : dynamic_models_) {
-    model->Tick(deltaTime);
-  }
 
   processInput(deltaTime);
-  for(CameraEventHandler* handler : event_handlers_) {
+  if(!pause_){
+    for (std::unique_ptr<DynamicRenderable>& model : dynamic_models_) {
+      model->Tick(deltaTime);
+    }
+  }
+  for (CameraEventHandler* handler : event_handlers_) {
     handler->TickUpdateCamera(&camera_, deltaTime);
   }
 
@@ -277,15 +280,11 @@ void PointShadowsDynamicRenderer::processInput(float deltaTime) {
   if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS)
     camera_.ProcessKeyboard(FORWARD, deltaTime);
 
-  if (glfwGetKey(window_, GLFW_KEY_P) == GLFW_PRESS && !pause_key_pressed_) {
+  if(KeyNewlyPressed(window_, &key_states_, GLFW_KEY_P)) {
     pause_ = !pause_;
-    pause_key_pressed_ = true;
-  }
-  if (glfwGetKey(window_, GLFW_KEY_P) == GLFW_RELEASE) {
-    pause_key_pressed_ = false;
   }
 
-  for(CameraEventHandler* handler : event_handlers_) {
+  for (CameraEventHandler* handler : event_handlers_) {
     handler->KeyboardEvents(window_);
   }
 }

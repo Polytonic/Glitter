@@ -2,6 +2,7 @@
 #define POINT_SHADOWS_DYNAMIC_RENDERER_HPP
 
 #include <memory>
+#include <unordered_map>
 #include <string>
 
 #include "glitter.hpp"
@@ -38,9 +39,9 @@ class PointShadowsDynamicRenderer : public RtRenderer {
   std::vector<glm::mat4> static_model_matrices_;
   std::vector<std::unique_ptr<DynamicRenderable>> dynamic_models_;
   std::vector<CameraEventHandler*> event_handlers_;
+  std::unordered_map<int, bool> key_states_;
 
   bool pause_ = false;
-  bool pause_key_pressed_ = false;
 
   float lastFrameTime = 0.0f;
   unsigned int depthMapFBO;

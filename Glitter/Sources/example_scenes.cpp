@@ -23,8 +23,10 @@ std::unique_ptr<RtRenderer> InProgressScene(
     std::default_random_engine* random_gen) {
   std::unique_ptr<RtRenderer> renderer(new PointShadowsDynamicRenderer());
   renderer->OpenWindow("In-Progress Scene");
-  renderer->AddDynamicModel(
-      std::unique_ptr<BoidsSimulation>(new BoidsSimulation(*random_gen, 15)));
+  std::unique_ptr<BoidsSimulation> simulation(
+    new BoidsSimulation(*random_gen, 15));
+  renderer->AddEventHandler(simulation.get());
+  renderer->AddDynamicModel(std::move(simulation));
   return renderer;
 }
 

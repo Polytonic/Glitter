@@ -2,8 +2,12 @@
 
 #include <iostream>
 
+#include "glitter.hpp"
+#include "GLFW/glfw3.h"
+
 #include "boids/character.hpp"
 #include "glm/gtx/quaternion.hpp"
+#include "rt_render_util.hpp"
 
 namespace {
 
@@ -76,5 +80,30 @@ void BoidsSimulation::Draw(ShaderSet shaders, glm::mat4 model_mat) {
         glm::quatLookAt(glm::normalize(-1.0f * (glm::vec3)boids_[i].velocity()),
                         glm::vec3(0, 1, 0)));
     boid_model_->Draw(shaders, model_mat * pos_mat * rot_mat);
+  }
+}
+
+void BoidsSimulation::KeyboardEvents(GLFWwindow* window) {
+  if(KeyNewlyPressed(window, &key_states_, GLFW_KEY_L)) {
+    follow_boid_ = !follow_boid_;
+  }
+  if(KeyNewlyPressed(window, &key_states_, GLFW_KEY_LEFT_BRACKET)) {
+    boid_to_follow_ = (boid_to_follow_ + (boids_.size() - 1)) % boids_.size();
+  }
+  if(KeyNewlyPressed(window, &key_states_, GLFW_KEY_RIGHT_BRACKET)) {
+    boid_to_follow_ = (boid_to_follow_ + 1) % boids_.size();
+  }
+}
+
+void BoidsSimulation::TickUpdateCamera(Camera* camera, double delta_time) {
+  if(follow_boid_){
+    const BoidActor& boid = boids_[boid_to_follow_];
+    DVec3 right = glm::cross(boid.velocity(), DVec3(0.0, 1.0, 0.0));
+    DVec3 boid_up = glm::cross(right, boid.velocity());
+    camera->SetPosition(boid.position()
+			- 2.0 * glm::normalize(boid.velocity())
+			+ 0.5 * glm::normalize(boid_up)
+      );
+    camera->SetFront(glm::normalize(boid.velocity()));
   }
 }
