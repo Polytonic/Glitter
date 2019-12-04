@@ -9,7 +9,7 @@
 // System Headers
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-#include <btBulletDynamicsCommon.h>
+// #include <btBulletDynamicsCommon.h>
 #include <glad/glad.h>
 #include <assimp/Importer.hpp>
 #include <glm/glm.hpp>
@@ -31,5 +31,11 @@ typedef glm::dvec4 DVec4;
 typedef glm::dmat2 DMat2;
 typedef glm::dmat3 DMat3;
 typedef glm::dmat4 DMat4;
+
+struct RgbPix {
+  unsigned char r;
+  unsigned char g;
+  unsigned char b;
+};
 
 #endif  //~ Glitter Header

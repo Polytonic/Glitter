@@ -1,16 +1,12 @@
 #ifndef TEX_CANVAS_HPP
 #define TEX_CANVAS_HPP
 
+#include "glitter.hpp"
+
 #include "learnopengl/mesh.h"
 
 class TexCanvas {
  public:
-  struct RgbPix {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-  };
-
   TexCanvas(int width, int height, int channels = 3);
 
   // Return false iff x, y is outside the image size.

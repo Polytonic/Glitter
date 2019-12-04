@@ -71,14 +71,11 @@ class Camera {
     updateCameraVectors();
   }
 
-  void SetPosition(glm::vec3 pos){
-    Position = pos;
-  }
+  void SetPosition(glm::vec3 pos) { Position = pos; }
 
-  void SetFront(glm::vec3 front){
+  void SetFront(glm::vec3 front) {
     Front = glm::normalize(front);
-    Right = glm::normalize(glm::cross(
-			     Front, WorldUp));
+    Right = glm::normalize(glm::cross(Front, WorldUp));
     Up = glm::normalize(glm::cross(Right, Front));
     Pitch = glm::degrees(std::asin(Front.y));
     Yaw = glm::degrees(std::atan2(Front.z, Front.x));

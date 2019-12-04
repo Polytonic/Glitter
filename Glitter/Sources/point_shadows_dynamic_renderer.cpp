@@ -142,7 +142,7 @@ void PointShadowsDynamicRenderer::Render() {
   lastFrameTime = currentFrame;
 
   processInput(deltaTime);
-  if(!pause_){
+  if (!pause_) {
     for (std::unique_ptr<DynamicRenderable>& model : dynamic_models_) {
       model->Tick(deltaTime);
     }
@@ -280,7 +280,7 @@ void PointShadowsDynamicRenderer::processInput(float deltaTime) {
   if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS)
     camera_.ProcessKeyboard(FORWARD, deltaTime);
 
-  if(KeyNewlyPressed(window_, &key_states_, GLFW_KEY_P)) {
+  if (KeyNewlyPressed(window_, &key_states_, GLFW_KEY_P)) {
     pause_ = !pause_;
   }
 

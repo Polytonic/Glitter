@@ -9,6 +9,7 @@
 
 void RenderCube();
 
-bool KeyNewlyPressed(GLFWwindow* window, std::unordered_map<int, bool>* key_states, int key);
+bool KeyNewlyPressed(GLFWwindow* window,
+                     std::unordered_map<int, bool>* key_states, int key);
 
 #endif

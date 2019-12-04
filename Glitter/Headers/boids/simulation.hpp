@@ -14,17 +14,19 @@ DVec3 RandomPosition(std::default_random_engine* random_gen, double axis_min,
                      double axis_max);
 DVec3 RandomVelocity(std::default_random_engine* random_gen, double magnitude);
 
-class BoidActor {
+class BoidActor : Renderable {
  public:
-  BoidActor(DVec3 position, DVec3 velocity);
+  BoidActor(DVec3 position, DVec3 velocity, std::unique_ptr<Model> boid_model);
   DVec3 position() const { return position_; }
   DVec3 velocity() const { return velocity_; }
   void Tick(double delta_sec, const std::vector<BoidActor>& boids);
+  void Draw(ShaderSet shaders, glm::mat4 model_mat) override;
 
  private:
   DVec3 position_;
   DVec3 velocity_;
   DVec3 last_acceleration_ = DVec3(0.0);
+  std::unique_ptr<Model> boid_model_;
 };
 
 class BoidsSimulation : public DynamicRenderable, public CameraEventHandler {
@@ -40,7 +42,6 @@ class BoidsSimulation : public DynamicRenderable, public CameraEventHandler {
  private:
   std::default_random_engine random_gen_;
   std::vector<BoidActor> boids_;
-  std::unique_ptr<Model> boid_model_;
   std::unordered_map<int, bool> key_states_;
 
   bool follow_boid_ = false;

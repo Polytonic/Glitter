@@ -10,6 +10,8 @@
 #include "learnopengl/model.h"
 #include "mesh_iterator.hpp"
 
-std::unique_ptr<Model> GetBoidCharacter(std::default_random_engine* random_gen);
+std::unique_ptr<Model> GetBoidCharacter(std::default_random_engine* random_gen,
+                                        RgbPix color1, RgbPix color2,
+                                        RgbPix color3);
 
 #endif

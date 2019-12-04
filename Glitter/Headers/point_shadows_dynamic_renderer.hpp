@@ -2,8 +2,8 @@
 #define POINT_SHADOWS_DYNAMIC_RENDERER_HPP
 
 #include <memory>
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 #include "glitter.hpp"
 

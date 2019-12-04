@@ -21,8 +21,8 @@ std::pair<double, double> WingVFunc(double u) {
   }
 }
 
-Mesh GetWingOuterMesh(std::default_random_engine* random_gen) {
-  Texture texture = GetColorTexture({66, 133, 244});
+Mesh GetWingOuterMesh(std::default_random_engine* random_gen, RgbPix color) {
+  Texture texture = GetColorTexture(color);
   std::unique_ptr<IterableMesh> it_mesh(new IterableCylinder(3.0, 0.5));
   BoundedMeshIterator mesh_iterator(100, 30, 0.05, 0.95, &WingVFunc);
   mesh_iterator.SetIterableMesh(std::move(it_mesh));
@@ -34,8 +34,8 @@ Mesh GetWingOuterMesh(std::default_random_engine* random_gen) {
   return Mesh(mesh_vert.vertices, mesh_vert.indices, {texture}, mesh_model_mat);
 }
 
-Mesh GetWingInnerMesh(std::default_random_engine* random_gen) {
-  Texture texture = GetColorTexture({234, 67, 53});
+Mesh GetWingInnerMesh(std::default_random_engine* random_gen, RgbPix color) {
+  Texture texture = GetColorTexture(color);
   std::unique_ptr<IterableMesh> it_mesh(new IterableCylinder(3.0, 0.499));
   BoundedMeshIterator mesh_iterator(100, 30, 0.05, 0.95, &WingVFunc, true);
   mesh_iterator.SetIterableMesh(std::move(it_mesh));
@@ -47,8 +47,8 @@ Mesh GetWingInnerMesh(std::default_random_engine* random_gen) {
   return Mesh(mesh_vert.vertices, mesh_vert.indices, {texture}, mesh_model_mat);
 }
 
-Mesh GetBody(std::default_random_engine* random_gen) {
-  Texture texture = GetColorTexture({234, 67, 53});
+Mesh GetBody(std::default_random_engine* random_gen, RgbPix color) {
+  Texture texture = GetColorTexture(color);
   std::unique_ptr<IterableMesh> it_mesh(new IterableSphere(0.3));
   BasicMeshIterator mesh_iterator(50, 50);
   mesh_iterator.SetIterableMesh(std::move(it_mesh));
@@ -61,10 +61,11 @@ Mesh GetBody(std::default_random_engine* random_gen) {
 
 }  // namespace
 
-std::unique_ptr<Model> GetBoidCharacter(
-    std::default_random_engine* random_gen) {
-  std::unique_ptr<Model> generated_model(
-      new Model({GetWingOuterMesh(random_gen), GetWingInnerMesh(random_gen),
-                 GetBody(random_gen)}));
+std::unique_ptr<Model> GetBoidCharacter(std::default_random_engine* random_gen,
+                                        RgbPix color1, RgbPix color2,
+                                        RgbPix color3) {
+  std::unique_ptr<Model> generated_model(new Model(
+      {GetWingOuterMesh(random_gen, color1),
+       GetWingInnerMesh(random_gen, color2), GetBody(random_gen, color3)}));
   return generated_model;
 }
