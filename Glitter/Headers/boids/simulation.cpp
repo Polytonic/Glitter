@@ -1,20 +1,89 @@
 #include "boids/simulation.hpp"
 
+#include <cmath>
 #include <iostream>
 
 #include "GLFW/glfw3.h"
 #include "glitter.hpp"
 
 #include "boids/character.hpp"
+#include "elementary_models.hpp"
 #include "glm/gtx/quaternion.hpp"
 #include "rt_render_util.hpp"
 #include "texture_gen.hpp"
 
 namespace {
 
-constexpr double min_speed = 1.0;
-constexpr double max_speed = 10.0;
-constexpr double max_acceleration = 2.0;
+const BoidPhysicsParams kDefaultPhysics = {
+    /*min_speed=*/1.0,
+    /*default_speed=*/5.0,
+    /*max_speed=*/14.0,
+    /*max_acceleration=*/10.0,
+};
+
+const double kNeighborThreshold = 10.0;
+
+const BoidBehaviorParams kDefaultBehavior = {
+    /*cage_distance=*/100.0,
+    // The following is twice the distance required to decelerate at max
+    // acceleration from max speed.
+    /*cage_threshold=*/
+    ((kDefaultPhysics.max_speed * kDefaultPhysics.max_speed) /
+     (2 * kDefaultPhysics.max_acceleration)) *
+        2,
+    /*neighbor_threshold=*/
+    kNeighborThreshold,
+    // When plugged into the response equation, this cancels out the
+    // distance squared (leading to max acceleration) at the point described
+    // above.
+    /*cage_response_multiplier=*/
+    std::pow((kDefaultPhysics.max_speed * kDefaultPhysics.max_speed) /
+                 (2 * kDefaultPhysics.max_acceleration),
+             2.0),
+    // When plugged into the response equation, this cancels out the distance
+    // squared at the corresponding degress of separation, leading to max
+    // acceleration.
+    /*neighbor_collision_multiplier=*/
+    std::pow(0.5, 2.0),
+    // Use x * max acceleration to center when the flock is just inside our
+    // neighbor threshold.
+    /*centering_multiplier=*/1.5 / kNeighborThreshold,
+    // Use max acceleration to match velocity when difference from average is
+    // default_speed + max_speed and the other boid is x units away.
+    /*velocity_multiplier=*/2.0 /
+        (kDefaultPhysics.default_speed + kDefaultPhysics.max_speed),
+};
+
+DVec3 GetDampingAcceleration(const BoidPhysicsParams& params, DVec3 velocity) {
+  double speed = glm::length(velocity);
+  double too_fast_coeff =
+      params.max_acceleration /
+      std::pow((params.max_speed - params.default_speed), 2);
+  double too_slow_coeff =
+      params.max_acceleration /
+      std::pow((params.default_speed - params.min_speed), 2);
+  double damper;
+  if (speed > params.default_speed) {
+    damper = -1 * std::pow((speed - params.default_speed), 2) * too_fast_coeff;
+  } else {
+    damper = std::pow((params.default_speed - speed), 2) * too_slow_coeff;
+  }
+  return damper * glm::normalize(velocity);
+}
+
+std::unique_ptr<Model> GetBoundingSphere(double radius) {
+  TexCanvas canvas = GetColorCanvas({255, 255, 255}, 400, 400);
+  ApplyGrid(&canvas, 25, 25, 1, {0, 0, 255});
+  Texture texture = canvas.ToTexture();
+
+  std::unique_ptr<IterableMesh> it_mesh(new IterableSphere(radius));
+  BasicMeshIterator mesh_iterator(50, 50);
+  mesh_iterator.SetIterableMesh(std::move(it_mesh));
+  MeshVertices mesh_vert = mesh_iterator.GetMesh();
+  glm::mat4 mesh_model_mat = glm::mat4(1.0f);
+  return std::unique_ptr<Model>(new Model({Mesh(
+      mesh_vert.vertices, mesh_vert.indices, {texture}, mesh_model_mat)}));
+}
 
 }  // namespace
 
@@ -31,32 +100,149 @@ DVec3 RandomVelocity(std::default_random_engine* random_gen, double magnitude) {
 }
 
 BoidActor::BoidActor(DVec3 position, DVec3 velocity,
+                     const BoidPhysicsParams& physics_params,
+                     const BoidBehaviorParams& behavior,
                      std::unique_ptr<Model> boid_model)
     : position_(position),
       velocity_(velocity),
+      physics_params_(physics_params),
+      behavior_(behavior),
       boid_model_(std::move(boid_model)) {}
 
-void BoidActor::Tick(double delta_sec, const std::vector<BoidActor>& boids) {
+std::vector<DVec3> BoidActor::GetAvoidanceRequests(
+    const std::vector<BoidActor>& boids) {
+  std::vector<DVec3> requests;
+  double from_center = glm::length(position_);
+  double from_cage = behavior_.cage_distance - from_center;
+  if (from_cage <= behavior_.cage_threshold) {
+    DVec3 response =
+        (-1.0 * physics_params_.max_acceleration *
+         behavior_.cage_response_multiplier * glm::normalize(position_)) /
+        glm::pow(from_cage, 2.0);
+    requests.push_back(response);
+  }
+
+  for (const BoidActor& boid : boids) {
+    if (&boid == this) {
+      continue;
+    }
+    double separation = glm::distance(boid.position(), position());
+    if (separation > behavior_.neighbor_threshold) {
+      continue;
+    }
+    DVec3 response = (physics_params_.max_acceleration *
+                      behavior_.neighbor_collision_multiplier *
+                      glm::normalize(position() - boid.position())) /
+                     glm::pow(separation, 2.0);
+    requests.push_back(response);
+  }
+  return requests;
+}
+
+std::vector<DVec3> BoidActor::GetVelocityMatchingRequests(
+    const std::vector<BoidActor>& boids) {
+  std::vector<DVec3> requests;
+  for (const BoidActor& boid : boids) {
+    if (&boid == this) {
+      continue;
+    }
+    double separation = glm::distance(boid.position(), position_);
+    if (separation > behavior_.neighbor_threshold) {
+      continue;
+    }
+    double weight = std::pow(separation, -2);
+    DVec3 velocity_diff = boid.velocity() - velocity_;
+    DVec3 request = weight * velocity_diff * physics_params_.max_acceleration *
+                    behavior_.velocity_multiplier;
+    requests.push_back(request);
+  }
+  return requests;
+}
+
+DVec3 BoidActor::GetCenteringRequest(const std::vector<BoidActor>& boids) {
   DVec3 average_pos(0.0);
   double total_weight = 0.0;
   for (const BoidActor& boid : boids) {
     if (&boid == this) {
       continue;
     }
+    if (glm::distance(boid.position(), position()) >
+        behavior_.neighbor_threshold) {
+      continue;
+    }
     average_pos += boid.position();
     total_weight += 1;
   }
+  if (total_weight == 0) {
+    return DVec3(0);
+  }
   average_pos = average_pos / total_weight;
-  DVec3 acceleration = average_pos - position_;
-  acceleration = max_acceleration * glm::normalize(acceleration);
+  DVec3 request = (average_pos - position_) * physics_params_.max_acceleration *
+                  behavior_.centering_multiplier;
+  return request;
+}
+
+void BoidActor::Tick(double delta_sec, const std::vector<BoidActor>& boids) {
+  DVec3 acceleration(0);
+  std::vector<DVec3> requests;
+  {
+    std::vector<DVec3> avoidance_requests = GetAvoidanceRequests(boids);
+    std::vector<DVec3> velocity_requests = GetVelocityMatchingRequests(boids);
+    DVec3 centering_request = GetCenteringRequest(boids);
+    requests.reserve(avoidance_requests.size() + velocity_requests.size() + 1);
+    requests.push_back(centering_request);
+    requests.insert(requests.begin(), avoidance_requests.begin(),
+                    avoidance_requests.end());
+    requests.insert(requests.begin(), velocity_requests.begin(),
+                    velocity_requests.end());
+  }
+
+  std::sort(requests.begin(), requests.end(),
+            [](const DVec3& a, const DVec3& b) {
+              return glm::length2(a) > glm::length2(b);
+            });
+  bool maxed_out = false;
+  double total_magnitude = 0;
+  for (int i = 0; i < requests.size() && !maxed_out; i++) {
+    acceleration += requests[i];
+    total_magnitude += glm::length(requests[i]);
+    maxed_out = total_magnitude >= physics_params_.max_acceleration;
+  }
+
+  /*
+std::sort(avoidance_requests.begin(), avoidance_requests.end(),
+          [](const DVec3& a, const DVec3& b) {
+            return glm::length2(a) > glm::length2(b);
+          });
+std::sort(velocity_requests.begin(), velocity_requests.end(),
+          [](const DVec3& a, const DVec3& b) {
+            return glm::length2(a) > glm::length2(b);
+          });
+
+bool maxed_out = false;
+double total_magnitude = 0;
+for (int i = 0; i < avoidance_requests.size() && !maxed_out; i++) {
+  acceleration += avoidance_requests[i];
+  total_magnitude += glm::length(avoidance_requests[i]);
+  maxed_out = total_magnitude >= physics_params_.max_acceleration;
+}
+for (int i = 0; i < velocity_requests.size() && !maxed_out; i++) {
+  acceleration += velocity_requests[i];
+  total_magnitude += glm::length(velocity_requests[i]);
+  maxed_out = total_magnitude >= physics_params_.max_acceleration;
+}
+  */
+
+  if (glm::length(acceleration) >= physics_params_.max_acceleration) {
+    acceleration =
+        physics_params_.max_acceleration * glm::normalize(acceleration);
+  }
+
   velocity_ += delta_sec * acceleration;
   last_acceleration_ = acceleration;
-  if (glm::length(velocity_) < min_speed) {
-    velocity_ = min_speed * glm::normalize(velocity_);
-  }
-  if (glm::length(velocity_) > max_speed) {
-    velocity_ = max_speed * glm::normalize(velocity_);
-  }
+  DVec3 damping_acceleration =
+      GetDampingAcceleration(physics_params_, velocity_);
+  velocity_ += delta_sec * damping_acceleration;
   position_ += delta_sec * velocity_;
 }
 
@@ -70,9 +256,16 @@ void BoidActor::Draw(ShaderSet shaders, glm::mat4 model_mat) {
 BoidsSimulation::BoidsSimulation(std::default_random_engine random_gen,
                                  unsigned int num_boids)
     : random_gen_(random_gen) {
+  bounding_sphere_ = GetBoundingSphere(kDefaultBehavior.cage_distance);
+  std::cout << "neighbor_threshold: " << kDefaultBehavior.neighbor_threshold
+            << std::endl;
+  std::cout << "cage_threshold: " << kDefaultBehavior.cage_threshold
+            << std::endl;
   for (int i = 0; i < num_boids; i++) {
     boids_.push_back(BoidActor(
-        RandomPosition(&random_gen_, -2, 2), RandomVelocity(&random_gen_, 1.0),
+        RandomPosition(&random_gen_, -40, 40),
+        RandomVelocity(&random_gen_, kDefaultPhysics.min_speed),
+        kDefaultPhysics, kDefaultBehavior,
         GetBoidCharacter(&random_gen_, GetRandomBasicColor(&random_gen_),
                          GetRandomBasicColor(&random_gen_),
                          GetRandomBasicColor(&random_gen_))));
@@ -86,6 +279,7 @@ void BoidsSimulation::Tick(double delta_sec) {
 }
 
 void BoidsSimulation::Draw(ShaderSet shaders, glm::mat4 model_mat) {
+  bounding_sphere_->Draw(shaders, model_mat);
   for (int i = 0; i < boids_.size(); i++) {
     boids_[i].Draw(shaders, model_mat);
   }

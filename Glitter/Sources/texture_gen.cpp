@@ -38,6 +38,38 @@ Texture GetColorTexture(RgbPix color, int width, int height) {
   return canvas.ToTexture();
 }
 
+TexCanvas GetColorCanvas(RgbPix color, int width, int height) {
+  TexCanvas canvas(width, height);
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < width; j++) {
+      canvas.SetPix(i, j, color);
+    }
+  }
+  return canvas;
+}
+
+void ApplyGrid(TexCanvas* canvas, int horizontal_lines, int vertical_lines,
+               int pix_stroke, RgbPix color) {
+  double x_step = ((double)canvas->width()) / horizontal_lines;
+  for (int x_i = 0; x_i < horizontal_lines; x_i++) {
+    for (int p = 0; p < pix_stroke; p++) {
+      int x = (int)(x_step * x_i + p);
+      for (int y = 0; y < canvas->height(); y++) {
+        canvas->SetPix(x, y, color);
+      }
+    }
+  }
+  double y_step = ((double)canvas->height()) / vertical_lines;
+  for (int y_i = 0; y_i < vertical_lines; y_i++) {
+    for (int p = 0; p < pix_stroke; p++) {
+      int y = (int)(y_step * y_i + p);
+      for (int x = 0; x < canvas->width(); x++) {
+        canvas->SetPix(x, y, color);
+      }
+    }
+  }
+}
+
 RgbPix GetRandomBasicColor(std::default_random_engine* random_gen) {
   std::uniform_int_distribution<int> distribution(0, kBasicColors.size() - 1);
   return kBasicColors[distribution(*random_gen)];

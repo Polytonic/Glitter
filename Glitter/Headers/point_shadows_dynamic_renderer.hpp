@@ -41,7 +41,7 @@ class PointShadowsDynamicRenderer : public RtRenderer {
   std::vector<CameraEventHandler*> event_handlers_;
   std::unordered_map<int, bool> key_states_;
 
-  bool pause_ = false;
+  bool pause_ = true;
 
   float lastFrameTime = 0.0f;
   unsigned int depthMapFBO;

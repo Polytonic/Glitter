@@ -39,6 +39,12 @@ ComputedVertex IterableCylinder::GetVertex(double u, double v) {
 IterableSphere::IterableSphere(double radius) : radius_(radius) {}
 
 ComputedVertex IterableSphere::GetVertex(double u, double v) {
+  if (u > 1.0 || u < 0.0) {
+    std::cerr << "Got u " << u << std::endl;
+  }
+  if (v > 1.0 || v < 0.0) {
+    std::cerr << "Got v " << v << std::endl;
+  }
   ComputedVertex vertex;
   double theta = u * 2.0 * M_PI;
   double phi = v * M_PI;

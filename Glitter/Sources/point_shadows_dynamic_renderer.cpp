@@ -162,8 +162,8 @@ void PointShadowsDynamicRenderer::Render() {
   glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  float near_plane = 0.1f;
-  float far_plane = 100.0f;
+  float near_plane = 0.5f;
+  float far_plane = 500.0f;
   glm::mat4 shadowProj = glm::perspective(
       glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT,
       near_plane, far_plane);
@@ -219,7 +219,7 @@ void PointShadowsDynamicRenderer::Render() {
   shader_->use();
   glm::mat4 projection =
       glm::perspective(glm::radians(camera_.Zoom),
-                       (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+                       (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.5f, 500.0f);
   glm::mat4 view = camera_.GetViewMatrix();
   shader_->setMat4("projection", projection);
   shader_->setMat4("view", view);

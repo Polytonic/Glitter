@@ -40,15 +40,15 @@ MeshVertices BasicMeshIterator::GetMesh() {
         mesh.indices.push_back(vert_num);
         mesh.indices.push_back(vert_num - (v_texels_ + 1) - 1);
         mesh.indices.push_back(vert_num - 1);
-      }
 
-      if (is_closed_ && u_ind == (u_texels_ - 1) && v_ind != v_texels_) {
-        mesh.indices.push_back(v_ind + 1);
-        mesh.indices.push_back(vert_num + 1);
-        mesh.indices.push_back(vert_num);
-        mesh.indices.push_back(v_ind + 1);
-        mesh.indices.push_back(vert_num);
-        mesh.indices.push_back(v_ind);
+        if (is_closed_ && u_ind == (u_texels_ - 1)) {
+          mesh.indices.push_back(v_ind);
+          mesh.indices.push_back(vert_num);
+          mesh.indices.push_back(vert_num - 1);
+          mesh.indices.push_back(v_ind);
+          mesh.indices.push_back(vert_num - 1);
+          mesh.indices.push_back(v_ind - 1);
+        }
       }
     }
   }

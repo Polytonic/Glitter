@@ -19,10 +19,14 @@ class TexCanvas {
 
   Texture ToTexture(std::string texture_type = "texture_diffuse");
 
+  int width() const { return width_; }
+  int height() const { return height_; }
+  int channels() const { return channels_; }
+
  private:
   int width_;
-  int row_alignment_;
   int height_;
+  int row_alignment_;
   int channels_;
   unsigned char* data;
 };
