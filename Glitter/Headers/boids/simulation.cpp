@@ -298,7 +298,7 @@ BoidsSimulation::BoidsSimulation(std::default_random_engine random_gen,
             << std::endl;
   for (int i = 0; i < num_boids; i++) {
     boids_.push_back(BoidActor(
-        RandomPosition(&random_gen_, -30, 30),
+        RandomPosition(&random_gen_, -10, 10),
         RandomVelocity(&random_gen_, kDefaultPhysics.min_speed),
         kDefaultPhysics, kDefaultBehavior,
         GetBoidCharacter(&random_gen_, GetRandomBasicColor(&random_gen_),

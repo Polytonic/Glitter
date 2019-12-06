@@ -6,6 +6,7 @@
 #include "boids/simulation.hpp"
 #include "box_textures.hpp"
 #include "elementary_models.hpp"
+#include "fps_counter.hpp"
 #include "interpolation.hpp"
 #include "iterable_mesh.hpp"
 #include "learnopengl/camera.h"
@@ -24,9 +25,11 @@ std::unique_ptr<RtRenderer> InProgressScene(
   std::unique_ptr<RtRenderer> renderer(new PointShadowsDynamicRenderer());
   renderer->OpenWindow("In-Progress Scene");
   std::unique_ptr<BoidsSimulation> simulation(
-      new BoidsSimulation(*random_gen, 80));
+      new BoidsSimulation(*random_gen, 150));
   renderer->AddEventHandler(simulation.get());
   renderer->AddDynamicModel(std::move(simulation));
+  FpsCounter* fps = new FpsCounter;
+  renderer->AddEventHandler(fps);
   return renderer;
 }
 

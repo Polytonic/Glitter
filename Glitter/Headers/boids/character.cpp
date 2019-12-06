@@ -1,5 +1,8 @@
 #include "boids/character.hpp"
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "texture_gen.hpp"
 
 namespace {
@@ -24,7 +27,7 @@ std::pair<double, double> WingVFunc(double u) {
 Mesh GetWingOuterMesh(std::default_random_engine* random_gen, RgbPix color) {
   Texture texture = GetColorTexture(color);
   std::unique_ptr<IterableMesh> it_mesh(new IterableCylinder(3.0, 0.5));
-  BoundedMeshIterator mesh_iterator(100, 30, 0.05, 0.95, &WingVFunc);
+  BoundedMeshIterator mesh_iterator(30, 20, 0.05, 0.95, &WingVFunc);
   mesh_iterator.SetIterableMesh(std::move(it_mesh));
   MeshVertices mesh_vert = mesh_iterator.GetMesh();
   glm::mat4 mesh_model_mat = glm::mat4(1.0f);
@@ -37,7 +40,7 @@ Mesh GetWingOuterMesh(std::default_random_engine* random_gen, RgbPix color) {
 Mesh GetWingInnerMesh(std::default_random_engine* random_gen, RgbPix color) {
   Texture texture = GetColorTexture(color);
   std::unique_ptr<IterableMesh> it_mesh(new IterableCylinder(3.0, 0.499));
-  BoundedMeshIterator mesh_iterator(100, 30, 0.05, 0.95, &WingVFunc, true);
+  BoundedMeshIterator mesh_iterator(30, 20, 0.05, 0.95, &WingVFunc, true);
   mesh_iterator.SetIterableMesh(std::move(it_mesh));
   MeshVertices mesh_vert = mesh_iterator.GetMesh();
   glm::mat4 mesh_model_mat = glm::mat4(1.0f);
@@ -50,7 +53,7 @@ Mesh GetWingInnerMesh(std::default_random_engine* random_gen, RgbPix color) {
 Mesh GetBody(std::default_random_engine* random_gen, RgbPix color) {
   Texture texture = GetColorTexture(color);
   std::unique_ptr<IterableMesh> it_mesh(new IterableSphere(0.3));
-  BasicMeshIterator mesh_iterator(50, 50);
+  BasicMeshIterator mesh_iterator(20, 20);
   mesh_iterator.SetIterableMesh(std::move(it_mesh));
   MeshVertices mesh_vert = mesh_iterator.GetMesh();
   glm::mat4 mesh_model_mat = glm::mat4(1.0f);
