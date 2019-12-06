@@ -14,6 +14,8 @@
 
 namespace {
 
+BoidActor* first_boid;
+
 const BoidPhysicsParams kDefaultPhysics = {
     /*min_speed=*/1.0,
     /*default_speed=*/5.0,
@@ -24,7 +26,7 @@ const BoidPhysicsParams kDefaultPhysics = {
 const double kNeighborThreshold = 10.0;
 
 const BoidBehaviorParams kDefaultBehavior = {
-    /*cage_distance=*/100.0,
+    /*cage_distance=*/50.0,
     // The following is twice the distance required to decelerate at max
     // acceleration from max speed.
     /*cage_threshold=*/
@@ -47,7 +49,7 @@ const BoidBehaviorParams kDefaultBehavior = {
     std::pow(0.5, 2.0),
     // Use x * max acceleration to center when the flock is just inside our
     // neighbor threshold.
-    /*centering_multiplier=*/1.5 / kNeighborThreshold,
+    /*centering_multiplier=*/1.0 / kNeighborThreshold,
     // Use max acceleration to match velocity when difference from average is
     // default_speed + max_speed and the other boid is x units away.
     /*velocity_multiplier=*/2.0 /
@@ -80,6 +82,7 @@ std::unique_ptr<Model> GetBoundingSphere(double radius) {
   BasicMeshIterator mesh_iterator(50, 50);
   mesh_iterator.SetIterableMesh(std::move(it_mesh));
   MeshVertices mesh_vert = mesh_iterator.GetMesh();
+  // ReverseNormals(&mesh_vert);
   glm::mat4 mesh_model_mat = glm::mat4(1.0f);
   return std::unique_ptr<Model>(new Model({Mesh(
       mesh_vert.vertices, mesh_vert.indices, {texture}, mesh_model_mat)}));
@@ -182,31 +185,61 @@ DVec3 BoidActor::GetCenteringRequest(const std::vector<BoidActor>& boids) {
   return request;
 }
 
+namespace {
+enum class ReqSource {
+  kCentering,
+  kVelocity,
+  kAvoidance,
+};
+
+std::string ToString(ReqSource s) {
+  switch (s) {
+    case ReqSource::kCentering:
+      return "center";
+    case ReqSource::kVelocity:
+      return "vlocty";
+    case ReqSource::kAvoidance:
+      return "avoids";
+  }
+  return "notfound";
+}
+}  // namespace
+
 void BoidActor::Tick(double delta_sec, const std::vector<BoidActor>& boids) {
   DVec3 acceleration(0);
-  std::vector<DVec3> requests;
+  std::vector<std::pair<DVec3, ReqSource>> requests;
   {
+    DVec3 centering_request = GetCenteringRequest(boids);
     std::vector<DVec3> avoidance_requests = GetAvoidanceRequests(boids);
     std::vector<DVec3> velocity_requests = GetVelocityMatchingRequests(boids);
-    DVec3 centering_request = GetCenteringRequest(boids);
     requests.reserve(avoidance_requests.size() + velocity_requests.size() + 1);
-    requests.push_back(centering_request);
-    requests.insert(requests.begin(), avoidance_requests.begin(),
-                    avoidance_requests.end());
-    requests.insert(requests.begin(), velocity_requests.begin(),
-                    velocity_requests.end());
+    requests.push_back(std::make_pair(centering_request, ReqSource::kCentering));
+    for(DVec3 e : avoidance_requests){
+      requests.push_back(std::make_pair(e, ReqSource::kAvoidance));
+    }
+    for(DVec3 e : velocity_requests){
+      requests.push_back(std::make_pair(e, ReqSource::kVelocity));
+    }
   }
 
   std::sort(requests.begin(), requests.end(),
-            [](const DVec3& a, const DVec3& b) {
-              return glm::length2(a) > glm::length2(b);
+            [](const std::pair<DVec3, ReqSource>& a, const std::pair<DVec3, ReqSource>& b) {
+              return glm::length2(a.first) > glm::length2(b.first);
             });
+  int components = 0;
+  std::string sources;
+  
   bool maxed_out = false;
   double total_magnitude = 0;
   for (int i = 0; i < requests.size() && !maxed_out; i++) {
-    acceleration += requests[i];
-    total_magnitude += glm::length(requests[i]);
+    components++;
+    sources.append(ToString(requests[i].second) + ", ");
+    acceleration += requests[i].first;
+    total_magnitude += glm::length(requests[i].first);
     maxed_out = total_magnitude >= physics_params_.max_acceleration;
+  }
+  if (this == first_boid) {
+    std::cout << "components: " << components << " " << sources << std::endl;
   }
 
   /*
@@ -263,13 +296,14 @@ BoidsSimulation::BoidsSimulation(std::default_random_engine random_gen,
             << std::endl;
   for (int i = 0; i < num_boids; i++) {
     boids_.push_back(BoidActor(
-        RandomPosition(&random_gen_, -40, 40),
+        RandomPosition(&random_gen_, -10, 10),
         RandomVelocity(&random_gen_, kDefaultPhysics.min_speed),
         kDefaultPhysics, kDefaultBehavior,
         GetBoidCharacter(&random_gen_, GetRandomBasicColor(&random_gen_),
                          GetRandomBasicColor(&random_gen_),
                          GetRandomBasicColor(&random_gen_))));
   }
+  first_boid = &boids_[0];
 }
 
 void BoidsSimulation::Tick(double delta_sec) {

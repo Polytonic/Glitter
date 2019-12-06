@@ -15,6 +15,8 @@ struct MeshVertices {
   std::vector<unsigned int> indices;
 };
 
+void ReverseNormals(MeshVertices* object);
+
 class MeshIterator {
  public:
   void SetIterableMesh(std::unique_ptr<IterableMesh> iterable_model) {

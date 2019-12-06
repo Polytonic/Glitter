@@ -3,6 +3,12 @@
 #include <iostream>
 #include <map>
 
+void ReverseNormals(MeshVertices* object) {
+  for (Vertex& vert : object->vertices) {
+    vert.Normal = -1.0f * vert.Normal;
+  }
+}
+
 BasicMeshIterator::BasicMeshIterator(unsigned int u_texels,
                                      unsigned int v_texels)
     : u_texels_(u_texels), v_texels_(v_texels) {}
