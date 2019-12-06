@@ -213,22 +213,24 @@ void BoidActor::Tick(double delta_sec, const std::vector<BoidActor>& boids) {
     std::vector<DVec3> avoidance_requests = GetAvoidanceRequests(boids);
     std::vector<DVec3> velocity_requests = GetVelocityMatchingRequests(boids);
     requests.reserve(avoidance_requests.size() + velocity_requests.size() + 1);
-    requests.push_back(std::make_pair(centering_request, ReqSource::kCentering));
-    for(DVec3 e : avoidance_requests){
+    requests.push_back(
+        std::make_pair(centering_request, ReqSource::kCentering));
+    for (DVec3 e : avoidance_requests) {
       requests.push_back(std::make_pair(e, ReqSource::kAvoidance));
     }
-    for(DVec3 e : velocity_requests){
+    for (DVec3 e : velocity_requests) {
       requests.push_back(std::make_pair(e, ReqSource::kVelocity));
     }
   }
 
   std::sort(requests.begin(), requests.end(),
-            [](const std::pair<DVec3, ReqSource>& a, const std::pair<DVec3, ReqSource>& b) {
+            [](const std::pair<DVec3, ReqSource>& a,
+               const std::pair<DVec3, ReqSource>& b) {
               return glm::length2(a.first) > glm::length2(b.first);
             });
   int components = 0;
   std::string sources;
-  
+
   bool maxed_out = false;
   double total_magnitude = 0;
   for (int i = 0; i < requests.size() && !maxed_out; i++) {
@@ -296,7 +298,7 @@ BoidsSimulation::BoidsSimulation(std::default_random_engine random_gen,
             << std::endl;
   for (int i = 0; i < num_boids; i++) {
     boids_.push_back(BoidActor(
-        RandomPosition(&random_gen_, -10, 10),
+        RandomPosition(&random_gen_, -30, 30),
         RandomVelocity(&random_gen_, kDefaultPhysics.min_speed),
         kDefaultPhysics, kDefaultBehavior,
         GetBoidCharacter(&random_gen_, GetRandomBasicColor(&random_gen_),
