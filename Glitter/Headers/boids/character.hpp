@@ -1,10 +1,14 @@
 #ifndef BOIDS_CHARACTER_HPP
 #define BOIDS_CHARACTER_HPP
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include <memory>
 #include <random>
 
 #include "box_textures.hpp"
+#include "glitter.hpp"
 #include "iterable_mesh.hpp"
 #include "learnopengl/mesh.h"
 #include "learnopengl/model.h"

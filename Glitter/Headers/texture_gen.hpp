@@ -1,9 +1,10 @@
 #ifndef TEXTURE_GEN_HPP
 #define TEXTURE_GEN_HPP
 
+#include "glitter.hpp"
+
 #include <random>
 
-#include "glitter.hpp"
 #include "learnopengl/mesh.h"
 #include "tex_canvas.hpp"
 

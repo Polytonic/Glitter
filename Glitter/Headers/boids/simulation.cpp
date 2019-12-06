@@ -26,7 +26,7 @@ const BoidPhysicsParams kDefaultPhysics = {
 const double kNeighborThreshold = 10.0;
 
 const BoidBehaviorParams kDefaultBehavior = {
-    /*cage_distance=*/50.0,
+    /*cage_distance=*/100.0,
     // The following is twice the distance required to decelerate at max
     // acceleration from max speed.
     /*cage_threshold=*/
@@ -46,7 +46,7 @@ const BoidBehaviorParams kDefaultBehavior = {
     // squared at the corresponding degress of separation, leading to max
     // acceleration.
     /*neighbor_collision_multiplier=*/
-    std::pow(0.5, 2.0),
+    std::pow(0.6, 2.0),
     // Use x * max acceleration to center when the flock is just inside our
     // neighbor threshold.
     /*centering_multiplier=*/1.0 / kNeighborThreshold,
@@ -298,7 +298,7 @@ BoidsSimulation::BoidsSimulation(std::default_random_engine random_gen,
             << std::endl;
   for (int i = 0; i < num_boids; i++) {
     boids_.push_back(BoidActor(
-        RandomPosition(&random_gen_, -10, 10),
+        RandomPosition(&random_gen_, -70, 70),
         RandomVelocity(&random_gen_, kDefaultPhysics.min_speed),
         kDefaultPhysics, kDefaultBehavior,
         GetBoidCharacter(&random_gen_, GetRandomBasicColor(&random_gen_),

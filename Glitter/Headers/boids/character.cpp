@@ -1,8 +1,5 @@
 #include "boids/character.hpp"
 
-#define _USE_MATH_DEFINES
-#include <cmath>
-
 #include "texture_gen.hpp"
 
 namespace {

@@ -1,6 +1,8 @@
 #ifndef BOX_TEXTURES_HPP
 #define BOX_TEXTURES_HPP
 
+#include "glitter.hpp"
+
 #include <random>
 
 #include "learnopengl/mesh.h"
