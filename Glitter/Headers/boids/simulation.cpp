@@ -241,32 +241,8 @@ void BoidActor::Tick(double delta_sec, const std::vector<BoidActor>& boids) {
     maxed_out = total_magnitude >= physics_params_.max_acceleration;
   }
   if (this == first_boid) {
-    std::cout << "components: " << components << " " << sources << std::endl;
+    // std::cout << "components: " << components << " " << sources << std::endl;
   }
-
-  /*
-std::sort(avoidance_requests.begin(), avoidance_requests.end(),
-          [](const DVec3& a, const DVec3& b) {
-            return glm::length2(a) > glm::length2(b);
-          });
-std::sort(velocity_requests.begin(), velocity_requests.end(),
-          [](const DVec3& a, const DVec3& b) {
-            return glm::length2(a) > glm::length2(b);
-          });
-
-bool maxed_out = false;
-double total_magnitude = 0;
-for (int i = 0; i < avoidance_requests.size() && !maxed_out; i++) {
-  acceleration += avoidance_requests[i];
-  total_magnitude += glm::length(avoidance_requests[i]);
-  maxed_out = total_magnitude >= physics_params_.max_acceleration;
-}
-for (int i = 0; i < velocity_requests.size() && !maxed_out; i++) {
-  acceleration += velocity_requests[i];
-  total_magnitude += glm::length(velocity_requests[i]);
-  maxed_out = total_magnitude >= physics_params_.max_acceleration;
-}
-  */
 
   if (glm::length(acceleration) >= physics_params_.max_acceleration) {
     acceleration =
@@ -298,7 +274,7 @@ BoidsSimulation::BoidsSimulation(std::default_random_engine random_gen,
             << std::endl;
   for (int i = 0; i < num_boids; i++) {
     boids_.push_back(BoidActor(
-        RandomPosition(&random_gen_, -70, 70),
+        RandomPosition(&random_gen_, -10, 10),
         RandomVelocity(&random_gen_, kDefaultPhysics.min_speed),
         kDefaultPhysics, kDefaultBehavior,
         GetBoidCharacter(&random_gen_, GetRandomBasicColor(&random_gen_),
