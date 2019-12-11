@@ -10,7 +10,7 @@ class FpsCounter : public CameraEventHandler {
   void KeyboardEvents(GLFWwindow* window) override;
   void TickUpdateCamera(Camera* camera, double delta_time) override;
 
-private:
+ private:
   std::queue<double> frames_;
   double last_printed_;
 };
