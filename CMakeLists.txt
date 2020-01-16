@@ -30,7 +30,7 @@ endif()
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
 
-include_directories(Glitter/Headers/
+include_directories(src/
                     Glitter/Vendor/assimp/include/
                     Glitter/Vendor/bullet/src/
                     Glitter/Vendor/glad/include/
@@ -39,11 +39,10 @@ include_directories(Glitter/Headers/
                     Glitter/Vendor/stb/)
 
 file(GLOB VENDORS_SOURCES Glitter/Vendor/glad/src/glad.c)
-file(GLOB PROJECT_HEADERS Glitter/Headers/*.hpp
-                          Glitter/Headers/boids/*.hpp)
-file(GLOB PROJECT_SOURCES Glitter/Sources/*.cpp
-                          Glitter/Headers/*.cpp
-			  Glitter/Headers/boids/*.cpp)
+file(GLOB PROJECT_HEADERS src/*.hpp
+                          src/boids/*.hpp)
+file(GLOB PROJECT_SOURCES src/*.cpp
+			  src/boids/*.cpp)
 file(GLOB PROJECT_SHADERS Glitter/Shaders/*.comp
                           Glitter/Shaders/*.frag
                           Glitter/Shaders/*.geom
