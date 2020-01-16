@@ -23,6 +23,12 @@
 std::unique_ptr<RtRenderer> InProgressScene(
     std::default_random_engine* random_gen) {
   std::unique_ptr<RtRenderer> renderer(new PointShadowsDynamicRenderer());
+  return renderer;
+}
+
+std::unique_ptr<RtRenderer> GetBoidsScene(
+    std::default_random_engine* random_gen) {
+  std::unique_ptr<RtRenderer> renderer(new PointShadowsDynamicRenderer());
   renderer->OpenWindow("In-Progress Scene");
   std::unique_ptr<BoidsSimulation> simulation(
       new BoidsSimulation(*random_gen, 100));
@@ -44,6 +50,7 @@ std::unique_ptr<RtRenderer> GetBasicFractalNoiseDemo(
     BasicMeshIterator mesh_iterator(20, 250);
     mesh_iterator.SetIterableMesh(std::move(it_mesh));
     MeshVertices mesh_vert = mesh_iterator.GetMesh();
+    mesh_vert = Polygonate(mesh_vert);
     Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {texture});
     std::unique_ptr<Model> generated_model(new Model({mesh}));
     glm::mat4 model_mat = glm::mat4(1.0f);
@@ -56,6 +63,7 @@ std::unique_ptr<RtRenderer> GetBasicFractalNoiseDemo(
     BasicMeshIterator mesh_iterator(20, 250);
     mesh_iterator.SetIterableMesh(std::move(it_mesh));
     MeshVertices mesh_vert = mesh_iterator.GetMesh();
+    mesh_vert = Polygonate(mesh_vert);
     Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {texture});
     std::unique_ptr<Model> generated_model(new Model({mesh}));
     glm::mat4 model_mat = glm::mat4(1.0f);
@@ -64,17 +72,26 @@ std::unique_ptr<RtRenderer> GetBasicFractalNoiseDemo(
   }
   {
     Texture texture = GetTestBoxTexture(random_gen);
-    std::unique_ptr<IterableMesh> it_mesh(new IterableRectPlane(2.0f, 2.0f));
+    std::unique_ptr<IterableMesh> it_mesh(new IterableRectPlane(4.0f, 4.0f));
     std::shared_ptr<MutationGenerator> mut =
         std::make_shared<FractalNoiseGenerator>(random_gen, 7, -0.5f, 0.7f);
-    MutationMeshIterator mesh_iterator(129, 129, mut);
+    MutationMeshIterator mesh_iterator(17, 17, mut);
     mesh_iterator.SetIterableMesh(std::move(it_mesh));
-    MeshVertices mesh_vert = mesh_iterator.GetMesh();
-    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {texture});
-    std::unique_ptr<Model> generated_model(new Model({mesh}));
+    MeshVertices smooth_mesh_vert = mesh_iterator.GetMesh();
+    Mesh smooth_mesh(smooth_mesh_vert.vertices, smooth_mesh_vert.indices,
+                     {texture});
+    std::unique_ptr<Model> smooth_generated_model(new Model({smooth_mesh}));
     glm::mat4 model_mat = glm::mat4(1.0f);
-    model_mat = glm::translate(model_mat, glm::vec3(0, -3.0f, 0));
-    renderer->AddModel(std::move(generated_model), model_mat);
+    model_mat = glm::translate(model_mat, glm::vec3(-2.0f, -3.0f, 0));
+    renderer->AddModel(std::move(smooth_generated_model), model_mat);
+
+    MeshVertices poly_mesh_vert = Polygonate(smooth_mesh_vert);
+    Mesh poly_mesh(poly_mesh_vert.vertices, poly_mesh_vert.indices, {texture});
+    std::unique_ptr<Model> poly_generated_model(new Model({poly_mesh}));
+    model_mat = glm::mat4(1.0f);
+    model_mat = glm::translate(model_mat, glm::vec3(2.0f, -3.0f, 0));
+    model_mat = glm::scale(model_mat, glm::vec3(-1.0f, 1.0f, 1.0f));
+    renderer->AddModel(std::move(poly_generated_model), model_mat);
   }
   return renderer;
 }

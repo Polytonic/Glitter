@@ -16,6 +16,7 @@ struct MeshVertices {
 };
 
 void ReverseNormals(MeshVertices* object);
+MeshVertices Polygonate(const MeshVertices& object);
 
 class MeshIterator {
  public:

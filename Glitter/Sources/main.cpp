@@ -19,7 +19,8 @@
 #include "rt_renderer.hpp"
 
 int main() {
-  std::default_random_engine random_gen(time(NULL));
+  // std::default_random_engine random_gen(time(NULL));
+  std::default_random_engine random_gen(4);
   random_gen.discard(64);
 
   // glfw: initialize and configure
@@ -33,7 +34,7 @@ int main() {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-  std::unique_ptr<RtRenderer> renderer = InProgressScene(&random_gen);
+  std::unique_ptr<RtRenderer> renderer = GetBoidsScene(&random_gen);
   // std::unique_ptr<RtRenderer> renderer(new SimpleRtRenderer());
 
   // render loop

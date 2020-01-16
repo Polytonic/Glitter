@@ -9,6 +9,37 @@ void ReverseNormals(MeshVertices* object) {
   }
 }
 
+MeshVertices Polygonate(const MeshVertices& object) {
+  MeshVertices result;
+  if (object.indices.size() % 3 != 0) {
+    std::cerr << "Object has indices size: " << object.indices.size()
+              << std::endl;
+    exit(-1);
+  }
+  for (int i = 0; i < object.indices.size(); i += 3) {
+    result.vertices.push_back(object.vertices[object.indices[i]]);
+    result.indices.push_back(i);
+    result.vertices.push_back(object.vertices[object.indices[i + 1]]);
+    result.indices.push_back(i + 1);
+    result.vertices.push_back(object.vertices[object.indices[i + 2]]);
+    result.indices.push_back(i + 2);
+    DVec3 p0 = result.vertices[i].Position;
+    DVec3 p1 = result.vertices[i + 1].Position;
+    DVec3 p2 = result.vertices[i + 2].Position;
+    DVec3 norm = glm::normalize(glm::cross((p1 - p0), (p2 - p0)));
+    DVec3 original_norm = glm::normalize(result.vertices[i].Normal +
+                                         result.vertices[i + 1].Normal +
+                                         result.vertices[i + 2].Normal);
+    if (glm::dot(norm, original_norm) < 0) {
+      norm = -1.0 * norm;
+    }
+    result.vertices[i].Normal = norm;
+    result.vertices[i + 1].Normal = norm;
+    result.vertices[i + 2].Normal = norm;
+  }
+  return result;
+}
+
 BasicMeshIterator::BasicMeshIterator(unsigned int u_texels,
                                      unsigned int v_texels)
     : u_texels_(u_texels), v_texels_(v_texels) {}
