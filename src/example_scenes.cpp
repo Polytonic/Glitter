@@ -13,6 +13,7 @@
 #include "learnopengl/model.h"
 #include "learnopengl/shader_m.h"
 #include "mesh_iterator.hpp"
+#include "multi_light_renderer.hpp"
 #include "mutation_generator.hpp"
 #include "point_shadows_dynamic_renderer.hpp"
 #include "point_shadows_rt_renderer.hpp"
@@ -22,7 +23,71 @@
 
 std::unique_ptr<RtRenderer> InProgressScene(
     std::default_random_engine* random_gen) {
-  std::unique_ptr<RtRenderer> renderer(new PointShadowsDynamicRenderer());
+  std::unique_ptr<MultiLightRenderer> renderer(new MultiLightRenderer());
+  FpsCounter* fps = new FpsCounter;
+  renderer->AddEventHandler(fps);
+  renderer->OpenWindow("Fractal Noise Demo");
+  {
+    Texture texture = GetWhiteTexture();
+    std::unique_ptr<IterableMesh> it_mesh(
+        new IterableHelix(0.5f, 4.0f, 0.1f, 0.25f));
+    BasicMeshIterator mesh_iterator(20, 250);
+    mesh_iterator.SetIterableMesh(std::move(it_mesh));
+    MeshVertices mesh_vert = mesh_iterator.GetMesh();
+    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {texture});
+    std::unique_ptr<Model> generated_model(new Model({mesh}));
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    renderer->AddModel(std::move(generated_model), model_mat);
+  }
+  {
+    Texture texture = GetTestBoxTexture(random_gen);
+    std::unique_ptr<IterableMesh> it_mesh(
+        new IterableHelix(0.5f, 4.0f, 0.1f, 0.25f));
+    BasicMeshIterator mesh_iterator(20, 250);
+    mesh_iterator.SetIterableMesh(std::move(it_mesh));
+    MeshVertices mesh_vert = mesh_iterator.GetMesh();
+    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {texture});
+    std::unique_ptr<Model> generated_model(new Model({mesh}));
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    model_mat = glm::rotate(model_mat, (float)M_PI, glm::vec3(0, 1.0f, 0));
+    renderer->AddModel(std::move(generated_model), model_mat);
+  }
+  {
+    // Texture texture = GetTestBoxTexture(random_gen);
+    Texture texture = GetWhiteTexture();
+    std::unique_ptr<IterableMesh> it_mesh(new IterableRectPlane(4.0f, 4.0f));
+    std::shared_ptr<MutationGenerator> mut =
+        std::make_shared<FractalNoiseGenerator>(random_gen, 7, -0.5f, 0.7f);
+    MutationMeshIterator mesh_iterator(17, 17, mut);
+    mesh_iterator.SetIterableMesh(std::move(it_mesh));
+    MeshVertices smooth_mesh_vert = mesh_iterator.GetMesh();
+    Mesh smooth_mesh(smooth_mesh_vert.vertices, smooth_mesh_vert.indices,
+                     {texture});
+    std::unique_ptr<Model> smooth_generated_model(new Model({smooth_mesh}));
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    model_mat = glm::translate(model_mat, glm::vec3(-2.0f, -3.0f, 0));
+    renderer->AddModel(std::move(smooth_generated_model), model_mat);
+
+    MeshVertices poly_mesh_vert = Polygonate(smooth_mesh_vert);
+    Mesh poly_mesh(poly_mesh_vert.vertices, poly_mesh_vert.indices, {texture});
+    std::unique_ptr<Model> poly_generated_model(new Model({poly_mesh}));
+    model_mat = glm::mat4(1.0f);
+    model_mat = glm::translate(model_mat, glm::vec3(2.0f, -3.0f, 0));
+    model_mat = glm::scale(model_mat, glm::vec3(-1.0f, 1.0f, 1.0f));
+    renderer->AddModel(std::move(poly_generated_model), model_mat);
+  }
+  {
+    Light l;
+    l.Position = glm::vec3(0);
+    l.Color = glm::vec3(1);
+    renderer->AddLight(l);
+  }
+  {
+    Light l;
+    l.Position = glm::vec3(-1, -1, 1);
+    l.Color = glm::vec3(1);
+    renderer->AddLight(l);
+  }
   return renderer;
 }
 

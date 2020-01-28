@@ -29,6 +29,14 @@ struct Vertex {
   glm::vec3 Bitangent;
 };
 
+struct Light {
+  glm::vec3 Position;
+  glm::vec3 Color;
+
+  float Linear = 0.2f;
+  float Quadratic = 0.4f;
+};
+
 struct Texture {
   unsigned int id = 0;
   string type;

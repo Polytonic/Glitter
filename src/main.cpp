@@ -34,7 +34,7 @@ int main() {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-  std::unique_ptr<RtRenderer> renderer = GetBoidsScene(&random_gen);
+  std::unique_ptr<RtRenderer> renderer = InProgressScene(&random_gen);
   // std::unique_ptr<RtRenderer> renderer(new SimpleRtRenderer());
 
   // render loop
