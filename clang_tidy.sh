@@ -1,6 +1,6 @@
 #!/bin/bash
 
-clang-format -i Glitter/Headers/*pp &&
-    clang-format -i Glitter/Sources/*pp &&
-    clang-format -i Glitter/Headers/learnopengl/*h &&
-    clang-format -i Glitter/Headers/boids/*pp
+clang-format -i src/*pp &&
+    clang-format -i src/*pp &&
+    clang-format -i src/learnopengl/*h &&
+    clang-format -i src/boids/*pp
