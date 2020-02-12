@@ -22,7 +22,7 @@
 #include "simple_rt_renderer.hpp"
 #include "texture_gen.hpp"
 
-std::unique_ptr<RtRenderer> InProgressScene(
+std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     std::default_random_engine* random_gen) {
   std::unique_ptr<MultiLightRenderer> renderer(new MultiLightRenderer());
   FpsCounter* fps = new FpsCounter;
@@ -123,7 +123,6 @@ std::unique_ptr<RtRenderer> InProgressScene(
     MeshVertices mesh_vert = mesh_iterator.GetMesh();
     Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {texture});
     std::unique_ptr<Model> generated_model(new Model({mesh}));
-    glm::mat4 model_mat = glm::mat4(1.0f);
     renderer->AddModel(std::move(generated_model), second_helix_model_mat);
   }
   {

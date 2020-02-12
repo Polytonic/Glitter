@@ -13,7 +13,7 @@
 using RtSceneFn = std::function<std::unique_ptr<RtRenderer>(
     std::default_random_engine* random_gen)>;
 
-std::unique_ptr<RtRenderer> InProgressScene(
+std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     std::default_random_engine* random_gen);
 
 std::unique_ptr<RtRenderer> GetBoidsScene(

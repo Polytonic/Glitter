@@ -71,6 +71,9 @@ class Camera {
     updateCameraVectors();
   }
 
+  glm::vec3 front() { return Front; }
+  glm::vec3 position() { return Position; }
+
   void SetPosition(glm::vec3 pos) { Position = pos; }
 
   void SetFront(glm::vec3 front) {
