@@ -68,16 +68,17 @@ IterableHelix::IterableHelix(double helix_radius, double helix_height,
 ComputedVertex IterableHelix::GetVertex(double u, double v) {
   ComputedVertex vertex;
   v = 2 * v - 1.0;
+  u = 1.0 - u;
   double current_radians = v * helix_height_ * loops_per_unit_ * 2 * M_PI;
 
   double slope = 1.0 / (helix_radius_ * 2 * M_PI * loops_per_unit_);
 
-  glm::vec4 fiber_position_flat(std::sin(current_radians), 0,
+  DVec4 fiber_position_flat(std::sin(current_radians), 0,
                                 std::cos(current_radians), 0);
   DVec3 fiber_position(helix_radius_ * fiber_position_flat.x, v * helix_height_,
                        helix_radius_ * fiber_position_flat.z);
   // Rotate flat fiber position 90 degress about the vertical axis.
-  glm::vec4 horizontal_dir =
+  DVec4 horizontal_dir =
       glm::rotate((double)M_PI / 2.0, DVec3(0, 1, 0)) * fiber_position_flat;
   // Since horizontal_dir is normalized, just stick in slope
   // for y.
@@ -85,8 +86,8 @@ ComputedVertex IterableHelix::GetVertex(double u, double v) {
   norm_fiber_dir = glm::normalize(norm_fiber_dir);
   DVec3 norm_xz_fiber_pos(fiber_position_flat.x, 0, fiber_position_flat.z);
   DVec3 unrotated_surface_pos = norm_xz_fiber_pos * fiber_radius_;
-  glm::mat4 rot_mat = glm::rotate(u * 2 * (double)M_PI, norm_fiber_dir);
-  glm::vec4 surface_pos4 = rot_mat * glm::vec4(unrotated_surface_pos, 1.0);
+  DMat4 rot_mat = glm::rotate(u * 2 * (double)M_PI, norm_fiber_dir);
+  DVec4 surface_pos4 = rot_mat * DVec4(unrotated_surface_pos, 1.0);
   if (surface_pos4[3] != 1.0) {
     std::cerr << "got 4th element " << surface_pos4[3] << std::endl;
     exit(-1);

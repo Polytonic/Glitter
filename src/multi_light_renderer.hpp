@@ -36,6 +36,7 @@ class MultiLightRenderer : public RtRenderer {
 
   GLFWwindow* window_;
   std::unique_ptr<Shader> shader_;
+  std::unique_ptr<Shader> depth_shader_;
   std::unique_ptr<Shader> light_box_shader_;
   std::vector<std::unique_ptr<Renderable>> static_models_;
   std::vector<glm::mat4> static_model_matrices_;
@@ -49,7 +50,6 @@ class MultiLightRenderer : public RtRenderer {
   unsigned int depthMapFBO;
   unsigned int depthCubemap;
   std::vector<Light> lights_;
-  ;
 };
 
 #endif

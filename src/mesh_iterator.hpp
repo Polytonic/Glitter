@@ -18,6 +18,8 @@ struct MeshVertices {
 void ReverseNormals(MeshVertices* object);
 MeshVertices Polygonate(const MeshVertices& object);
 
+DVec3 CalcNormal(IterableMesh* model, double u, double v, double epsilon);
+
 class MeshIterator {
  public:
   void SetIterableMesh(std::unique_ptr<IterableMesh> iterable_model) {
@@ -41,6 +43,19 @@ class BasicMeshIterator : public MeshIterator {
  private:
   unsigned int u_texels_;
   unsigned int v_texels_;
+};
+
+class CalcNormalsMeshIterator : public MeshIterator {
+ public:
+  CalcNormalsMeshIterator(unsigned int u_texels, unsigned int v_texels,
+              double epsilon = 1e-10);
+
+  MeshVertices GetMesh() override;
+
+ private:
+  unsigned int u_texels_;
+  unsigned int v_texels_;
+  double epsilon_;
 };
 
 class MutationMeshIterator : public MeshIterator {

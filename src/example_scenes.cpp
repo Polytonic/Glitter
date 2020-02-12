@@ -18,6 +18,7 @@
 #include "point_shadows_dynamic_renderer.hpp"
 #include "point_shadows_rt_renderer.hpp"
 #include "rt_renderer.hpp"
+#include "shapes/onion.hpp"
 #include "simple_rt_renderer.hpp"
 #include "texture_gen.hpp"
 
@@ -40,10 +41,24 @@ std::unique_ptr<RtRenderer> InProgressScene(
     renderer->AddModel(std::move(generated_model), model_mat);
   }
   {
+    Texture texture = GetWhiteTexture();
+    MeshVertices mesh_vert = GetGarlic(/*outer_radius=*/0.4,
+				       /*inner_radius=*/0.3,
+				       /*cloves=*/9,
+				       /*clove_res=*/15,
+				       /*height_res=*/40);
+    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {texture});
+    std::unique_ptr<Model> generated_model(new Model({mesh}));
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    model_mat = glm::translate(model_mat, glm::vec3(-1.5, 0.0, 0.0));
+    renderer->AddModel(std::move(generated_model), model_mat);
+  }
+  {
     Texture texture = GetTestBoxTexture(random_gen);
     std::unique_ptr<IterableMesh> it_mesh(
         new IterableHelix(0.5f, 4.0f, 0.1f, 0.25f));
-    BasicMeshIterator mesh_iterator(20, 250);
+    // BasicMeshIterator mesh_iterator(20, 250);
+    CalcNormalsMeshIterator mesh_iterator(20, 250);
     mesh_iterator.SetIterableMesh(std::move(it_mesh));
     MeshVertices mesh_vert = mesh_iterator.GetMesh();
     Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {texture});

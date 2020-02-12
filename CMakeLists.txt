@@ -40,9 +40,11 @@ include_directories(src/
 
 file(GLOB VENDORS_SOURCES Glitter/Vendor/glad/src/glad.c)
 file(GLOB PROJECT_HEADERS src/*.hpp
-                          src/boids/*.hpp)
+  src/boids/*.hpp
+  src/shapes/*.hpp)
 file(GLOB PROJECT_SOURCES src/*.cpp
-			  src/boids/*.cpp)
+  src/boids/*.cpp
+  src/shapes/*.cpp)
 file(GLOB PROJECT_SHADERS Glitter/Shaders/*.comp
                           Glitter/Shaders/*.frag
                           Glitter/Shaders/*.geom
