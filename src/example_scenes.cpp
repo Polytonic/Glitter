@@ -43,10 +43,10 @@ std::unique_ptr<RtRenderer> InProgressScene(
   {
     Texture texture = GetWhiteTexture();
     MeshVertices mesh_vert = GetGarlic(/*outer_radius=*/0.4,
-				       /*inner_radius=*/0.3,
-				       /*cloves=*/9,
-				       /*clove_res=*/15,
-				       /*height_res=*/40);
+                                       /*inner_radius=*/0.3,
+                                       /*cloves=*/9,
+                                       /*clove_res=*/15,
+                                       /*height_res=*/40);
     Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {texture});
     std::unique_ptr<Model> generated_model(new Model({mesh}));
     glm::mat4 model_mat = glm::mat4(1.0f);

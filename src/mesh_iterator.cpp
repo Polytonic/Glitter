@@ -49,7 +49,7 @@ DVec3 CalcNormal(IterableMesh* model, double u, double v, double epsilon) {
   double u_down = u - epsilon;
   double v_up = v + epsilon;
   double v_down = v - epsilon;*/
-  
+
   DVec3 x_forward = model->GetVertex(u_up, v).position;
   DVec3 x_back = model->GetVertex(u_down, v).position;
   DVec3 y_forward = model->GetVertex(u, v_up).position;
@@ -57,7 +57,7 @@ DVec3 CalcNormal(IterableMesh* model, double u, double v, double epsilon) {
   DVec3 x_diff = x_forward - x_back;
   DVec3 y_diff = y_forward - y_back;
   DVec3 norm = glm::cross(y_diff, x_diff);
-  return glm::normalize(norm);  
+  return glm::normalize(norm);
 }
 
 BasicMeshIterator::BasicMeshIterator(unsigned int u_texels,
@@ -113,12 +113,10 @@ MeshVertices BasicMeshIterator::GetMesh() {
   return mesh;
 }
 
-CalcNormalsMeshIterator::CalcNormalsMeshIterator(
-    unsigned int u_texels, unsigned int v_texels,
-    double epsilon)
-    : u_texels_(u_texels),
-      v_texels_(v_texels),
-      epsilon_(epsilon) {}
+CalcNormalsMeshIterator::CalcNormalsMeshIterator(unsigned int u_texels,
+                                                 unsigned int v_texels,
+                                                 double epsilon)
+    : u_texels_(u_texels), v_texels_(v_texels), epsilon_(epsilon) {}
 
 MeshVertices CalcNormalsMeshIterator::GetMesh() {
   if (iterable_model_ == nullptr) {

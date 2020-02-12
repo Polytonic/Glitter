@@ -48,7 +48,7 @@ class BasicMeshIterator : public MeshIterator {
 class CalcNormalsMeshIterator : public MeshIterator {
  public:
   CalcNormalsMeshIterator(unsigned int u_texels, unsigned int v_texels,
-              double epsilon = 1e-10);
+                          double epsilon = 1e-10);
 
   MeshVertices GetMesh() override;
 

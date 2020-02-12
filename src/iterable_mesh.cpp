@@ -74,7 +74,7 @@ ComputedVertex IterableHelix::GetVertex(double u, double v) {
   double slope = 1.0 / (helix_radius_ * 2 * M_PI * loops_per_unit_);
 
   DVec4 fiber_position_flat(std::sin(current_radians), 0,
-                                std::cos(current_radians), 0);
+                            std::cos(current_radians), 0);
   DVec3 fiber_position(helix_radius_ * fiber_position_flat.x, v * helix_height_,
                        helix_radius_ * fiber_position_flat.z);
   // Rotate flat fiber position 90 degress about the vertical axis.
