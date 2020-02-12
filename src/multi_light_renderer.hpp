@@ -31,6 +31,14 @@ class MultiLightRenderer : public RtRenderer {
   bool AddLight(const Light& light);
   int MaxNumLights() const;
 
+  void set_directional_light_pos(glm::vec3 pos) {
+    directional_light_pos_ = pos;
+  }
+
+  void set_directional_light_color(glm::vec3 color) {
+    directional_light_color_ = color;
+  }
+
  private:
   void processInput(float deltaTime);
 
@@ -47,9 +55,11 @@ class MultiLightRenderer : public RtRenderer {
   bool pause_ = true;
 
   float lastFrameTime = 0.0f;
-  unsigned int depthMapFBO;
-  unsigned int depthCubemap;
+  unsigned int depth_map_texture_;
+  unsigned int depth_map_fbo_;
   std::vector<Light> lights_;
+  glm::vec3 directional_light_pos_ = glm::vec3(-6.0f, 6.0f, -6.0f);
+  glm::vec3 directional_light_color_ = glm::vec3(0.2f, 0.2f, 0.2f);
 };
 
 #endif
