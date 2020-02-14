@@ -47,22 +47,33 @@ struct Texture {
   unsigned char* data = nullptr;
 };
 
+class Material {
+ public:
+  Material(Texture diff_texture);
+
+  const Texture& diff_texture() const { return diff_texture_; }
+
+ private:
+  Texture diff_texture_;
+};
+
 class Mesh : public Renderable {
  public:
   /*  Mesh Data  */
   vector<Vertex> vertices;
   vector<unsigned int> indices;
-  vector<Texture> textures;
+  vector<Material> materials;
   unsigned int VAO;
 
   /*  Functions  */
   // constructor
   Mesh(vector<Vertex> vertices, vector<unsigned int> indices,
-       vector<Texture> textures, glm::mat4 local_model_mat = glm::mat4(1.0f)) {
+       vector<Material> materials,
+       glm::mat4 local_model_mat = glm::mat4(1.0f)) {
     this->vertices = std::move(vertices);
     this->indices = std::move(indices);
-    this->textures = std::move(textures);
-    this->local_model_mat = local_model_mat;
+    this->materials = std::move(materials);
+    this->local_model_mat_ = local_model_mat;
 
     // now that we have all the required data, set the vertex buffers and its
     // attribute pointers.
@@ -71,36 +82,22 @@ class Mesh : public Renderable {
 
   // render the mesh
   void Draw(ShaderSet shaders, glm::mat4 model_mat) override {
-    // bind appropriate textures
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
-    unsigned int normalNr = 1;
-    unsigned int heightNr = 1;
-    for (unsigned int i = 0; i < textures.size() && i < 1; i++) {
-      glActiveTexture(GL_TEXTURE0 +
-                      i);  // active proper texture unit before binding
+    // bind textures
+    if (!materials.empty()) {
+      glActiveTexture(GL_TEXTURE0);
       // retrieve texture number (the N in diffuse_textureN)
-      string number;
-      string name = textures[i].type;
-      if (name == "texture_diffuse")
-        number = std::to_string(diffuseNr++);
-      else if (name == "texture_specular")
-        number =
-            std::to_string(specularNr++);  // transfer unsigned int to stream
-      else if (name == "texture_normal")
-        number = std::to_string(normalNr++);  // transfer unsigned int to stream
-      else if (name == "texture_height")
-        number = std::to_string(heightNr++);  // transfer unsigned int to stream
+      string number = "0";
+      string name = materials[0].diff_texture().type;
 
       // now set the sampler to the correct texture unit
       glUniform1i(glGetUniformLocation(shaders.texture_shader->ID,
                                        (name + number).c_str()),
-                  i);
+                  0);
       // and finally bind the texture
-      glBindTexture(GL_TEXTURE_2D, textures[i].id);
+      glBindTexture(GL_TEXTURE_2D, materials[0].diff_texture().id);
     }
 
-    shaders.texture_shader->setMat4("model", model_mat * local_model_mat);
+    shaders.texture_shader->setMat4("model", model_mat * local_model_mat_);
     // draw mesh
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -110,10 +107,12 @@ class Mesh : public Renderable {
     glActiveTexture(GL_TEXTURE0);
   }
 
+  glm::mat4 local_model_mat() const { return local_model_mat_; }
+
  private:
   /*  Render data  */
   unsigned int VBO, EBO;
-  glm::mat4 local_model_mat;
+  glm::mat4 local_model_mat_;
 
   /*  Functions    */
   // initializes all the buffer objects/arrays
