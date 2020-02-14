@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-  std::unique_ptr<RtRenderer> renderer = HelixGarlicNanoScene(false, &random_gen);
+  std::unique_ptr<RtRenderer> renderer = HelixGarlicNanoScene(true, &random_gen);
 
   renderer->MoveCamera(GetStartingCamera(argc, argv));
 

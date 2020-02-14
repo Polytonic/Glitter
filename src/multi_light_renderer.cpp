@@ -47,6 +47,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 GLFWwindow* MultiLightRenderer::Init(const std::string& window_name) {
   if (!windowed_mode_) {
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+    glfwWindowHint(GLFW_COCOA_MENUBAR, GLFW_FALSE);
   }
   window_ =
       glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, window_name.c_str(), NULL, NULL);
