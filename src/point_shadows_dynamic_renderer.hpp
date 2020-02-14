@@ -18,8 +18,9 @@
 
 class PointShadowsDynamicRenderer : public RtRenderer {
  public:
-  PointShadowsDynamicRenderer();
-  GLFWwindow* OpenWindow(const std::string& window_name = "RT Render") override;
+  PointShadowsDynamicRenderer(bool windowed_mode = true)
+      : RtRenderer(windowed_mode) {}
+  GLFWwindow* Init(const std::string& window_name = "RT Render") override;
   void AddModel(const std::string& file_path, glm::mat4 model_matrix) override;
   void AddModel(std::unique_ptr<Renderable> model,
                 glm::mat4 model_matrix) override;
@@ -27,6 +28,8 @@ class PointShadowsDynamicRenderer : public RtRenderer {
   void AddEventHandler(CameraEventHandler* event_handler) override;
   void Render() override;
   bool WindowShouldClose() override;
+  void MoveCamera(const CameraArrangement& camera);
+  const Camera& camera();
 
  private:
   void processInput(float deltaTime);
@@ -46,7 +49,7 @@ class PointShadowsDynamicRenderer : public RtRenderer {
   float lastFrameTime = 0.0f;
   unsigned int depthMapFBO;
   unsigned int depthCubemap;
-  glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3 lightPos = glm::vec3(0.0f);
 };
 
 #endif

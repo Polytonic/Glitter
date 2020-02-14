@@ -25,6 +25,11 @@ const float SPEED = 5.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
+struct CameraArrangement {
+  glm::vec3 position;
+  glm::vec3 view_dir;
+};
+
 // An abstract camera class that processes input and calculates the
 // corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Camera {
@@ -71,8 +76,8 @@ class Camera {
     updateCameraVectors();
   }
 
-  glm::vec3 front() { return Front; }
-  glm::vec3 position() { return Position; }
+  glm::vec3 front() const { return Front; }
+  glm::vec3 position() const { return Position; }
 
   void SetPosition(glm::vec3 pos) { Position = pos; }
 

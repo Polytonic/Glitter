@@ -16,18 +16,17 @@
 #include "multi_light_renderer.hpp"
 #include "mutation_generator.hpp"
 #include "point_shadows_dynamic_renderer.hpp"
-#include "point_shadows_rt_renderer.hpp"
 #include "rt_renderer.hpp"
 #include "shapes/onion.hpp"
-#include "simple_rt_renderer.hpp"
 #include "texture_gen.hpp"
 
 std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
-    std::default_random_engine* random_gen) {
-  std::unique_ptr<MultiLightRenderer> renderer(new MultiLightRenderer());
+    bool windowed_mode, std::default_random_engine* random_gen) {
+  std::unique_ptr<MultiLightRenderer> renderer(
+      new MultiLightRenderer(windowed_mode));
   FpsCounter* fps = new FpsCounter;
   renderer->AddEventHandler(fps);
-  renderer->OpenWindow("Fractal Noise Demo");
+  renderer->Init("HelixGarlicNanoScene");
   {
     std::string objects_dir = "resources/objects/";
     std::string model_dir = "nanosuit";
@@ -157,9 +156,10 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
 }
 
 std::unique_ptr<RtRenderer> GetBoidsScene(
-    std::default_random_engine* random_gen) {
-  std::unique_ptr<RtRenderer> renderer(new PointShadowsDynamicRenderer());
-  renderer->OpenWindow("In-Progress Scene");
+    bool windowed_mode, std::default_random_engine* random_gen) {
+  std::unique_ptr<RtRenderer> renderer(
+      new PointShadowsDynamicRenderer(windowed_mode));
+  renderer->Init("In-Progress Scene");
   std::unique_ptr<BoidsSimulation> simulation(
       new BoidsSimulation(*random_gen, 100));
   renderer->AddEventHandler(simulation.get());
@@ -170,9 +170,10 @@ std::unique_ptr<RtRenderer> GetBoidsScene(
 }
 
 std::unique_ptr<RtRenderer> GetBasicFractalNoiseDemo(
-    std::default_random_engine* random_gen) {
-  std::unique_ptr<RtRenderer> renderer(new PointShadowsRtRenderer());
-  renderer->OpenWindow("Fractal Noise Demo");
+    bool windowed_mode, std::default_random_engine* random_gen) {
+  std::unique_ptr<RtRenderer> renderer(
+      new PointShadowsDynamicRenderer(windowed_mode));
+  renderer->Init("Fractal Noise Demo");
   {
     Texture texture = GetWhiteTexture();
     std::unique_ptr<IterableMesh> it_mesh(
@@ -227,9 +228,10 @@ std::unique_ptr<RtRenderer> GetBasicFractalNoiseDemo(
 }
 
 std::unique_ptr<RtRenderer> GetSponzaDemo(
-    std::default_random_engine* random_gen) {
-  std::unique_ptr<RtRenderer> renderer(new PointShadowsRtRenderer());
-  renderer->OpenWindow("Sponza Demo");
+    bool windowed_mode, std::default_random_engine* random_gen) {
+  std::unique_ptr<RtRenderer> renderer(
+      new PointShadowsDynamicRenderer(windowed_mode));
+  renderer->Init("Sponza Demo");
   {
     std::string objects_dir = "resources/objects/";
     std::string model_dir = "nanosuit";

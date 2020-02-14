@@ -18,8 +18,8 @@
 
 class MultiLightRenderer : public RtRenderer {
  public:
-  MultiLightRenderer();
-  GLFWwindow* OpenWindow(const std::string& window_name = "RT Render") override;
+  MultiLightRenderer(bool windowed_mode = true) : RtRenderer(windowed_mode) {}
+  GLFWwindow* Init(const std::string& window_name = "RT Render") override;
   void AddModel(const std::string& file_path, glm::mat4 model_matrix) override;
   void AddModel(std::unique_ptr<Renderable> model,
                 glm::mat4 model_matrix) override;
@@ -27,6 +27,8 @@ class MultiLightRenderer : public RtRenderer {
   void AddEventHandler(CameraEventHandler* event_handler) override;
   void Render() override;
   bool WindowShouldClose() override;
+  void MoveCamera(const CameraArrangement& camera);
+  const Camera& camera();
 
   bool AddLight(const Light& light);
   int MaxNumLights() const;
@@ -42,7 +44,7 @@ class MultiLightRenderer : public RtRenderer {
  private:
   void processInput(float deltaTime);
 
-  GLFWwindow* window_;
+  GLFWwindow* window_ = nullptr;
   std::unique_ptr<Shader> shader_;
   std::unique_ptr<Shader> depth_shader_;
   std::unique_ptr<Shader> light_box_shader_;

@@ -43,10 +43,10 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 
 }  // namespace
 
-PointShadowsDynamicRenderer::PointShadowsDynamicRenderer() : lightPos(0) {}
-
-GLFWwindow* PointShadowsDynamicRenderer::OpenWindow(
-    const std::string& window_name) {
+GLFWwindow* PointShadowsDynamicRenderer::Init(const std::string& window_name) {
+  if (!windowed_mode_) {
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+  }
   window_ =
       glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, window_name.c_str(), NULL, NULL);
   if (window_ == NULL) {
@@ -135,6 +135,7 @@ void PointShadowsDynamicRenderer::AddEventHandler(
 }
 
 void PointShadowsDynamicRenderer::Render() {
+  if (window_ == nullptr) return;
   glfwMakeContextCurrent(window_);
 
   float currentFrame = glfwGetTime();
@@ -258,10 +259,19 @@ void PointShadowsDynamicRenderer::Render() {
 }
 
 bool PointShadowsDynamicRenderer::WindowShouldClose() {
+  if (window_ == nullptr || !windowed_mode_) return true;
   return glfwWindowShouldClose(window_);
 }
 
+void PointShadowsDynamicRenderer::MoveCamera(const CameraArrangement& camera) {
+  camera_.SetPosition(camera.position);
+  camera_.SetFront(camera.view_dir);
+}
+
+const Camera& PointShadowsDynamicRenderer::camera() { return camera_; }
+
 void PointShadowsDynamicRenderer::processInput(float deltaTime) {
+  if (window_ == nullptr) return;
   if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window_, true);
 

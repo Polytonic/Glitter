@@ -44,9 +44,10 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 
 }  // namespace
 
-MultiLightRenderer::MultiLightRenderer() {}
-
-GLFWwindow* MultiLightRenderer::OpenWindow(const std::string& window_name) {
+GLFWwindow* MultiLightRenderer::Init(const std::string& window_name) {
+  if (!windowed_mode_) {
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+  }
   window_ =
       glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, window_name.c_str(), NULL, NULL);
   if (window_ == NULL) {
@@ -135,6 +136,7 @@ void MultiLightRenderer::AddEventHandler(CameraEventHandler* event_handler) {
 }
 
 void MultiLightRenderer::Render() {
+  if (window_ == nullptr) return;
   glfwMakeContextCurrent(window_);
 
   float currentFrame = glfwGetTime();
@@ -238,8 +240,16 @@ void MultiLightRenderer::Render() {
 }
 
 bool MultiLightRenderer::WindowShouldClose() {
+  if (window_ == nullptr || !windowed_mode_) return true;
   return glfwWindowShouldClose(window_);
 }
+
+void MultiLightRenderer::MoveCamera(const CameraArrangement& camera) {
+  camera_.SetPosition(camera.position);
+  camera_.SetFront(camera.view_dir);
+}
+
+const Camera& MultiLightRenderer::camera() { return camera_; }
 
 bool MultiLightRenderer::AddLight(const Light& light) {
   if (lights_.size() < kNumLights) {
@@ -252,6 +262,7 @@ bool MultiLightRenderer::AddLight(const Light& light) {
 int MultiLightRenderer::MaxNumLights() const { return kNumLights; }
 
 void MultiLightRenderer::processInput(float deltaTime) {
+  if (window_ == nullptr) return;
   if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window_, true);
 

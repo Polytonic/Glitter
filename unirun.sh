@@ -5,5 +5,5 @@ cp Glitter/Shaders/* Build/Glitter/;
 cd Build
 make -j 8 &&
     cd Glitter &&
-    time ./Glitter
+    time ./Glitter "$@"
 cd $STARTING_DIR

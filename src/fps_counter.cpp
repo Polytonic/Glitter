@@ -3,6 +3,8 @@
 #include <GLFW/glfw3.h>
 #include "glitter.hpp"
 
+FpsCounter::FpsCounter(double delay) : delay_(delay) {}
+
 void FpsCounter::KeyboardEvents(GLFWwindow* window) {}
 
 void FpsCounter::TickUpdateCamera(Camera* camera, double delta_time) {
@@ -12,12 +14,16 @@ void FpsCounter::TickUpdateCamera(Camera* camera, double delta_time) {
     last_printed_ = now;
     return;
   }
-  if (now > last_printed_ + 1) {
+  if (now > last_printed_ + delay_) {
     while (frames_.front() < now - 5) {
       frames_.pop();
     }
     double fps = frames_.size() / (now - frames_.front());
     last_printed_ = now;
-    std::cout << "FPS: " << fps << std::endl;
+    std::cerr << "FPS: " << fps << std::endl;
+    std::cerr << "Camera:" << camera->position().x << " "
+              << camera->position().y << " " << camera->position().z << " "
+              << camera->front().x << " " << camera->front().y << " "
+              << camera->front().z << std::endl;
   }
 }

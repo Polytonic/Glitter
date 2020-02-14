@@ -76,8 +76,7 @@ class Mesh : public Renderable {
     unsigned int specularNr = 1;
     unsigned int normalNr = 1;
     unsigned int heightNr = 1;
-    // for (unsigned int i = 0; i < textures.size(); i++) {
-    for (unsigned int i = 0; i < 1; i++) {
+    for (unsigned int i = 0; i < textures.size() && i < 1; i++) {
       glActiveTexture(GL_TEXTURE0 +
                       i);  // active proper texture unit before binding
       // retrieve texture number (the N in diffuse_textureN)

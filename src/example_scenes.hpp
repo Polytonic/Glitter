@@ -11,18 +11,18 @@
 #include "rt_renderer.hpp"
 
 using RtSceneFn = std::function<std::unique_ptr<RtRenderer>(
-    std::default_random_engine* random_gen)>;
+    bool windowed_mode, std::default_random_engine* random_gen)>;
 
 std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
-    std::default_random_engine* random_gen);
+    bool windowed_mode, std::default_random_engine* random_gen);
 
 std::unique_ptr<RtRenderer> GetBoidsScene(
-    std::default_random_engine* random_gen);
+    bool windowed_mode, std::default_random_engine* random_gen);
 
 std::unique_ptr<RtRenderer> GetBasicFractalNoiseDemo(
-    std::default_random_engine* random_gen);
+    bool windowed_mode, std::default_random_engine* random_gen);
 
 std::unique_ptr<RtRenderer> GetSponzaDemo(
-    std::default_random_engine* random_gen);
+    bool windowed_mode, std::default_random_engine* random_gen);
 
 #endif
