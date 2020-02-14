@@ -23,7 +23,9 @@
 using namespace std;
 
 void BuildGlTexture(Texture* texture);
-Texture TextureFromFile(const char* path, const string& directory,
+Texture TextureFromFile(const string& filename, const string& typeName,
+                        bool gamma = false);
+Texture TextureFromFile(const string& path, const string& directory,
                         const string& typeName, bool gamma = false);
 
 class Model : public Renderable {

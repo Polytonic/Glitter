@@ -34,7 +34,34 @@ void BuildGlTexture(Texture* texture) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-Texture TextureFromFile(const char* path, const string& directory,
+Texture TextureFromFile(const string& filename,
+                        const string& typeName, bool gamma) {
+  string clean_filename = filename;  
+#ifdef _WIN32
+  std::replace(clean_filename.begin(), clean_filename.end(), '/', '\\');
+#else
+  std::replace(clean_filename.begin(), clean_filename.end(), '\\', '/');
+#endif
+
+  Texture texture;
+  texture.type = typeName;
+  texture.path = clean_filename;
+
+  unsigned char* data = stbi_load(clean_filename.c_str(), &texture.width,
+                                  &texture.height, &texture.num_components, 0);
+  if (data) {
+    texture.data = data;
+    BuildGlTexture(&texture);
+  } else {
+    std::cerr << "Texture failed to load at path: " << clean_filename << std::endl;
+    stbi_image_free(data);
+    exit(-1);
+  }
+
+  return texture;
+}
+
+Texture TextureFromFile(const string& path, const string& directory,
                         const string& typeName, bool gamma) {
   const char kPathSeparator =
 #ifdef _WIN32
@@ -44,26 +71,5 @@ Texture TextureFromFile(const char* path, const string& directory,
 #endif
   string filename = string(path);
   filename = directory + kPathSeparator + filename;
-#ifdef _WIN32
-  std::replace(filename.begin(), filename.end(), '/', '\\');
-#else
-  std::replace(filename.begin(), filename.end(), '\\', '/');
-#endif
-
-  Texture texture;
-  texture.type = typeName;
-  texture.path = path;
-
-  unsigned char* data = stbi_load(filename.c_str(), &texture.width,
-                                  &texture.height, &texture.num_components, 0);
-  if (data) {
-    texture.data = data;
-    BuildGlTexture(&texture);
-  } else {
-    std::cerr << "Texture failed to load at path: " << path << std::endl;
-    stbi_image_free(data);
-    exit(-1);
-  }
-
-  return texture;
+  return TextureFromFile(filename, typeName, gamma);
 }

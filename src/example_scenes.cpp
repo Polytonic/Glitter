@@ -75,12 +75,21 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     renderer->AddModel(std::move(generated_model), model_mat);
   }
   {
+    Texture texture = TextureFromFile(
+        FileSystem::getPath("resources/textures/awesomeface.png"), "texture_diffuse");
+    std::unique_ptr<Model> model = BuildBoxModel(texture);
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    model_mat = glm::translate(model_mat, glm::vec3(-1.5, -2.0, 1.0));
+    model_mat = glm::scale(model_mat, glm::vec3(0.5));
+    renderer->AddModel(std::move(model), model_mat);
+  }
+  {
     Texture texture = GetWhiteTexture();
-        // Texture texture = GetTestBoxTexture(random_gen);
+    // Texture texture = GetTestBoxTexture(random_gen);
     Transparency transparency;
     transparency.opacity = 0.1;
     transparency.index = 2.0;
-     Material material(std::move(texture), transparency);
+    Material material(std::move(texture), transparency);
     MeshVertices mesh_vert = GetGarlic(/*outer_radius=*/0.4,
                                        /*inner_radius=*/0.3,
                                        /*cloves=*/9,
