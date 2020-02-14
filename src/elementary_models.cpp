@@ -146,7 +146,7 @@ std::vector<Vertex> GetCubeVertices() {
 
 }  // namespace
 
-std::unique_ptr<Model> BuildBoxModel(Texture texture) {
+std::unique_ptr<Model> BuildBoxModel(Material material) {
   std::vector<Vertex> cube_verts = GetCubeVertices();
   std::vector<Mesh> meshes;
   for (int i = 0; i < 24; i += 4) {
@@ -156,7 +156,7 @@ std::unique_ptr<Model> BuildBoxModel(Texture texture) {
         cube_verts[i + 2],
         cube_verts[i + 3],
     };
-    Mesh face_mesh(vertices, GetCubeFaceIndices(), {texture});
+    Mesh face_mesh(vertices, GetCubeFaceIndices(), {material});
     meshes.push_back(face_mesh);
   }
   return std::unique_ptr<Model>(new Model(std::move(meshes)));

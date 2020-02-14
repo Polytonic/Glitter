@@ -76,7 +76,7 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
   }
   {
     Texture texture = GetWhiteTexture();
-        // Texture texture = GetTestBoxTexture(random_gen);
+    // Texture texture = GetTestBoxTexture(random_gen);
     Transparency transparency;
     transparency.opacity = 0.1;
     transparency.index = 2.0;

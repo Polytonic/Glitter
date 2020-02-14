@@ -47,14 +47,24 @@ struct Texture {
   unsigned char* data = nullptr;
 };
 
+struct Transparency {
+  double opacity = 1.0;
+  double index = 1.0003;
+};
+
 class Material {
  public:
   Material(Texture diff_texture);
+  Material(Texture diff_texture, Transparency transparency);
 
   const Texture& diff_texture() const { return diff_texture_; }
+  const Transparency& transparency() const { return transparency_; }
+  double opacity() const { return transparency_.opacity; }
+  double r_index() const { return transparency_.index; }
 
  private:
   Texture diff_texture_;
+  Transparency transparency_;
 };
 
 class Mesh : public Renderable {

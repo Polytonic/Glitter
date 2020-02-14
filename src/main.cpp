@@ -38,7 +38,6 @@ CameraArrangement GetStartingCamera(int argc, char** argv) {
       std::cerr << "Using input camera position" << std::endl;
     }
   }
-
   return camera;
 }
 

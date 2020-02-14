@@ -189,7 +189,7 @@ class Model : public Renderable {
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
     std::vector<Material> materials;
-    for(Texture& texture : textures){
+    for (Texture& texture : textures) {
       materials.push_back(Material(std::move(texture)));
     }
     // return a mesh object created from the extracted mesh data
