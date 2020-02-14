@@ -114,24 +114,6 @@ GLFWwindow* MultiLightRenderer::Init(const std::string& window_name) {
   return window_;
 }
 
-void MultiLightRenderer::AddModel(const std::string& file_path,
-                                  glm::mat4 model_matrix) {
-  static_models_.push_back(
-      std::unique_ptr<Model>(new Model(FileSystem::getPath(file_path))));
-  static_model_matrices_.push_back(model_matrix);
-}
-
-void MultiLightRenderer::AddModel(std::unique_ptr<Renderable> model,
-                                  glm::mat4 model_matrix) {
-  static_models_.push_back(std::move(model));
-  static_model_matrices_.push_back(model_matrix);
-}
-
-void MultiLightRenderer::AddDynamicModel(
-    std::unique_ptr<DynamicRenderable> model) {
-  dynamic_models_.push_back(std::move(model));
-}
-
 void MultiLightRenderer::AddEventHandler(CameraEventHandler* event_handler) {
   event_handlers_.push_back(event_handler);
 }

@@ -1,6 +1,6 @@
 #include "point_shadows_dynamic_renderer.hpp"
 
-#include <rt_render_util.hpp>
+#include "rt_render_util.hpp"
 
 namespace {
 
@@ -110,24 +110,6 @@ GLFWwindow* PointShadowsDynamicRenderer::Init(const std::string& window_name) {
   shader_->setInt("depthMap", 1);
 
   return window_;
-}
-
-void PointShadowsDynamicRenderer::AddModel(const std::string& file_path,
-                                           glm::mat4 model_matrix) {
-  static_models_.push_back(
-      std::unique_ptr<Model>(new Model(FileSystem::getPath(file_path))));
-  static_model_matrices_.push_back(model_matrix);
-}
-
-void PointShadowsDynamicRenderer::AddModel(std::unique_ptr<Renderable> model,
-                                           glm::mat4 model_matrix) {
-  static_models_.push_back(std::move(model));
-  static_model_matrices_.push_back(model_matrix);
-}
-
-void PointShadowsDynamicRenderer::AddDynamicModel(
-    std::unique_ptr<DynamicRenderable> model) {
-  dynamic_models_.push_back(std::move(model));
 }
 
 void PointShadowsDynamicRenderer::AddEventHandler(
