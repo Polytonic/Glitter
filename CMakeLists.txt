@@ -1,6 +1,8 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 project(Glitter)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(GLFW_BUILD_DOCS OFF)
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
@@ -23,7 +25,7 @@ set(CMAKE_BUILD_TYPE Release)
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
     if(NOT WIN32)
         set(GLAD_LIBRARIES dl)
     endif()
@@ -44,11 +46,13 @@ file(GLOB VENDORS_SOURCES Glitter/Vendor/glad/src/glad.c)
 file(GLOB PROJECT_HEADERS src/*.hpp
   src/boids/*.hpp
   src/shapes/*.hpp
+  src/tracer/*.hpp
   src/learnopengl/*.h
   src/learnopengl/*.hpp)
 file(GLOB PROJECT_SOURCES src/*.cpp
   src/boids/*.cpp
   src/shapes/*.cpp
+  src/tracer/*.cpp
   src/learnopengl/*.cpp)
 file(GLOB PROJECT_SHADERS Glitter/Shaders/*.comp
                           Glitter/Shaders/*.frag
