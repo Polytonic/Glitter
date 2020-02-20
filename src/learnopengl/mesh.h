@@ -8,7 +8,9 @@
 
 #include "glitter.hpp"
 #include "learnopengl/shader.h"
+#include "primitives.hpp"
 #include "renderable.hpp"
+#include "tracer/intersectable.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -17,88 +19,21 @@
 #include <vector>
 using namespace std;
 
-struct Vertex {
-  // position
-  glm::vec3 Position;
-  // normal
-  glm::vec3 Normal;
-  // texCoords
-  glm::vec2 TexCoords;
-  // tangent
-  glm::vec3 Tangent;
-  // bitangent
-  glm::vec3 Bitangent;
-};
-
-struct DVertex {
-  DVertex() = default;
-  DVertex(const Vertex& v);
-  // position
-  DVec3 Position;
-  // normal
-  DVec3 Normal;
-  // texCoords
-  DVec2 TexCoords;
-  // tangent
-  DVec3 Tangent;
-  // bitangent
-  DVec3 Bitangent;
-};
-
-struct Light {
-  glm::vec3 Position;
-  glm::vec3 Color;
-
-  float Linear = 0.2f;
-  float Quadratic = 0.4f;
-};
-
-struct Texture {
-  unsigned int id = 0;
-  string type;
-  string path;
-  int width = 0;
-  int height = 0;
-  int num_components = 0;
-  unsigned char* data = nullptr;
-};
-
-struct Transparency {
-  double opacity = 1.0;
-  double index = 1.0003;
-};
-
-class Material {
- public:
-  Material(Texture diff_texture);
-  Material(Texture diff_texture, Transparency transparency);
-
-  const Texture& diff_texture() const { return diff_texture_; }
-  const Transparency& transparency() const { return transparency_; }
-  double opacity() const { return transparency_.opacity; }
-  double r_index() const { return transparency_.index; }
-
- private:
-  Texture diff_texture_;
-  Transparency transparency_;
-};
-
 class Mesh : public Renderable {
  public:
   /*  Mesh Data  */
   vector<Vertex> vertices;
   vector<unsigned int> indices;
-  vector<Material> materials;
+  Material material_;
   unsigned int VAO;
 
   /*  Functions  */
   // constructor
-  Mesh(vector<Vertex> vertices, vector<unsigned int> indices,
-       vector<Material> materials,
-       glm::mat4 local_model_mat = glm::mat4(1.0f)) {
+  Mesh(vector<Vertex> vertices, vector<unsigned int> indices, Material material,
+       glm::mat4 local_model_mat = glm::mat4(1.0f))
+      : material_(material) {
     this->vertices = std::move(vertices);
     this->indices = std::move(indices);
-    this->materials = std::move(materials);
     this->local_model_mat_ = local_model_mat;
 
     // now that we have all the required data, set the vertex buffers and its
@@ -109,19 +44,17 @@ class Mesh : public Renderable {
   // render the mesh
   void Draw(ShaderSet shaders, glm::mat4 model_mat) override {
     // bind textures
-    if (!materials.empty()) {
-      glActiveTexture(GL_TEXTURE0);
-      // retrieve texture number (the N in diffuse_textureN)
-      string number = "0";
-      string name = materials[0].diff_texture().type;
+    glActiveTexture(GL_TEXTURE0);
+    // retrieve texture number (the N in diffuse_textureN)
+    string number = "0";
+    string name = material_.diff_texture().type;
 
-      // now set the sampler to the correct texture unit
-      glUniform1i(glGetUniformLocation(shaders.texture_shader->ID,
-                                       (name + number).c_str()),
-                  0);
-      // and finally bind the texture
-      glBindTexture(GL_TEXTURE_2D, materials[0].diff_texture().id);
-    }
+    // now set the sampler to the correct texture unit
+    glUniform1i(glGetUniformLocation(shaders.texture_shader->ID,
+                                     (name + number).c_str()),
+                0);
+    // and finally bind the texture
+    glBindTexture(GL_TEXTURE_2D, material_.diff_texture().id);
 
     shaders.texture_shader->setMat4("model", model_mat * local_model_mat_);
     // draw mesh
@@ -132,6 +65,8 @@ class Mesh : public Renderable {
     // always good practice to set everything back to defaults once configured.
     glActiveTexture(GL_TEXTURE0);
   }
+
+  void GetTris(glm::mat4 model_mat, std::vector<InterTri>* tris) override;
 
   glm::mat4 local_model_mat() const { return local_model_mat_; }
 

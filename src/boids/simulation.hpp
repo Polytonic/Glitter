@@ -42,12 +42,15 @@ class BoidActor : public Renderable {
   DVec3 velocity() const { return velocity_; }
   void Tick(double delta_sec, const std::vector<BoidActor>& boids);
   void Draw(ShaderSet shaders, glm::mat4 model_mat) override;
+  void GetTris(glm::mat4 model_mat, std::vector<InterTri>* tris) override;
 
  private:
   std::vector<DVec3> GetAvoidanceRequests(const std::vector<BoidActor>& boids);
   std::vector<DVec3> GetVelocityMatchingRequests(
       const std::vector<BoidActor>& boids);
   DVec3 GetCenteringRequest(const std::vector<BoidActor>& boids);
+  DMat4 PosMat();
+  DMat4 RotMat();
   DVec3 position_;
   DVec3 velocity_;
   DVec3 last_acceleration_ = DVec3(0.0);
@@ -63,6 +66,7 @@ class BoidsSimulation : public DynamicRenderable, public CameraEventHandler {
 
   void Tick(double delta_sec) override;
   void Draw(ShaderSet shaders, glm::mat4 model_mat) override;
+  void GetTris(glm::mat4 model_mat, std::vector<InterTri>* tris) override;
   void KeyboardEvents(GLFWwindow* window) override;
   void TickUpdateCamera(Camera* camera, double delta_time) override;
 

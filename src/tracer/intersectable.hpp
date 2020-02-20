@@ -4,7 +4,7 @@
 #include <optional>
 
 #include "glitter.hpp"
-#include "learnopengl/mesh.h"
+#include "primitives.hpp"
 
 class AaBox;
 class Intersectable;
@@ -25,6 +25,7 @@ class Intersectable {
  public:
   virtual std::optional<InterPoint> Intersect(const Ray& ray) = 0;
   virtual AaBox GetAaBox() = 0;
+  virtual bool IsShadeable() = 0;
 };
 
 class Shadeable {
@@ -41,6 +42,7 @@ class AaBox : public Intersectable {
   AaBox(DVec3 point);
   std::optional<InterPoint> Intersect(const Ray& ray) override;
   AaBox GetAaBox() override;
+  bool IsShadeable() override { return false; }
   void Update(DVec3 point);
 };
 
@@ -49,6 +51,7 @@ class InterTri : public Intersectable, public Shadeable {
   InterTri(Material* material, DVertex vert0, DVertex vert1, DVertex vert2);
   std::optional<InterPoint> Intersect(const Ray& ray) override;
   AaBox GetAaBox() override;
+  bool IsShadeable() override { return true; }
   Material* material() const override;
   DVec2 GetUv(DVec3 point) override;
 

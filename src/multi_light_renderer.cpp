@@ -170,7 +170,7 @@ void MultiLightRenderer::Render() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   shader_->use();
   glm::mat4 projection =
-      glm::perspective(glm::radians(camera_.Zoom),
+      glm::perspective((float)glm::radians(camera_.Zoom),
                        (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.5f, 500.0f);
   glm::mat4 view = camera_.GetViewMatrix();
   shader_->setMat4("projection", projection);

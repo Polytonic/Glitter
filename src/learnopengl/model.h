@@ -19,6 +19,7 @@
 #include "learnopengl/mesh.h"
 #include "learnopengl/shader.h"
 #include "renderable.hpp"
+#include "texture_gen.hpp"
 
 using namespace std;
 
@@ -50,6 +51,12 @@ class Model : public Renderable {
   void Draw(ShaderSet shaders, glm::mat4 model_mat) override {
     for (unsigned int i = 0; i < meshes.size(); i++) {
       meshes[i].Draw(shaders, model_mat);
+    }
+  }
+
+  void GetTris(glm::mat4 model_mat, std::vector<InterTri>* tris) override {
+    for (unsigned int i = 0; i < meshes.size(); i++) {
+      meshes[i].GetTris(model_mat, tris);
     }
   }
 
@@ -195,7 +202,12 @@ class Model : public Renderable {
       materials.push_back(Material(std::move(texture)));
     }
     // return a mesh object created from the extracted mesh data
-    return Mesh(vertices, indices, materials);
+    if (materials.empty()) {
+      return Mesh(vertices, indices,
+                  Material(GetColorTexture({255, 0, 127}, 1, 1)));
+    } else {
+      return Mesh(vertices, indices, materials[0]);
+    }
   }
 
   // checks all material textures of a given type and loads the textures if

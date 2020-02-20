@@ -1,12 +1,15 @@
 #include "learnopengl/mesh.h"
 
-DVertex::DVertex(const Vertex& v)
-    : Position(v.Position),
-      Normal(v.Normal),
-      TexCoords(v.TexCoords),
-      Bitangent(v.Bitangent) {}
-
-Material::Material(Texture diff_texture) : diff_texture_(diff_texture) {}
-
-Material::Material(Texture diff_texture, Transparency transparency)
-    : diff_texture_(diff_texture), transparency_(transparency) {}
+void Mesh::GetTris(glm::mat4 model_mat, std::vector<InterTri>* tris) {
+  DMat4 final_mat = model_mat * local_model_mat_;
+  for (int i = 0; i < indices.size() - 2; i++) {
+    DVertex v0(vertices[indices[i]]);
+    DVertex v1(vertices[indices[i + 1]]);
+    DVertex v2(vertices[indices[i + 2]]);
+    v0.Apply(final_mat);
+    v1.Apply(final_mat);
+    v2.Apply(final_mat);
+    tris->push_back(
+        InterTri(&material_, v0, v1, v2));
+  }
+}

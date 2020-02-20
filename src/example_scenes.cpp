@@ -68,7 +68,7 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     BasicMeshIterator mesh_iterator(20, 20);
     mesh_iterator.SetIterableMesh(std::move(it_mesh));
     MeshVertices mesh_vert = mesh_iterator.GetMesh();
-    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {material});
+    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, material);
     std::unique_ptr<Model> generated_model(new Model({mesh}));
     glm::mat4 model_mat = glm::mat4(1.0f);
     model_mat = glm::translate(model_mat, glm::vec3(1.5, -2.5, 0.0));
@@ -96,7 +96,7 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
                                        /*cloves=*/5,
                                        /*clove_res=*/15,
                                        /*height_res=*/40);
-    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, {material});
+    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, material);
     std::unique_ptr<Model> generated_model(new Model({mesh}));
     glm::mat4 model_mat = glm::mat4(1.0f);
     model_mat = glm::translate(model_mat, glm::vec3(-1.5, -2.0, -3.0));
