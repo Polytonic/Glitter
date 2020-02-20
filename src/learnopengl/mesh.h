@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "glitter.hpp"
 #include "learnopengl/shader.h"
 #include "renderable.hpp"
 
@@ -27,6 +28,21 @@ struct Vertex {
   glm::vec3 Tangent;
   // bitangent
   glm::vec3 Bitangent;
+};
+
+struct DVertex {
+  DVertex() = default;
+  DVertex(const Vertex& v);
+  // position
+  DVec3 Position;
+  // normal
+  DVec3 Normal;
+  // texCoords
+  DVec2 TexCoords;
+  // tangent
+  DVec3 Tangent;
+  // bitangent
+  DVec3 Bitangent;
 };
 
 struct Light {

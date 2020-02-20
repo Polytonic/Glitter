@@ -19,6 +19,7 @@
 
 #include "example_scenes.hpp"
 #include "rt_renderer.hpp"
+#include "tracer/intersectable.hpp"
 
 CameraArrangement GetStartingCamera(int argc, char** argv) {
   CameraArrangement camera = {
@@ -56,7 +57,7 @@ int main(int argc, char** argv) {
 #endif
 
   std::unique_ptr<RtRenderer> renderer =
-      HelixGarlicNanoScene(true, &random_gen);
+      HelixGarlicNanoScene(false, &random_gen);
 
   renderer->MoveCamera(GetStartingCamera(argc, argv));
 

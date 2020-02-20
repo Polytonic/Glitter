@@ -1,10 +1,12 @@
 // Preprocessor Directives
-#ifndef GLITTER
-#define GLITTER
+#ifndef GLITTER_HPP
+#define GLITTER_HPP
 #pragma once
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <optional>
+#include <ostream>
 
 // System Headers
 #include <assimp/postprocess.h>
@@ -37,5 +39,12 @@ struct RgbPix {
   unsigned char g;
   unsigned char b;
 };
+
+std::ostream& operator<<(std::ostream& os, const DVec3 vec);
+std::ostream& operator<<(std::ostream& os, const DVec2 vec);
+std::ostream& operator<<(std::ostream& os, const std::optional<DVec3> vec);
+std::ostream& operator<<(std::ostream& os, const glm::vec3 vec);
+
+double epsilon(DVec3 vec);
 
 #endif  //~ Glitter Header
