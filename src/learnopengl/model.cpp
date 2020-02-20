@@ -34,9 +34,9 @@ void BuildGlTexture(Texture* texture) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-Texture TextureFromFile(const string& filename,
-                        const string& typeName, bool gamma) {
-  string clean_filename = filename;  
+Texture TextureFromFile(const string& filename, const string& typeName,
+                        bool gamma) {
+  string clean_filename = filename;
 #ifdef _WIN32
   std::replace(clean_filename.begin(), clean_filename.end(), '/', '\\');
 #else
@@ -53,7 +53,8 @@ Texture TextureFromFile(const string& filename,
     texture.data = data;
     BuildGlTexture(&texture);
   } else {
-    std::cerr << "Texture failed to load at path: " << clean_filename << std::endl;
+    std::cerr << "Texture failed to load at path: " << clean_filename
+              << std::endl;
     stbi_image_free(data);
     exit(-1);
   }

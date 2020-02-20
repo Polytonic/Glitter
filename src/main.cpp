@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 #endif
 
   std::unique_ptr<RtRenderer> renderer =
-      HelixGarlicNanoScene(false, &random_gen);
+      HelixGarlicNanoScene(true, &random_gen);
 
   renderer->MoveCamera(GetStartingCamera(argc, argv));
 
