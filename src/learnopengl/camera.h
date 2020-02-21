@@ -70,7 +70,7 @@ class Camera {
 
   DVec3 front() const { return Front; }
   DVec3 position() const { return Position; }
-  const CameratracerOpts& opts() { return opts_; }
+  const CameraTracerOpts& opts() { return opts_; }
 
   void SetPosition(DVec3 pos);
 

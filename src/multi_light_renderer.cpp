@@ -234,6 +234,10 @@ void MultiLightRenderer::MoveCamera(const CameraArrangement& camera) {
 
 const Camera& MultiLightRenderer::camera() { return camera_; }
 
+void MultiLightRenderer::SetCameraOpts(CameraTracerOpts opts) {
+  camera_.SetTracerOpts(opts);
+}
+
 bool MultiLightRenderer::AddLight(const Light& light) {
   if (lights_.size() < kNumLights) {
     lights_.push_back(light);

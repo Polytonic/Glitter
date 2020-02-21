@@ -29,13 +29,7 @@ Texture GetWhiteTexture(int width, int height) {
 }
 
 Texture GetColorTexture(RgbPix color, int width, int height) {
-  TexCanvas canvas(width, height);
-  for (int i = 0; i < width; i++) {
-    for (int j = 0; j < width; j++) {
-      canvas.SetPix(i, j, color);
-    }
-  }
-  return canvas.ToTexture();
+  return GetColorCanvas(color, width, height).ToTexture();
 }
 
 TexCanvas GetColorCanvas(RgbPix color, int width, int height) {

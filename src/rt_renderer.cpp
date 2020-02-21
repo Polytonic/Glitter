@@ -18,3 +18,12 @@ void RtRenderer::AddModel(std::unique_ptr<Renderable> model,
 void RtRenderer::AddDynamicModel(std::unique_ptr<DynamicRenderable> model) {
   dynamic_models_.push_back(std::move(model));
 }
+
+void RtRenderer::GetTris(std::vector<InterPtr>* tris) {
+  for (int i = 0; i < static_models_.size(); i++) {
+    static_models_[i]->GetTris(static_model_matrices_[i], tris);
+  }
+  for (const std::unique_ptr<DynamicRenderable>& model : dynamic_models_) {
+    model->GetTris(glm::mat4(1.0f), tris);
+  }
+}

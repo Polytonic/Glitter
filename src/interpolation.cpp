@@ -55,6 +55,5 @@ DVec3 GetBarycentricWeights(const DVec3& p1, const DVec3& p2, const DVec3& p3,
   }
   double sum = res.x + res.y + res.z;
   res *= 1.0 / sum;
-  std::cout << "Barycentric: " << res << std::endl;
   return {res.y, res.z, res.x};
 }

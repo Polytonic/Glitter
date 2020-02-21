@@ -74,7 +74,7 @@ std::vector<Ray> Camera::GetScreenRays(int x_px, int y_px) {
 
   std::vector<Ray> rays;
   for (DVec2 screen_space : screen_space_px) {
-    DVec3 screen_point = screen_pos - (2 * screen_space.x - 1) * screen_horiz -
+    DVec3 screen_point = screen_pos + (2 * screen_space.x - 1) * screen_horiz -
                          (2 * screen_space.y - 1) * screen_vert;
     DVec3 pix_vec = glm::normalize(screen_point - Position);
     rays.push_back({Position, pix_vec});

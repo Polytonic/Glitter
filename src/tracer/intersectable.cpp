@@ -4,7 +4,15 @@
 
 #include "interpolation.hpp"
 
-std::optional<DVec3> IntersectTri(const Ray& ray, DVec3 verts[3]) {
+DVec3 PreventZero(DVec3 vec) {
+  if (vec.x == 0) vec.x = epsilon(vec);
+  if (vec.y == 0) vec.y = epsilon(vec);
+  if (vec.z == 0) vec.z = epsilon(vec);
+  return vec;
+}
+
+std::optional<DVec3> IntersectTri(Ray ray, DVec3 verts[3]) {
+  ray.dir = glm::normalize(ray.dir);
   double eps = epsilon(verts[0]);
   DVec3 edge0 = verts[1] - verts[0];
   DVec3 edge1 = verts[2] - verts[0];
@@ -34,28 +42,92 @@ std::optional<DVec3> IntersectTri(const Ray& ray, DVec3 verts[3]) {
 }
 
 AaBox::AaBox(DVec3 bot, DVec3 top) {
-  this->bot = bot;
-  this->top = top;
+  this->bot_ = bot;
+  this->top_ = top;
+  this->Update(bot);
+  this->Update(top);
 }
 
 AaBox::AaBox(DVec3 point) {
-  this->bot = point;
-  this->top = point;
+  this->bot_ = point;
+  this->top_ = point;
 }
 
-std::optional<InterPoint> AaBox::Intersect(const Ray& ray) {
+std::optional<ShadeablePoint> AaBox::Intersect(const Ray& ray) {
   return std::nullopt;
+}
+
+std::optional<DVec3> AaBox::EarliestIntersect(const Ray& ray) {
+  Ray r = ray;
+  r.dir = glm::normalize(PreventZero(r.dir));
+  DVec3 closePlanes(0);
+  DVec3 farPlanes(0);
+  DVec3 invDir(1.0 / r.dir.x, 1.0 / r.dir.y, 1.0 / r.dir.z);
+  for (int i = 0; i < 3; i++) {
+    if (invDir[i] < 0) {
+      closePlanes[i] = top_[i];
+      farPlanes[i] = bot_[i];
+    } else {
+      closePlanes[i] = bot_[i];
+      farPlanes[i] = top_[i];
+    }
+  }
+
+  double tMin = (closePlanes.x - r.origin.x) * invDir.x;
+  double tMax = (farPlanes.x - r.origin.x) * invDir.x;
+  double tyMin = (closePlanes.y - r.origin.y) * invDir.y;
+  double tyMax = (farPlanes.y - r.origin.y) * invDir.y;
+
+  if (tMin > tyMax || tyMin > tMax) return std::nullopt;
+  if (tyMin > tMin) tMin = tyMin;
+  if (tyMax < tMax) tMax = tyMax;
+
+  double tzMin = (closePlanes.z - r.origin.z) * invDir.z;
+  double tzMax = (farPlanes.z - r.origin.z) * invDir.z;
+
+  if (tMin > tzMax || tzMin > tMax) return std::nullopt;
+  if (tzMin > tMin) tMin = tzMin;
+  if (tzMax < tMax) tMax = tzMax;
+
+  DVec3 res;
+  if (tMin <= 0) {
+    if (tMax <= 0)
+      return std::nullopt;
+    else
+      res = r.origin + tMax * r.dir;
+  } else {
+    res = r.origin + tMin * r.dir;
+  }
+
+  return res;
 }
 
 AaBox AaBox::GetAaBox() { return *this; }
 
 void AaBox::Update(DVec3 point) {
   for (int i = 0; i < 3; i++) {
-    bot[i] = std::min(bot[i], point[i]);
+    bot_[i] = std::min(bot_[i], point[i]);
   }
   for (int i = 0; i < 3; i++) {
-    top[i] = std::max(top[i], point[i]);
+    top_[i] = std::max(top_[i], point[i]);
   }
+}
+
+void AaBox::Update(AaBox box) {
+  Update(box.bot());
+  Update(box.top());
+}
+
+bool AaBox::Inside(DVec3 point) const {
+  return point.x < top_.x && point.x > bot_.x && point.y < top_.y &&
+         point.y > bot_.y && point.z < top_.z && point.z > bot_.z;
+}
+
+double AaBox::SurfaceArea() const {
+  double xdiff = top_.x - bot_.x;
+  double ydiff = top_.y - bot_.y;
+  double zdiff = top_.z - bot_.z;
+  return 2 * xdiff * ydiff + 2 * ydiff * zdiff + 2 * xdiff * zdiff;
 }
 
 InterTri::InterTri(Material* material, DVertex vert0, DVertex vert1,
@@ -66,7 +138,7 @@ InterTri::InterTri(Material* material, DVertex vert0, DVertex vert1,
   verts_[2] = vert2;
 }
 
-std::optional<InterPoint> InterTri::Intersect(const Ray& ray) {
+std::optional<ShadeablePoint> InterTri::Intersect(const Ray& ray) {
   DVec3 verts[3] = {
       verts_[0].Position,
       verts_[1].Position,
@@ -76,7 +148,15 @@ std::optional<InterPoint> InterTri::Intersect(const Ray& ray) {
   if (!point.has_value()) {
     return std::nullopt;
   }
-  return InterPoint({*point, this});
+  return ShadeablePoint({*point, this, ray});
+}
+
+std::optional<DVec3> InterTri::EarliestIntersect(const Ray& ray) {
+  std::optional<ShadeablePoint> intersect = Intersect(ray);
+  if (intersect.has_value()) {
+    return intersect->point;
+  }
+  return std::nullopt;
 }
 
 AaBox InterTri::GetAaBox() {

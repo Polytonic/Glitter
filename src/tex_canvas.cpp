@@ -72,6 +72,7 @@ Texture TexCanvas::ToTexture(std::string texture_type) {
   tex.width = width_;
   tex.height = height_;
   tex.num_components = channels_;
+  tex.row_alignment = row_alignment_;
   tex.data = data;
   BuildGlTexture(&tex);
   return tex;

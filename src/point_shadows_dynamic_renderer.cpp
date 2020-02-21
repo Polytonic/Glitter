@@ -253,6 +253,10 @@ void PointShadowsDynamicRenderer::MoveCamera(const CameraArrangement& camera) {
 
 const Camera& PointShadowsDynamicRenderer::camera() { return camera_; }
 
+void PointShadowsDynamicRenderer::SetCameraOpts(CameraTracerOpts opts) {
+  camera_.SetTracerOpts(opts);
+}
+
 void PointShadowsDynamicRenderer::processInput(float deltaTime) {
   if (window_ == nullptr) return;
   if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)

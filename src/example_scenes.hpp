@@ -13,6 +13,9 @@
 using RtSceneFn = std::function<std::unique_ptr<RtRenderer>(
     bool windowed_mode, std::default_random_engine* random_gen)>;
 
+std::unique_ptr<RtRenderer> CurrentScene(
+    bool windowed_mode, std::default_random_engine* random_gen);
+
 std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     bool windowed_mode, std::default_random_engine* random_gen);
 

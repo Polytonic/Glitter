@@ -33,7 +33,7 @@ class IterableCylinder : public IterableMesh {
 
   ComputedVertex GetVertex(double u, double v) override;
 
-  bool IsClosed() override { return true; }
+  bool IsClosed() override { return false; }
 
  private:
   double height_;
@@ -46,7 +46,7 @@ class IterableSphere : public IterableMesh {
 
   ComputedVertex GetVertex(double u, double v) override;
 
-  bool IsClosed() override { return true; }
+  bool IsClosed() override { return false; }
 
  private:
   double radius_;
@@ -60,7 +60,7 @@ class IterableHelix : public IterableMesh {
 
   ComputedVertex GetVertex(double u, double v) override;
 
-  bool IsClosed() override { return true; }
+  bool IsClosed() override { return false; }
 
  private:
   double helix_radius_;

@@ -23,11 +23,13 @@ class RtRenderer {
   virtual void AddModel(std::unique_ptr<Renderable> model,
                         glm::mat4 model_matrix);
   virtual void AddDynamicModel(std::unique_ptr<DynamicRenderable> model);
+  virtual void GetTris(std::vector<InterPtr>* tris);
   virtual void AddEventHandler(CameraEventHandler* event_handler) = 0;
   virtual void Render() = 0;
   virtual bool WindowShouldClose() = 0;
   virtual void MoveCamera(const CameraArrangement& camera) = 0;
   virtual const Camera& camera() = 0;
+  virtual void SetCameraOpts(CameraTracerOpts opts) = 0;
 
  protected:
   bool windowed_mode_;

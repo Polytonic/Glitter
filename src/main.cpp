@@ -18,8 +18,12 @@
 #include <string>
 
 #include "example_scenes.hpp"
+#include "learnopengl/filesystem.h"
 #include "rt_renderer.hpp"
+#include "tracer/acceleration.hpp"
+#include "tracer/bound.hpp"
 #include "tracer/intersectable.hpp"
+#include "tracer/ray_tracer.hpp"
 
 CameraArrangement GetStartingCamera(int argc, char** argv) {
   CameraArrangement camera = {
@@ -56,10 +60,31 @@ int main(int argc, char** argv) {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-  std::unique_ptr<RtRenderer> renderer =
-      HelixGarlicNanoScene(true, &random_gen);
+  bool trace = true;
+
+  std::unique_ptr<RtRenderer> renderer = CurrentScene(!trace, &random_gen);
 
   renderer->MoveCamera(GetStartingCamera(argc, argv));
+
+  if (trace) {
+    std::cerr << "Starting ray tracing" << std::endl;
+    CameraTracerOpts opts;
+    opts.h_px = 100;
+    opts.w_px = 100;
+    opts.focal_length = 0.01;
+    opts.focus_distance = 5;
+    opts.vert_fov = 0.785398;
+    renderer->SetCameraOpts(opts);
+    std::vector<InterPtr> inters;
+    renderer->GetTris(&inters);
+    RayTracer::Options t_opts = {
+        .background_color = {100, 100, 100},
+    };
+    std::unique_ptr<RayTracer> tracer =
+        RayTracer::Create(t_opts, std::move(inters));
+    Texture tex = tracer->Render(renderer->camera());
+    TextureToFile("output.png", tex);
+  }
 
   std::cerr << "Starting rendering" << std::endl;
   while (!renderer->WindowShouldClose()) {

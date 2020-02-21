@@ -1,34 +1,49 @@
 #ifndef TRACER_INTERSECTABLE_HPP
 #define TRACER_INTERSECTABLE_HPP
 
+#include <memory>
 #include <optional>
+#include <vector>
 
 #include "glitter.hpp"
 #include "primitives.hpp"
 
 class AaBox;
 class Intersectable;
+class Shadeable;
 
-struct InterPoint {
-  DVec3 point;
-  Intersectable* intersectable;
-};
+DVec3 PreventZero(DVec3 vec);
 
 struct Ray {
   DVec3 origin;
   DVec3 dir;
 };
 
-std::optional<DVec3> IntersectTri(const Ray& ray, DVec3 verts[3]);
+struct InterPoint {
+  DVec3 point;
+  Intersectable* shape;
+  Ray ray;
+};
+
+struct ShadeablePoint {
+  DVec3 point;
+  Shadeable* shape;
+  Ray ray;
+};
+
+std::optional<DVec3> IntersectTri(Ray ray, DVec3 verts[3]);
 
 class Intersectable {
  public:
-  virtual std::optional<InterPoint> Intersect(const Ray& ray) = 0;
+  virtual std::optional<ShadeablePoint> Intersect(const Ray& ray) = 0;
+  virtual std::optional<DVec3> EarliestIntersect(const Ray& ray) = 0;
   virtual AaBox GetAaBox() = 0;
   virtual bool IsShadeable() = 0;
 };
 
-class Shadeable {
+using InterPtr = std::unique_ptr<Intersectable>;
+
+class Shadeable : public Intersectable {
  public:
   virtual Material* material() const = 0;
   virtual DVec2 GetUv(DVec3 point) = 0;
@@ -36,26 +51,36 @@ class Shadeable {
 
 class AaBox : public Intersectable {
  public:
-  DVec3 bot;
-  DVec3 top;
   AaBox(DVec3 bot, DVec3 top);
   AaBox(DVec3 point);
-  std::optional<InterPoint> Intersect(const Ray& ray) override;
+  std::optional<ShadeablePoint> Intersect(const Ray& ray) override;
+  std::optional<DVec3> EarliestIntersect(const Ray& ray) override;
   AaBox GetAaBox() override;
   bool IsShadeable() override { return false; }
-  void Update(DVec3 point);
+  virtual void Update(DVec3 point);
+  virtual void Update(AaBox box);
+  virtual bool Inside(DVec3 point) const;
+  virtual double SurfaceArea() const;
+
+  DVec3 bot() { return bot_; }
+  DVec3 top() { return top_; }
+
+ protected:
+  DVec3 bot_;
+  DVec3 top_;
 };
 
-class InterTri : public Intersectable, public Shadeable {
+class InterTri : public Shadeable {
  public:
   InterTri(Material* material, DVertex vert0, DVertex vert1, DVertex vert2);
-  std::optional<InterPoint> Intersect(const Ray& ray) override;
+  std::optional<ShadeablePoint> Intersect(const Ray& ray) override;
+  std::optional<DVec3> EarliestIntersect(const Ray& ray) override;
   AaBox GetAaBox() override;
   bool IsShadeable() override { return true; }
   Material* material() const override;
   DVec2 GetUv(DVec3 point) override;
 
- private:
+ protected:
   Material* material_;
   DVertex verts_[3];
 };

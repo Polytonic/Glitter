@@ -5,6 +5,12 @@
 
 #include "glitter.hpp"
 
+struct RgbPix {
+  unsigned char r;
+  unsigned char g;
+  unsigned char b;
+};
+
 struct Vertex {
   // position
   glm::vec3 Position;
@@ -50,7 +56,11 @@ struct Texture {
   int width = 0;
   int height = 0;
   int num_components = 0;
+  int row_alignment = 0;
   unsigned char* data = nullptr;
+
+  RgbPix Sample(double u, double v) const;
+  RgbPix Sample(DVec2 uv) const;
 };
 
 struct Transparency {

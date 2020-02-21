@@ -11,23 +11,17 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <glad/glad.h>
-#include <stb_image.h>
 #include <assimp/Importer.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "image.hpp"
 #include "learnopengl/mesh.h"
 #include "learnopengl/shader.h"
 #include "renderable.hpp"
 #include "texture_gen.hpp"
 
 using namespace std;
-
-void BuildGlTexture(Texture* texture);
-Texture TextureFromFile(const string& filename, const string& typeName,
-                        bool gamma = false);
-Texture TextureFromFile(const string& path, const string& directory,
-                        const string& typeName, bool gamma = false);
 
 class Model : public Renderable {
  public:
@@ -54,7 +48,7 @@ class Model : public Renderable {
     }
   }
 
-  void GetTris(glm::mat4 model_mat, std::vector<InterTri>* tris) override {
+  void GetTris(glm::mat4 model_mat, std::vector<InterPtr>* tris) override {
     for (unsigned int i = 0; i < meshes.size(); i++) {
       meshes[i].GetTris(model_mat, tris);
     }

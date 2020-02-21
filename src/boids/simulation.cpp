@@ -257,13 +257,11 @@ void BoidActor::Tick(double delta_sec, const std::vector<BoidActor>& boids) {
   position_ += delta_sec * velocity_;
 }
 
-DMat4 BoidActor::PosMat(){
-  return glm::translate(DMat4(1.0), position());
-}
+DMat4 BoidActor::PosMat() { return glm::translate(DMat4(1.0), position()); }
 
-DMat4 BoidActor::RotMat(){
-  return glm::toMat4(glm::quatLookAt(
-      glm::normalize(-1.0 * velocity()), DVec3(0, 1, 0)));
+DMat4 BoidActor::RotMat() {
+  return glm::toMat4(
+      glm::quatLookAt(glm::normalize(-1.0 * velocity()), DVec3(0, 1, 0)));
 }
 
 void BoidActor::Draw(ShaderSet shaders, glm::mat4 model_mat) {
@@ -272,7 +270,7 @@ void BoidActor::Draw(ShaderSet shaders, glm::mat4 model_mat) {
   boid_model_->Draw(shaders, model_mat * pos_mat * rot_mat);
 }
 
-void BoidActor::GetTris(glm::mat4 model_mat, std::vector<InterTri>* tris) {
+void BoidActor::GetTris(glm::mat4 model_mat, std::vector<InterPtr>* tris) {
   glm::mat4 pos_mat = PosMat();
   glm::mat4 rot_mat = RotMat();
   boid_model_->GetTris(model_mat * pos_mat * rot_mat, tris);
@@ -311,7 +309,8 @@ void BoidsSimulation::Draw(ShaderSet shaders, glm::mat4 model_mat) {
   }
 }
 
-void BoidsSimulation::GetTris(glm::mat4 model_mat, std::vector<InterTri>* tris) {
+void BoidsSimulation::GetTris(glm::mat4 model_mat,
+                              std::vector<InterPtr>* tris) {
   bounding_sphere_->GetTris(model_mat, tris);
   for (int i = 0; i < boids_.size(); i++) {
     boids_[i].GetTris(model_mat, tris);

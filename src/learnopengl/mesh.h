@@ -66,7 +66,7 @@ class Mesh : public Renderable {
     glActiveTexture(GL_TEXTURE0);
   }
 
-  void GetTris(glm::mat4 model_mat, std::vector<InterTri>* tris) override;
+  void GetTris(glm::mat4 model_mat, std::vector<InterPtr>* tris) override;
 
   glm::mat4 local_model_mat() const { return local_model_mat_; }
 
