@@ -69,8 +69,8 @@ int main(int argc, char** argv) {
   if (trace) {
     std::cerr << "Starting ray tracing" << std::endl;
     CameraTracerOpts opts;
-    opts.h_px = 100;
-    opts.w_px = 100;
+    opts.h_px = 150;
+    opts.w_px = 200;
     opts.focal_length = 0.01;
     opts.focus_distance = 5;
     opts.vert_fov = 0.785398;
@@ -81,7 +81,8 @@ int main(int argc, char** argv) {
         .background_color = {100, 100, 100},
     };
     std::unique_ptr<RayTracer> tracer =
-        RayTracer::Create(t_opts, std::move(inters));
+      // RayTracer::CreateNoAcceleration(t_opts, std::move(inters));
+    RayTracer::CreateTopDownTriple(t_opts, std::move(inters));
     Texture tex = tracer->Render(renderer->camera());
     TextureToFile("output.png", tex);
   }

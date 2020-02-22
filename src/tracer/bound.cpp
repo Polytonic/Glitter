@@ -1,13 +1,20 @@
 #include "bound.hpp"
 
-#include <map>
+#include <iostream>
+#include <set>
 
 std::optional<ShadeablePoint> BoundShape::Intersect(const Ray& ray) {
-  std::map<double, Intersectable*> ordered_children;
-  for (Intersectable* child : children_) {
+  std::set<std::pair<double, Intersectable*> > ordered_children;
+  for (Intersectable* child : inter_children_) {
     std::optional<DVec3> inter = child->EarliestIntersect(ray);
     if (inter.has_value()) {
-      ordered_children[glm::distance2(*inter, ray.origin)] = child;
+      ordered_children.insert({glm::distance(*inter, ray.origin), child});
+    }
+  }
+  for (BoundPtr& child : bound_children_) {
+    std::optional<DVec3> inter = child->EarliestIntersect(ray);
+    if (inter.has_value()) {
+      ordered_children.insert({glm::distance(*inter, ray.origin), child.get()});
     }
   }
   double closest = 1e10;
@@ -18,7 +25,7 @@ std::optional<ShadeablePoint> BoundShape::Intersect(const Ray& ray) {
     }
     std::optional<ShadeablePoint> inter = child.second->Intersect(ray);
     if (inter.has_value()) {
-      double curr = glm::distance2(inter->point, ray.origin);
+      double curr = glm::distance(inter->point, ray.origin);
       if (curr < closest) {
         closest = curr;
         closest_inter = inter;
@@ -26,6 +33,19 @@ std::optional<ShadeablePoint> BoundShape::Intersect(const Ray& ray) {
     }
   }
   return closest_inter;
+}
+
+size_t BoundShape::RecursiveShadeableSize() const {
+  size_t size = 0;
+  for (const Intersectable* inter : inter_children_) {
+    if (inter->IsShadeable()) {
+      size++;
+    }
+  }
+  for (const BoundPtr& bound : bound_children_) {
+    size += bound->RecursiveShadeableSize();
+  }
+  return size;
 }
 
 void AddChildren(BoundShape* shape,
@@ -44,10 +64,17 @@ void BoundBox::AddChild(Intersectable* child) {
   BoundShape::AddChild(child);
 }
 
+void BoundBox::AddChild(BoundPtr child) {
+  box_.Update(child->GetAaBox());
+  BoundShape::AddChild(std::move(child));
+}
+
 std::optional<DVec3> BoundBox::EarliestIntersect(const Ray& ray) {
   return box_.EarliestIntersect(ray);
 }
 
-AaBox BoundBox::GetAaBox() { return box_.GetAaBox(); }
+AaBox BoundBox::GetAaBox() const { return box_.GetAaBox(); }
+
+DVec3 BoundBox::EstimateCenter() const { return box_.EstimateCenter(); }
 
 double BoundBox::SurfaceArea() const { return box_.SurfaceArea(); }

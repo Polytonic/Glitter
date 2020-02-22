@@ -37,8 +37,10 @@ class Intersectable {
  public:
   virtual std::optional<ShadeablePoint> Intersect(const Ray& ray) = 0;
   virtual std::optional<DVec3> EarliestIntersect(const Ray& ray) = 0;
-  virtual AaBox GetAaBox() = 0;
-  virtual bool IsShadeable() = 0;
+  virtual AaBox GetAaBox() const = 0;
+  virtual double SurfaceArea() const;
+  virtual DVec3 EstimateCenter() const = 0;
+  virtual bool IsShadeable() const = 0;
 };
 
 using InterPtr = std::unique_ptr<Intersectable>;
@@ -53,14 +55,18 @@ class AaBox : public Intersectable {
  public:
   AaBox(DVec3 bot, DVec3 top);
   AaBox(DVec3 point);
+  AaBox();
   std::optional<ShadeablePoint> Intersect(const Ray& ray) override;
   std::optional<DVec3> EarliestIntersect(const Ray& ray) override;
-  AaBox GetAaBox() override;
-  bool IsShadeable() override { return false; }
+  AaBox GetAaBox() const override;
+  double SurfaceArea() const override;
+  DVec3 EstimateCenter() const override;
+  bool IsShadeable() const override { return false; }
   virtual void Update(DVec3 point);
   virtual void Update(AaBox box);
-  virtual bool Inside(DVec3 point) const;
-  virtual double SurfaceArea() const;
+  virtual bool Contains(DVec3 point) const;
+  virtual bool Contains(AaBox box) const;
+  virtual bool Contains(const Intersectable& inter) const;
 
   DVec3 bot() { return bot_; }
   DVec3 top() { return top_; }
@@ -75,8 +81,9 @@ class InterTri : public Shadeable {
   InterTri(Material* material, DVertex vert0, DVertex vert1, DVertex vert2);
   std::optional<ShadeablePoint> Intersect(const Ray& ray) override;
   std::optional<DVec3> EarliestIntersect(const Ray& ray) override;
-  AaBox GetAaBox() override;
-  bool IsShadeable() override { return true; }
+  AaBox GetAaBox() const override;
+  DVec3 EstimateCenter() const override;
+  bool IsShadeable() const override { return true; }
   Material* material() const override;
   DVec2 GetUv(DVec3 point) override;
 

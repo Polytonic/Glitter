@@ -3,6 +3,14 @@
 
 #include "tracer/bound.hpp"
 
-BoundPtr ConstructBounds(std::vector<InterPtr>* inters);
+struct BoundTopDownTripleOptions {
+  int target_per_box = 5;
+  int max_iterations = 20;
+};
+
+BoundPtr ConstructBoundsNoAcceleration(const std::vector<InterPtr>* inters);
+
+BoundPtr ConstructBoundsTopDownTriple(const BoundTopDownTripleOptions& opts,
+                                      const std::vector<InterPtr>* inters);
 
 #endif

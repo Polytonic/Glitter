@@ -1,12 +1,20 @@
 #include "tracer/ray_tracer.hpp"
 
-#include "tracer/acceleration.hpp"
 #include "tex_canvas.hpp"
 #include "texture_gen.hpp"
+#include "tracer/acceleration.hpp"
 
-std::unique_ptr<RayTracer> RayTracer::Create(Options options,
-                                             std::vector<InterPtr> inters) {
-  BoundPtr outer_bound = ConstructBounds(&inters);
+std::unique_ptr<RayTracer> RayTracer::CreateNoAcceleration(
+    Options options, std::vector<InterPtr> inters) {
+  BoundPtr outer_bound = ConstructBoundsNoAcceleration(&inters);
+  return std::unique_ptr<RayTracer>(
+      new RayTracer(options, std::move(inters), std::move(outer_bound)));
+}
+
+std::unique_ptr<RayTracer> RayTracer::CreateTopDownTriple(
+    Options options, std::vector<InterPtr> inters) {
+  BoundPtr outer_bound =
+      ConstructBoundsTopDownTriple(BoundTopDownTripleOptions(), &inters);
   return std::unique_ptr<RayTracer>(
       new RayTracer(options, std::move(inters), std::move(outer_bound)));
 }

@@ -7,8 +7,8 @@
 
 #include "learnopengl/camera.h"
 #include "learnopengl/mesh.h"
-#include "tracer/intersectable.hpp"
 #include "tracer/bound.hpp"
+#include "tracer/intersectable.hpp"
 
 class RayTracer {
  public:
@@ -16,11 +16,13 @@ class RayTracer {
     RgbPix background_color = {0, 0, 0};
   };
 
-  static std::unique_ptr<RayTracer> Create(Options options,
-                                           std::vector<InterPtr> inters);
+  static std::unique_ptr<RayTracer> CreateNoAcceleration(
+      Options options, std::vector<InterPtr> inters);
+  static std::unique_ptr<RayTracer> CreateTopDownTriple(
+      Options options, std::vector<InterPtr> inters);
   virtual Texture Render(Camera camera);
 
-protected:
+ protected:
   RayTracer(Options options, std::vector<InterPtr> inters,
             BoundPtr outer_bounds);
 

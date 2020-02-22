@@ -41,6 +41,8 @@ std::optional<DVec3> IntersectTri(Ray ray, DVec3 verts[3]) {
   return std::nullopt;
 }
 
+double Intersectable::SurfaceArea() const { return GetAaBox().SurfaceArea(); }
+
 AaBox::AaBox(DVec3 bot, DVec3 top) {
   this->bot_ = bot;
   this->top_ = top;
@@ -51,6 +53,11 @@ AaBox::AaBox(DVec3 bot, DVec3 top) {
 AaBox::AaBox(DVec3 point) {
   this->bot_ = point;
   this->top_ = point;
+}
+
+AaBox::AaBox() {
+  this->bot_ = DVec3(0);
+  this->top_ = DVec3(0);
 }
 
 std::optional<ShadeablePoint> AaBox::Intersect(const Ray& ray) {
@@ -102,7 +109,9 @@ std::optional<DVec3> AaBox::EarliestIntersect(const Ray& ray) {
   return res;
 }
 
-AaBox AaBox::GetAaBox() { return *this; }
+AaBox AaBox::GetAaBox() const { return *this; }
+
+DVec3 AaBox::EstimateCenter() const { return (bot_ + top_) / 2.0; }
 
 void AaBox::Update(DVec3 point) {
   for (int i = 0; i < 3; i++) {
@@ -118,9 +127,17 @@ void AaBox::Update(AaBox box) {
   Update(box.top());
 }
 
-bool AaBox::Inside(DVec3 point) const {
+bool AaBox::Contains(DVec3 point) const {
   return point.x < top_.x && point.x > bot_.x && point.y < top_.y &&
          point.y > bot_.y && point.z < top_.z && point.z > bot_.z;
+}
+
+bool AaBox::Contains(AaBox box) const {
+  return Contains(box.bot()) && Contains(box.top());
+}
+
+bool AaBox::Contains(const Intersectable& inter) const {
+  return Contains(inter.GetAaBox());
 }
 
 double AaBox::SurfaceArea() const {
@@ -159,12 +176,16 @@ std::optional<DVec3> InterTri::EarliestIntersect(const Ray& ray) {
   return std::nullopt;
 }
 
-AaBox InterTri::GetAaBox() {
+AaBox InterTri::GetAaBox() const {
   AaBox box(verts_[0].Position);
   for (int i = 0; i < 3; i++) {
     box.Update(verts_[i].Position);
   }
   return box;
+}
+
+DVec3 InterTri::EstimateCenter() const {
+  return (verts_[0].Position + verts_[1].Position + verts_[2].Position) / 3.0;
 }
 
 Material* InterTri::material() const { return material_; }
