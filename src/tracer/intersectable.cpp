@@ -1,6 +1,7 @@
 #include "tracer/intersectable.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 #include "interpolation.hpp"
 
@@ -44,27 +45,25 @@ std::optional<DVec3> IntersectTri(Ray ray, DVec3 verts[3]) {
 double Intersectable::SurfaceArea() const { return GetAaBox().SurfaceArea(); }
 
 AaBox::AaBox(DVec3 bot, DVec3 top) {
-  this->bot_ = bot;
-  this->top_ = top;
-  this->Update(bot);
-  this->Update(top);
+  initialized_ = true;
+  bot_ = bot;
+  top_ = top;
+  Update(bot);
+  Update(top);
 }
 
-AaBox::AaBox(DVec3 point) {
-  this->bot_ = point;
-  this->top_ = point;
-}
-
-AaBox::AaBox() {
-  this->bot_ = DVec3(0);
-  this->top_ = DVec3(0);
-}
+AaBox::AaBox() {}
 
 std::optional<ShadeablePoint> AaBox::Intersect(const Ray& ray) {
   return std::nullopt;
 }
 
 std::optional<DVec3> AaBox::EarliestIntersect(const Ray& ray) {
+  if (!initialized_) {
+    std::cerr << "ERROR: called `EarliestIntersect` on uninitialized AaBox."
+              << std::endl;
+    exit(-1);
+  }
   Ray r = ray;
   r.dir = glm::normalize(PreventZero(r.dir));
   DVec3 closePlanes(0);
@@ -111,15 +110,28 @@ std::optional<DVec3> AaBox::EarliestIntersect(const Ray& ray) {
 
 AaBox AaBox::GetAaBox() const { return *this; }
 
-DVec3 AaBox::EstimateCenter() const { return (bot_ + top_) / 2.0; }
+DVec3 AaBox::EstimateCenter() const {
+  if (!initialized_) {
+    std::cerr << "ERROR: called `EstimateCenter` on uninitialized AaBox."
+              << std::endl;
+    exit(-1);
+  }
+  return (bot_ + top_) / 2.0;
+}
 
 void AaBox::Update(DVec3 point) {
-  for (int i = 0; i < 3; i++) {
-    bot_[i] = std::min(bot_[i], point[i]);
+  if (initialized_) {
+    for (int i = 0; i < 3; i++) {
+      bot_[i] = std::min(bot_[i], point[i]);
+    }
+    for (int i = 0; i < 3; i++) {
+      top_[i] = std::max(top_[i], point[i]);
+    }
+  } else {
+    bot_ = point;
+    top_ = point;
   }
-  for (int i = 0; i < 3; i++) {
-    top_[i] = std::max(top_[i], point[i]);
-  }
+  initialized_ = true;
 }
 
 void AaBox::Update(AaBox box) {
@@ -128,8 +140,13 @@ void AaBox::Update(AaBox box) {
 }
 
 bool AaBox::Contains(DVec3 point) const {
-  return point.x < top_.x && point.x > bot_.x && point.y < top_.y &&
-         point.y > bot_.y && point.z < top_.z && point.z > bot_.z;
+  if (!initialized_) {
+    std::cerr << "ERROR: called `Contains` on uninitialized AaBox."
+              << std::endl;
+    exit(-1);
+  }
+  return point.x <= top_.x && point.x >= bot_.x && point.y <= top_.y &&
+         point.y >= bot_.y && point.z <= top_.z && point.z >= bot_.z;
 }
 
 bool AaBox::Contains(AaBox box) const {
@@ -141,6 +158,11 @@ bool AaBox::Contains(const Intersectable& inter) const {
 }
 
 double AaBox::SurfaceArea() const {
+  if (!initialized_) {
+    std::cerr << "ERROR: called `SurfaceArea` on uninitialized AaBox."
+              << std::endl;
+    exit(-1);
+  }
   double xdiff = top_.x - bot_.x;
   double ydiff = top_.y - bot_.y;
   double zdiff = top_.z - bot_.z;
@@ -177,7 +199,7 @@ std::optional<DVec3> InterTri::EarliestIntersect(const Ray& ray) {
 }
 
 AaBox InterTri::GetAaBox() const {
-  AaBox box(verts_[0].Position);
+  AaBox box;
   for (int i = 0; i < 3; i++) {
     box.Update(verts_[i].Position);
   }

@@ -54,7 +54,6 @@ class Shadeable : public Intersectable {
 class AaBox : public Intersectable {
  public:
   AaBox(DVec3 bot, DVec3 top);
-  AaBox(DVec3 point);
   AaBox();
   std::optional<ShadeablePoint> Intersect(const Ray& ray) override;
   std::optional<DVec3> EarliestIntersect(const Ray& ray) override;
@@ -72,6 +71,7 @@ class AaBox : public Intersectable {
   DVec3 top() { return top_; }
 
  protected:
+  bool initialized_ = false;
   DVec3 bot_;
   DVec3 top_;
 };

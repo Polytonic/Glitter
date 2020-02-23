@@ -55,7 +55,7 @@ void AddChildren(BoundShape* shape,
   }
 }
 
-BoundBox::BoundBox() : box_(DVec3(0)) {}
+BoundBox::BoundBox() {}
 
 BoundBox::BoundBox(DVec3 bot, DVec3 top) : box_(bot, top) {}
 
@@ -73,7 +73,7 @@ std::optional<DVec3> BoundBox::EarliestIntersect(const Ray& ray) {
   return box_.EarliestIntersect(ray);
 }
 
-AaBox BoundBox::GetAaBox() const { return box_.GetAaBox(); }
+AaBox BoundBox::GetAaBox() const { return box_; }
 
 DVec3 BoundBox::EstimateCenter() const { return box_.EstimateCenter(); }
 
