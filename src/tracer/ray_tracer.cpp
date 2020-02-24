@@ -100,13 +100,58 @@ RgbPix RayTracer::Shade(const ShadeablePoint& point, const Camera& camera,
         point, view_dir, *lights.directional_light_in_dir,
         lights.directional_light_color, diffuse, specular, normal);
   }
+  for(const Light& light : lights.points) {
+    lighting += CalculatePointLight(point, view_dir, light,
+				    diffuse, specular, normal);
+  }
   return RgbPix::Convert(lighting);
 }
 
 DVec3 RayTracer::CalculatePointLight(const ShadeablePoint& point,
                                      DVec3 view_dir, const Light& light,
-                                     DVec3 diffuse, DVec3 spec, DVec3 normal) {
-  return DVec3(0);
+                                     DVec3 diffuse_color, DVec3 specular_color,
+                                     DVec3 normal) {
+  DVec3 point_shadow = DVec3(1.0) - CalculatePointShadow(point.point, light);
+  DVec3 light_color(light.Color);
+  if (point_shadow == DVec3(0.0)) {
+    return DVec3(0.0);
+  }
+  DVec3 light_out_dir = DVec3(light.Position) - point.point;
+  double light_distance = glm::length(light_out_dir);
+  light_out_dir = glm::normalize(light_out_dir);
+  DVec3 diff_light = std::max(glm::dot(normal, light_out_dir), 0.0) *
+                     diffuse_color * light_color;
+  DVec3 halfway_dir = glm::normalize(light_out_dir + view_dir);
+  double spec_strength =
+      std::pow(std::max(glm::dot(normal, halfway_dir), 0.0), 16.0);
+  DVec3 spec_light = light_color * specular_color * spec_strength;
+  double attenuation = 1.0 / (1.0 + light.Linear * light_distance + light.Quadratic * light_distance * light_distance);
+  DVec3 lighting(0.0);
+  lighting += attenuation * point_shadow * diff_light;
+  lighting += attenuation * point_shadow * spec_light;
+  return lighting;
+}
+
+DVec3 RayTracer::CalculatePointShadow(DVec3 point, const Light& light) {
+  DVec3 light_position(light.Position);
+  Ray out_ray = {
+      .origin = point,
+      .dir = glm::normalize(light_position - point),
+  };
+  EpsilonAdvance(&out_ray);
+  std::optional<ShadeablePoint> intersection = IntersectScene(out_ray);
+  if (intersection.has_value()) {
+    double light_dist = glm::distance(point, light_position);
+    if (glm::distance(intersection->point, point) >= light_dist) {
+      // Intersected object is farther away than light.
+      return DVec3(0.0);
+    } else {
+      return DVec3(1.0);
+    }
+  } else {
+    // Hit nothing, no shadow
+    return DVec3(0.0);
+  }
 }
 
 DVec3 RayTracer::CalculateDirectionalLight(const ShadeablePoint& point,
@@ -114,12 +159,12 @@ DVec3 RayTracer::CalculateDirectionalLight(const ShadeablePoint& point,
                                            DVec3 light_color,
                                            DVec3 diffuse_color,
                                            DVec3 specular_color, DVec3 normal) {
-  double directional_shadow =
-      1.0 - CalculateDirectionalShadow(point.point, light_in_dir);
-  if (directional_shadow == 0.0) {
+  DVec3 directional_shadow =
+      DVec3(1.0) - CalculateDirectionalShadow(point.point, light_in_dir);
+  if (directional_shadow == DVec3(0.0)) {
     return DVec3(0.0);
   }
-  DVec3 light_out_dir = -1.0 * light_in_dir;
+  DVec3 light_out_dir = glm::normalize(-1.0 * light_in_dir);
   DVec3 diff_light = std::max(glm::dot(normal, light_out_dir), 0.0) *
                      diffuse_color * light_color;
   DVec3 halfway_dir = glm::normalize(light_out_dir + view_dir);
@@ -132,12 +177,12 @@ DVec3 RayTracer::CalculateDirectionalLight(const ShadeablePoint& point,
   return lighting;
 }
 
-double RayTracer::CalculateDirectionalShadow(DVec3 point, DVec3 light_in_dir) {
+DVec3 RayTracer::CalculateDirectionalShadow(DVec3 point, DVec3 light_in_dir) {
   Ray out_ray = {
       .origin = point,
-      .dir = -1.0 * light_in_dir,
+      .dir = glm::normalize(-1.0 * light_in_dir),
   };
   EpsilonAdvance(&out_ray);
   // If it hit something, full shadow, otherwise none.
-  return IntersectScene(out_ray).has_value() ? 1.0 : 0.0;
+  return IntersectScene(out_ray).has_value() ? DVec3(1.0) : DVec3(0.0);
 }

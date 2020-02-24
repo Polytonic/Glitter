@@ -199,7 +199,7 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     mat_opts.reflectivity = 0.5;
     Material material(std::move(texture), mat_opts);
     std::unique_ptr<IterableMesh> it_mesh(new IterableSphere(0.5f));
-    BasicMeshIterator mesh_iterator(20, 20);
+    BasicMeshIterator mesh_iterator(100, 100);
     mesh_iterator.SetIterableMesh(std::move(it_mesh));
     MeshVertices mesh_vert = mesh_iterator.GetMesh();
     Mesh mesh(mesh_vert.vertices, mesh_vert.indices, material);
@@ -291,7 +291,7 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
         glm::rotate(second_helix_model_mat, (float)M_PI, glm::vec3(0, 1.0f, 0));
     renderer->AddModel(std::move(generated_model), model_mat);
   }
-  /*{
+  {
     Light l;
     l.Position = glm::vec3(-2, -1, -1);
     l.Color = glm::vec3(1);
@@ -299,10 +299,10 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
   }
   {
     Light l;
-    l.Position = glm::vec3(-1, -1, 1);
+    l.Position = glm::vec3(3, -2, 1);
     l.Color = glm::vec3(1);
     renderer->AddLight(l);
-    }*/
+  }
   renderer->set_directional_light_pos(glm::vec3(-6.0f, 10.0f, -6.0f));
   renderer->set_directional_light_color(glm::vec3(0.5f, 0.5f, 0.5f));
   return renderer;

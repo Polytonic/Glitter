@@ -34,15 +34,16 @@ class RayTracer {
 
   // `view_dir` is the vector from the point to the camera
   virtual DVec3 CalculatePointLight(const ShadeablePoint& point, DVec3 view_dir,
-                                    const Light& light, DVec3 diffuse,
-                                    DVec3 specular, DVec3 normal);
+                                    const Light& light, DVec3 diffuse_color,
+                                    DVec3 specular_color, DVec3 normal);
+  virtual DVec3 CalculatePointShadow(DVec3 point, const Light& light);
 
   virtual DVec3 CalculateDirectionalLight(const ShadeablePoint& point,
                                           DVec3 view_dir, DVec3 light_in_dir,
                                           DVec3 light_color,
                                           DVec3 diffuse_color,
                                           DVec3 specular_color, DVec3 normal);
-  virtual double CalculateDirectionalShadow(DVec3 point, DVec3 light_in_dir);
+  virtual DVec3 CalculateDirectionalShadow(DVec3 point, DVec3 light_in_dir);
 
   std::vector<InterPtr> inters_;
   BoundPtr outer_bound_;

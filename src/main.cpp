@@ -25,14 +25,38 @@
 #include "tracer/intersectable.hpp"
 #include "tracer/ray_tracer.hpp"
 
+struct CommandOps {
+  bool trace = false;
+  bool raster = false;
+};
+
+CommandOps GetOps(int argc, char** argv) {
+  CommandOps ops;
+  if(argc >= 2) {
+    std::string str(argv[1]);
+    if(str == "trace") {
+      ops.trace = true;
+    } else if (str == "raster") {
+      ops.raster = true;
+    } else if (str == "all") {
+      ops.trace = true;
+      ops.raster = true;
+    } else {
+      std::cerr << "Command `" << str << "` is invalid" << std::endl;
+      exit(1);
+    }
+  }
+  return ops;
+}
+
 CameraArrangement GetStartingCamera(int argc, char** argv) {
   CameraArrangement camera = {
       .position = glm::vec3(0.0f, 0.0f, 2.0f),
       .view_dir = glm::vec3(0.0f, 0.0f, -1.0f),
   };
-  if (argc >= 2) {
+  if (argc >= 3) {
     std::stringstream in;
-    in << argv[1] << " ";
+    in << argv[2] << " ";
     float coords[6];
     for (int i = 0; i < 6 && in.good(); i++) {
       in >> coords[i];
@@ -60,14 +84,14 @@ int main(int argc, char** argv) {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-  bool trace = true;
+  CommandOps ops = GetOps(argc, argv);
 
   std::unique_ptr<RtRenderer> renderer =
-      HelixGarlicNanoScene(!trace, &random_gen);
+      HelixGarlicNanoScene(ops.raster, &random_gen);
 
   renderer->MoveCamera(GetStartingCamera(argc, argv));
 
-  if (trace) {
+  if (ops.trace) {
     std::cerr << "Starting ray tracing" << std::endl;
     CameraTracerOpts opts;
     opts.h_px = 600;
@@ -95,7 +119,7 @@ int main(int argc, char** argv) {
 
   glfwTerminate();
   const Camera& camera = renderer->camera();
-  std::cout << "Camera:" << std::endl;
+  std::cout << "Final camera:" << std::endl;
   std::cout << camera.position().x << " " << camera.position().y << " "
             << camera.position().z << " " << camera.front().x << " "
             << camera.front().y << " " << camera.front().z << std::endl;
