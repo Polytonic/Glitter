@@ -74,7 +74,8 @@ void main()
     vec3 Diffuse = texture(diffuseTexture, fs_in.TexCoords).rgb;
     
     // then calculate lighting as usual
-    vec3 lighting  = Diffuse * 0.1; // hard-coded ambient component
+    vec3 lighting = vec3(0.0, 0.0, 0.0);
+    lighting += Diffuse * 0.1; // hard-coded ambient component
     vec3 viewDir  = normalize(viewPos - FragPos);
     for(int i = 0; i < NR_LIGHTS; ++i)
     {
@@ -101,7 +102,6 @@ void main()
         float spec = pow(max(dot(Normal, halfwayDir), 0.0), 16.0);
         vec3 specular = directionalLightColor * spec * Diffuse;
 	float directional_shadow = 1.0 - ShadowCalculation(fs_in.FragPosLightSpace);
-	// lighting = vec3(directional_shadow, directional_shadow, directional_shadow);
         lighting += directional_shadow * diffuse;
 	lighting += directional_shadow * specular;
     }

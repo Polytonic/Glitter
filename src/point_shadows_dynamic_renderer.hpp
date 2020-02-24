@@ -27,6 +27,7 @@ class PointShadowsDynamicRenderer : public RtRenderer {
   void MoveCamera(const CameraArrangement& camera);
   const Camera& camera();
   void SetCameraOpts(CameraTracerOpts opts) override;
+  SceneLights GetLights() const override;
 
  private:
   void processInput(float deltaTime);

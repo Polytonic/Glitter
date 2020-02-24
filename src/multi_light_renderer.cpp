@@ -222,6 +222,15 @@ void MultiLightRenderer::Render() {
   glfwPollEvents();
 }
 
+SceneLights MultiLightRenderer::GetLights() const {
+  SceneLights lights;
+  lights.points = lights_;
+  lights.directional_light_in_dir =
+      glm::normalize(glm::vec3(0.0f) - directional_light_pos_);
+  lights.directional_light_color = directional_light_color_;
+  return lights;
+}
+
 bool MultiLightRenderer::WindowShouldClose() {
   if (window_ == nullptr || !windowed_mode_) return true;
   return glfwWindowShouldClose(window_);

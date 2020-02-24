@@ -257,6 +257,15 @@ void PointShadowsDynamicRenderer::SetCameraOpts(CameraTracerOpts opts) {
   camera_.SetTracerOpts(opts);
 }
 
+SceneLights PointShadowsDynamicRenderer::GetLights() const {
+  Light light;
+  light.Position = lightPos;
+  light.Color = glm::vec3(1.0);
+  SceneLights data;
+  data.points = {light};
+  return data;
+}
+
 void PointShadowsDynamicRenderer::processInput(float deltaTime) {
   if (window_ == nullptr) return;
   if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)

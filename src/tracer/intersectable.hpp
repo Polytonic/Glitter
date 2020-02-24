@@ -20,6 +20,8 @@ struct Ray {
   DVec3 dir;
 };
 
+void EpsilonAdvance(Ray* ray);
+
 struct InterPoint {
   DVec3 point;
   Intersectable* shape;
@@ -50,6 +52,7 @@ class Shadeable : public Intersectable {
  public:
   virtual Material* material() const = 0;
   virtual DVec2 GetUv(DVec3 point) = 0;
+  virtual DVec3 GetNormal(DVec3 point) = 0;
 };
 
 class AaBox : public Intersectable {
@@ -89,6 +92,7 @@ class InterTri : public Shadeable {
   bool IsShadeable() const override { return true; }
   Material* material() const override;
   DVec2 GetUv(DVec3 point) override;
+  DVec3 GetNormal(DVec3 point) override;
 
  protected:
   Material* material_;

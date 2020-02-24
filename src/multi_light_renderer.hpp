@@ -26,6 +26,7 @@ class MultiLightRenderer : public RtRenderer {
   void MoveCamera(const CameraArrangement& camera);
   const Camera& camera();
   void SetCameraOpts(CameraTracerOpts opts) override;
+  SceneLights GetLights() const override;
 
   bool AddLight(const Light& light);
   int MaxNumLights() const;

@@ -2,6 +2,16 @@
 
 #include <cmath>
 
+DVec3 RgbPix::ToFloat() const { return DVec3(r / 255.0, g / 255.0, b / 255.0); }
+
+RgbPix RgbPix::Convert(DVec3 vec) {
+  return {
+      std::max(std::min((int)std::round(vec.x * 255), 255), 0),
+      std::max(std::min((int)std::round(vec.y * 255), 255), 0),
+      std::max(std::min((int)std::round(vec.z * 255), 255), 0),
+  };
+}
+
 DVertex::DVertex(const Vertex& v)
     : Position(v.Position),
       Normal(v.Normal),
@@ -10,8 +20,8 @@ DVertex::DVertex(const Vertex& v)
 
 Material::Material(Texture diff_texture) : diff_texture_(diff_texture) {}
 
-Material::Material(Texture diff_texture, Transparency transparency)
-    : diff_texture_(diff_texture), transparency_(transparency) {}
+Material::Material(Texture diff_texture, Material::Options options)
+    : diff_texture_(diff_texture), options_(options) {}
 
 void DVertex::Apply(DMat4 mat) {
   Position = mat * DVec4(Position, 1.0);

@@ -5,6 +5,10 @@
 
 #include "interpolation.hpp"
 
+void EpsilonAdvance(Ray* ray) {
+  ray->origin += epsilon(ray->origin) * ray->dir;
+}
+
 DVec3 PreventZero(DVec3 vec) {
   if (vec.x == 0) vec.x = epsilon(vec);
   if (vec.y == 0) vec.y = epsilon(vec);
@@ -280,4 +284,14 @@ DVec2 InterTri::GetUv(DVec3 point) {
     uv += weights[i] * verts_[i].TexCoords;
   }
   return uv;
+}
+
+DVec3 InterTri::GetNormal(DVec3 point) {
+  DVec3 weights = GetBarycentricWeights(verts_[0].Position, verts_[1].Position,
+                                        verts_[2].Position, point);
+  DVec3 normal(0.0);
+  for (int i = 0; i < 3; i++) {
+    normal += weights[i] * verts_[i].Normal;
+  }
+  return glm::normalize(normal);
 }

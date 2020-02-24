@@ -2,6 +2,7 @@
 #define PRIMITIVES_HPP
 
 #include <string>
+#include <vector>
 
 #include "glitter.hpp"
 
@@ -9,6 +10,8 @@ struct RgbPix {
   unsigned char r;
   unsigned char g;
   unsigned char b;
+  DVec3 ToFloat() const;
+  static RgbPix Convert(DVec3 vec);
 };
 
 struct Vertex {
@@ -49,6 +52,12 @@ struct Light {
   float Quadratic = 0.4f;
 };
 
+struct SceneLights {
+  std::vector<Light> points;
+  std::optional<DVec3> directional_light_in_dir;
+  DVec3 directional_light_color;
+};
+
 struct Texture {
   unsigned int id = 0;
   std::string type;
@@ -63,24 +72,31 @@ struct Texture {
   RgbPix Sample(DVec2 uv) const;
 };
 
-struct Transparency {
-  double opacity = 1.0;
+struct MaterialOptions {
+  double transparency = 0.0;
   double index = 1.0003;
+  double reflectivity = 0.0;
 };
 
 class Material {
  public:
+  struct Options {
+    double transparency = 0.0;
+    double index = 1.0003;
+    double reflectivity = 0.0;
+  };
+
   Material(Texture diff_texture);
-  Material(Texture diff_texture, Transparency transparency);
+  Material(Texture diff_texture, Options options);
 
   const Texture& diff_texture() const { return diff_texture_; }
-  const Transparency& transparency() const { return transparency_; }
-  double opacity() const { return transparency_.opacity; }
-  double r_index() const { return transparency_.index; }
+  const Options& options() const { return options_; }
+  double opacity() const { return options_.transparency; }
+  double r_index() const { return options_.index; }
 
  private:
   Texture diff_texture_;
-  Transparency transparency_;
+  Options options_;
 };
 
 #endif

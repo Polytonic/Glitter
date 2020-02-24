@@ -30,6 +30,7 @@ class RtRenderer {
   virtual void MoveCamera(const CameraArrangement& camera) = 0;
   virtual const Camera& camera() = 0;
   virtual void SetCameraOpts(CameraTracerOpts opts) = 0;
+  virtual SceneLights GetLights() const = 0;
 
  protected:
   bool windowed_mode_;
