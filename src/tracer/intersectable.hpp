@@ -1,6 +1,7 @@
 #ifndef TRACER_INTERSECTABLE_HPP
 #define TRACER_INTERSECTABLE_HPP
 
+#include <array>
 #include <memory>
 #include <optional>
 #include <vector>
@@ -31,7 +32,7 @@ struct ShadeablePoint {
   Ray ray;
 };
 
-std::optional<DVec3> IntersectTri(Ray ray, DVec3 verts[3]);
+std::optional<DVec3> IntersectTri(Ray ray, const std::array<DVec3, 3>& verts);
 
 class Intersectable {
  public:
@@ -57,6 +58,7 @@ class AaBox : public Intersectable {
   AaBox();
   std::optional<ShadeablePoint> Intersect(const Ray& ray) override;
   std::optional<DVec3> EarliestIntersect(const Ray& ray) override;
+  std::optional<DVec3> EarliestIntersectSlowTriBased(const Ray& ray);
   AaBox GetAaBox() const override;
   double SurfaceArea() const override;
   DVec3 EstimateCenter() const override;
@@ -66,6 +68,7 @@ class AaBox : public Intersectable {
   virtual bool Contains(DVec3 point) const;
   virtual bool Contains(AaBox box) const;
   virtual bool Contains(const Intersectable& inter) const;
+  std::vector<std::array<DVec3, 3>> ToTris() const;
 
   DVec3 bot() { return bot_; }
   DVec3 top() { return top_; }

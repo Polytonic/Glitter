@@ -1,20 +1,28 @@
 #include "tracer/ray_tracer.hpp"
 
+#include "GLFW/glfw3.h"
+
 #include "tex_canvas.hpp"
 #include "texture_gen.hpp"
 #include "tracer/acceleration.hpp"
 
 std::unique_ptr<RayTracer> RayTracer::CreateNoAcceleration(
     Options options, std::vector<InterPtr> inters) {
+  double start = glfwGetTime();
   BoundPtr outer_bound = ConstructBoundsNoAcceleration(&inters);
+  double elapsed = glfwGetTime() - start;
+  std::cerr << "Accele time: " << elapsed << std::endl;
   return std::unique_ptr<RayTracer>(
       new RayTracer(options, std::move(inters), std::move(outer_bound)));
 }
 
 std::unique_ptr<RayTracer> RayTracer::CreateTopDownTriple(
     Options options, std::vector<InterPtr> inters) {
+  double start = glfwGetTime();
   BoundPtr outer_bound =
       ConstructBoundsTopDownTriple(BoundTopDownTripleOptions(), &inters);
+  double elapsed = glfwGetTime() - start;
+  std::cerr << "Accele time: " << elapsed << std::endl;
   return std::unique_ptr<RayTracer>(
       new RayTracer(options, std::move(inters), std::move(outer_bound)));
 }
@@ -26,8 +34,10 @@ RayTracer::RayTracer(Options options, std::vector<InterPtr> inters,
       outer_bound_(std::move(outer_bound)) {}
 
 Texture RayTracer::Render(Camera camera) {
+  double start = glfwGetTime();
   TexCanvas canvas = GetColorCanvas(options_.background_color,
                                     camera.opts().w_px, camera.opts().h_px);
+  outer_bound_->RecursiveAssertSanity();
   for (int y = 0; y < camera.opts().h_px; y++) {
     for (int x = 0; x < camera.opts().w_px; x++) {
       std::vector<Ray> pix_rays = camera.GetScreenRays(x, y);
@@ -40,6 +50,8 @@ Texture RayTracer::Render(Camera camera) {
       }
     }
   }
+  double elapsed = glfwGetTime() - start;
+  std::cerr << "Render time: " << elapsed << std::endl;
   return canvas.ToTexture();
 }
 

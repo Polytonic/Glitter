@@ -12,7 +12,7 @@ DVec3 PreventZero(DVec3 vec) {
   return vec;
 }
 
-std::optional<DVec3> IntersectTri(Ray ray, DVec3 verts[3]) {
+std::optional<DVec3> IntersectTri(Ray ray, const std::array<DVec3, 3>& verts) {
   ray.dir = glm::normalize(ray.dir);
   double eps = epsilon(verts[0]);
   DVec3 edge0 = verts[1] - verts[0];
@@ -64,13 +64,16 @@ std::optional<DVec3> AaBox::EarliestIntersect(const Ray& ray) {
               << std::endl;
     exit(-1);
   }
+
+  // return EarliestIntersectSlowTriBased(ray);
+
   Ray r = ray;
   r.dir = glm::normalize(PreventZero(r.dir));
   DVec3 closePlanes(0);
   DVec3 farPlanes(0);
   DVec3 invDir(1.0 / r.dir.x, 1.0 / r.dir.y, 1.0 / r.dir.z);
   for (int i = 0; i < 3; i++) {
-    if (invDir[i] < 0) {
+    if (r.dir[i] < 0) {
       closePlanes[i] = top_[i];
       farPlanes[i] = bot_[i];
     } else {
@@ -106,6 +109,23 @@ std::optional<DVec3> AaBox::EarliestIntersect(const Ray& ray) {
   }
 
   return res;
+}
+
+std::optional<DVec3> AaBox::EarliestIntersectSlowTriBased(const Ray& ray) {
+  std::vector<std::array<DVec3, 3>> tris = ToTris();
+  double closest = 1e100;
+  std::optional<DVec3> closest_point;
+  for (const auto& tri : tris) {
+    std::optional<DVec3> inter = IntersectTri(ray, tri);
+    if (inter.has_value()) {
+      double curr = glm::distance(*inter, ray.origin);
+      if (curr < closest) {
+        closest = curr;
+        closest_point = inter;
+      }
+    }
+  }
+  return closest_point;
 }
 
 AaBox AaBox::GetAaBox() const { return *this; }
@@ -169,6 +189,47 @@ double AaBox::SurfaceArea() const {
   return 2 * xdiff * ydiff + 2 * ydiff * zdiff + 2 * xdiff * zdiff;
 }
 
+std::vector<std::array<DVec3, 3>> AaBox::ToTris() const {
+  // Named with z going away, x going right, y up from behind origin (-z).
+  DVec3 close_bot_left = bot_;
+  DVec3 close_bot_right(top_.x, bot_.y, bot_.z);
+  DVec3 close_top_right(top_.x, top_.y, bot_.z);
+  DVec3 close_top_left(bot_.x, top_.y, bot_.z);
+  DVec3 far_bot_left(bot_.x, bot_.y, top_.z);
+  DVec3 far_bot_right(top_.x, bot_.y, top_.z);
+  DVec3 far_top_right = top_;
+  DVec3 far_top_left(bot_.x, top_.y, top_.z);
+
+  std::vector<std::array<DVec3, 3>> tris;
+  tris.reserve(12);
+
+  // close face
+  tris.push_back({close_bot_left, close_bot_right, close_top_right});
+  tris.push_back({close_bot_left, close_top_right, close_top_left});
+
+  // far face
+  tris.push_back({far_bot_left, far_bot_right, far_top_right});
+  tris.push_back({far_bot_left, far_top_right, far_top_left});
+
+  // top face
+  tris.push_back({close_top_left, close_top_right, far_top_right});
+  tris.push_back({close_top_left, far_top_right, far_top_left});
+
+  // bottom face
+  tris.push_back({close_bot_left, close_bot_right, far_bot_right});
+  tris.push_back({close_bot_left, far_bot_right, far_bot_left});
+
+  // left face
+  tris.push_back({close_bot_left, far_bot_left, far_top_left});
+  tris.push_back({close_bot_left, far_top_left, close_top_left});
+
+  // right face
+  tris.push_back({close_bot_right, far_bot_right, far_top_right});
+  tris.push_back({close_bot_right, far_top_right, close_top_right});
+
+  return tris;
+}
+
 InterTri::InterTri(Material* material, DVertex vert0, DVertex vert1,
                    DVertex vert2)
     : material_(material) {
@@ -178,12 +239,11 @@ InterTri::InterTri(Material* material, DVertex vert0, DVertex vert1,
 }
 
 std::optional<ShadeablePoint> InterTri::Intersect(const Ray& ray) {
-  DVec3 verts[3] = {
-      verts_[0].Position,
-      verts_[1].Position,
-      verts_[2].Position,
-  };
-  std::optional<DVec3> point = IntersectTri(ray, verts);
+  std::optional<DVec3> point = IntersectTri(ray, {
+                                                     verts_[0].Position,
+                                                     verts_[1].Position,
+                                                     verts_[2].Position,
+                                                 });
   if (!point.has_value()) {
     return std::nullopt;
   }

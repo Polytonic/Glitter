@@ -29,6 +29,7 @@ class BoundShape : public Intersectable {
   }
   virtual std::vector<BoundPtr>& bound_children() { return bound_children_; }
   virtual size_t RecursiveShadeableSize() const;
+  virtual void RecursiveAssertSanity() const;
 
  protected:
   std::vector<Intersectable*> inter_children_;

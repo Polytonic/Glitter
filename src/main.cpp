@@ -62,15 +62,16 @@ int main(int argc, char** argv) {
 
   bool trace = true;
 
-  std::unique_ptr<RtRenderer> renderer = CurrentScene(!trace, &random_gen);
+  std::unique_ptr<RtRenderer> renderer =
+      HelixGarlicNanoScene(!trace, &random_gen);
 
   renderer->MoveCamera(GetStartingCamera(argc, argv));
 
   if (trace) {
     std::cerr << "Starting ray tracing" << std::endl;
     CameraTracerOpts opts;
-    opts.h_px = 100;
-    opts.w_px = 100;
+    opts.h_px = 150;
+    opts.w_px = 200;
     opts.focal_length = 0.01;
     opts.focus_distance = 5;
     opts.vert_fov = 0.785398;

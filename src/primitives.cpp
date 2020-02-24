@@ -1,5 +1,7 @@
 #include "primitives.hpp"
 
+#include <cmath>
+
 DVertex::DVertex(const Vertex& v)
     : Position(v.Position),
       Normal(v.Normal),
@@ -17,6 +19,9 @@ void DVertex::Apply(DMat4 mat) {
 }
 
 RgbPix Texture::Sample(double u, double v) const {
+  double unused;
+  u = std::modf(u, &unused);
+  v = std::modf(v, &unused);
   int x = std::round(u * width);
   x = std::max(x, 0);
   x = std::min(x, width - 1);
