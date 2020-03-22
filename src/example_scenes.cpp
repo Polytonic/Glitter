@@ -196,7 +196,7 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
   {
     Texture texture = GetWhiteTexture();
     Material::Options mat_opts;
-    mat_opts.reflectivity = 0.5;
+    mat_opts.reflectivity = 1.0;
     Material material(std::move(texture), mat_opts);
     std::unique_ptr<IterableMesh> it_mesh(new IterableSphere(0.5f));
     BasicMeshIterator mesh_iterator(100, 100);

@@ -32,9 +32,9 @@ struct CommandOps {
 
 CommandOps GetOps(int argc, char** argv) {
   CommandOps ops;
-  if(argc >= 2) {
+  if (argc >= 2) {
     std::string str(argv[1]);
-    if(str == "trace") {
+    if (str == "trace") {
       ops.trace = true;
     } else if (str == "raster") {
       ops.raster = true;
@@ -94,8 +94,8 @@ int main(int argc, char** argv) {
   if (ops.trace) {
     std::cerr << "Starting ray tracing" << std::endl;
     CameraTracerOpts opts;
-    opts.h_px = 600;
-    opts.w_px = 800;
+    opts.h_px = 300;
+    opts.w_px = 400;
     opts.focal_length = 0.01;
     opts.focus_distance = 5;
     opts.vert_fov = 0.785398;

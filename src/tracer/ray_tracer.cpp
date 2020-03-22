@@ -49,7 +49,9 @@ Texture RayTracer::Render(Camera camera, const SceneLights& scene_lights) {
       for (Ray ray : pix_rays) {
         std::optional<ShadeablePoint> point = IntersectScene(ray);
         if (point.has_value()) {
-          RgbPix color = Shade(*point, camera, lights);
+          RecursiveContext context;
+          RgbPix color =
+              RgbPix::Convert(Shade(*point, camera, lights, context));
           canvas.SetPix(x, y, color);
         }
       }
@@ -83,8 +85,8 @@ std::optional<ShadeablePoint> RayTracer::IntersectScene(Ray ray) {
   return outer_bound_->Intersect(ray);
 }
 
-RgbPix RayTracer::Shade(const ShadeablePoint& point, const Camera& camera,
-                        const SceneLights& lights) {
+DVec3 RayTracer::Shade(const ShadeablePoint& point, const Camera& camera,
+                       const SceneLights& lights, RecursiveContext context) {
   DVec3 view_dir = glm::normalize(camera.Position - point.point);
   DVec3 diffuse = point.shape->material()
                       ->diff_texture()
@@ -92,19 +94,54 @@ RgbPix RayTracer::Shade(const ShadeablePoint& point, const Camera& camera,
                       .ToFloat();
   DVec3 specular = diffuse;
   DVec3 normal = point.shape->GetNormal(point.point);
-  DVec3 lighting(0.0);
-  // hard-coded ambient light
-  lighting += 0.1 * diffuse;
+  DVec3 direct_lighting(0.0);
+  // Hard-coded ambient light
+  direct_lighting += 0.1 * diffuse;
   if (lights.directional_light_in_dir.has_value()) {
-    lighting += CalculateDirectionalLight(
+    direct_lighting += CalculateDirectionalLight(
         point, view_dir, *lights.directional_light_in_dir,
         lights.directional_light_color, diffuse, specular, normal);
   }
-  for(const Light& light : lights.points) {
-    lighting += CalculatePointLight(point, view_dir, light,
-				    diffuse, specular, normal);
+  for (const Light& light : lights.points) {
+    direct_lighting +=
+        CalculatePointLight(point, view_dir, light, diffuse, specular, normal);
   }
-  return RgbPix::Convert(lighting);
+  double direct_lighting_component_strength =
+      std::max(0.0, 1.0 - (point.shape->material()->options().transparency +
+                           point.shape->material()->options().reflectivity));
+
+  DVec3 total_lighting = direct_lighting_component_strength * direct_lighting;
+
+  if (point.shape->material()->is_reflective()) {
+    DVec3 reflection_color =
+        CalculateReflectionColor(point, camera, lights, context);
+    total_lighting +=
+        reflection_color * point.shape->material()->options().reflectivity;
+  }
+
+  return total_lighting;
+}
+
+DVec3 RayTracer::CalculateReflectionColor(const ShadeablePoint& start_point,
+                                          const Camera& camera,
+                                          const SceneLights& lights,
+                                          RecursiveContext context) {
+  context.depth += 1;
+  if (context.depth > options_.max_depth) {
+    return DVec3(0.0);
+  }
+
+  DVec3 normal = start_point.shape->GetNormal(start_point.point);
+  Ray ray = {
+      .origin = start_point.point,
+      .dir = glm::normalize(glm::reflect(start_point.ray.dir, normal)),
+  };
+
+  std::optional<ShadeablePoint> point = IntersectScene(ray);
+  if (point.has_value()) {
+    return Shade(*point, camera, lights, context);
+  }
+  return options_.background_color.ToFloat();
 }
 
 DVec3 RayTracer::CalculatePointLight(const ShadeablePoint& point,
@@ -125,7 +162,9 @@ DVec3 RayTracer::CalculatePointLight(const ShadeablePoint& point,
   double spec_strength =
       std::pow(std::max(glm::dot(normal, halfway_dir), 0.0), 16.0);
   DVec3 spec_light = light_color * specular_color * spec_strength;
-  double attenuation = 1.0 / (1.0 + light.Linear * light_distance + light.Quadratic * light_distance * light_distance);
+  double attenuation =
+      1.0 / (1.0 + light.Linear * light_distance +
+             light.Quadratic * light_distance * light_distance);
   DVec3 lighting(0.0);
   lighting += attenuation * point_shadow * diff_light;
   lighting += attenuation * point_shadow * spec_light;

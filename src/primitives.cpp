@@ -12,13 +12,25 @@ RgbPix RgbPix::Convert(DVec3 vec) {
   };
 }
 
+DVec3 PreventZero(DVec3 vec) {
+  if (vec.x == 0) vec.x = epsilon(vec);
+  if (vec.y == 0) vec.y = epsilon(vec);
+  if (vec.z == 0) vec.z = epsilon(vec);
+  return vec;
+}
+
+void EpsilonAdvance(Ray* ray) {
+  ray->origin += epsilon(ray->origin) * ray->dir;
+}
+
 DVertex::DVertex(const Vertex& v)
     : Position(v.Position),
       Normal(v.Normal),
       TexCoords(v.TexCoords),
       Bitangent(v.Bitangent) {}
 
-Material::Material(Texture diff_texture) : diff_texture_(diff_texture) {}
+Material::Material(Texture diff_texture)
+    : diff_texture_(diff_texture), options_() {}
 
 Material::Material(Texture diff_texture, Material::Options options)
     : diff_texture_(diff_texture), options_(options) {}

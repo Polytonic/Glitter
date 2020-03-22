@@ -14,6 +14,15 @@ struct RgbPix {
   static RgbPix Convert(DVec3 vec);
 };
 
+DVec3 PreventZero(DVec3 vec);
+
+struct Ray {
+  DVec3 origin;
+  DVec3 dir;
+};
+
+void EpsilonAdvance(Ray* ray);
+
 struct Vertex {
   // position
   glm::vec3 Position;
@@ -72,12 +81,6 @@ struct Texture {
   RgbPix Sample(DVec2 uv) const;
 };
 
-struct MaterialOptions {
-  double transparency = 0.0;
-  double index = 1.0003;
-  double reflectivity = 0.0;
-};
-
 class Material {
  public:
   struct Options {
@@ -91,8 +94,9 @@ class Material {
 
   const Texture& diff_texture() const { return diff_texture_; }
   const Options& options() const { return options_; }
-  double opacity() const { return options_.transparency; }
-  double r_index() const { return options_.index; }
+  double opacity() const { return 1.0 - options_.transparency; }
+  bool is_reflective() const { return options_.reflectivity != 0.0; }
+  bool is_transparent() const { return options_.transparency != 0.0; }
 
  private:
   Texture diff_texture_;

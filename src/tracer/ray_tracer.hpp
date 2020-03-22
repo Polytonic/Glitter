@@ -15,6 +15,11 @@ class RayTracer {
  public:
   struct Options {
     RgbPix background_color = {0, 0, 0};
+    int max_depth = 8;
+  };
+
+  struct RecursiveContext {
+    int depth = 0;
   };
 
   static std::unique_ptr<RayTracer> CreateNoAcceleration(
@@ -29,8 +34,13 @@ class RayTracer {
 
   virtual std::optional<ShadeablePoint> IntersectScene(Ray ray);
 
-  virtual RgbPix Shade(const ShadeablePoint& point, const Camera& camera,
-                       const SceneLights& lights);
+  virtual DVec3 Shade(const ShadeablePoint& point, const Camera& camera,
+                      const SceneLights& lights, RecursiveContext context);
+
+  virtual DVec3 CalculateReflectionColor(const ShadeablePoint& start_point,
+                                         const Camera& camera,
+                                         const SceneLights& lights,
+                                         RecursiveContext context);
 
   // `view_dir` is the vector from the point to the camera
   virtual DVec3 CalculatePointLight(const ShadeablePoint& point, DVec3 view_dir,

@@ -5,17 +5,6 @@
 
 #include "interpolation.hpp"
 
-void EpsilonAdvance(Ray* ray) {
-  ray->origin += epsilon(ray->origin) * ray->dir;
-}
-
-DVec3 PreventZero(DVec3 vec) {
-  if (vec.x == 0) vec.x = epsilon(vec);
-  if (vec.y == 0) vec.y = epsilon(vec);
-  if (vec.z == 0) vec.z = epsilon(vec);
-  return vec;
-}
-
 std::optional<DVec3> IntersectTri(Ray ray, const std::array<DVec3, 3>& verts) {
   ray.dir = glm::normalize(ray.dir);
   double eps = epsilon(verts[0]);

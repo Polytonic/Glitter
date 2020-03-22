@@ -13,15 +13,6 @@ class AaBox;
 class Intersectable;
 class Shadeable;
 
-DVec3 PreventZero(DVec3 vec);
-
-struct Ray {
-  DVec3 origin;
-  DVec3 dir;
-};
-
-void EpsilonAdvance(Ray* ray);
-
 struct InterPoint {
   DVec3 point;
   Intersectable* shape;
