@@ -181,22 +181,28 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     renderer->AddModel(file_path, model_mat);
   }
   {
-    Texture texture = GetTestBoxTexture(random_gen);
+    // Floor
+    TexCanvas canvas = GetColorCanvas(RgbPix({0, 0, 255}), 1000, 1000);
+    ApplyGrid(&canvas, 7, 7, 10, RgbPix({255, 0, 0}));
     std::unique_ptr<IterableMesh> it_mesh(new IterableRectPlane(20.0f, 20.0f));
     BasicMeshIterator mesh_iterator(4, 4);
     mesh_iterator.SetIterableMesh(std::move(it_mesh));
+    Material::Options mat_opts;
+    mat_opts.reflectivity = 0.5;
+    Material material(std::move(canvas.ToTexture()), mat_opts);
     MeshVertices smooth_mesh_vert = mesh_iterator.GetMesh();
     Mesh smooth_mesh(smooth_mesh_vert.vertices, smooth_mesh_vert.indices,
-                     {texture});
+                     material);
     std::unique_ptr<Model> smooth_generated_model(new Model({smooth_mesh}));
     glm::mat4 model_mat = glm::mat4(1.0f);
     model_mat = glm::translate(model_mat, glm::vec3(0.0f, -3.0f, 0));
     renderer->AddModel(std::move(smooth_generated_model), model_mat);
   }
   {
-    Texture texture = GetWhiteTexture();
+    // Lower sphere
+    Texture texture = GetColorTexture(RgbPix({0, 0, 0}), 1, 1);
     Material::Options mat_opts;
-    mat_opts.reflectivity = 1.0;
+    mat_opts.reflectivity = 0.8;
     Material material(std::move(texture), mat_opts);
     std::unique_ptr<IterableMesh> it_mesh(new IterableSphere(0.5f));
     BasicMeshIterator mesh_iterator(100, 100);
@@ -206,6 +212,22 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     std::unique_ptr<Model> generated_model(new Model({mesh}));
     glm::mat4 model_mat = glm::mat4(1.0f);
     model_mat = glm::translate(model_mat, glm::vec3(1.5, -2.5, 0.0));
+    renderer->AddModel(std::move(generated_model), model_mat);
+  }
+  {
+    // Upper sphere
+    Texture texture = GetColorTexture(RgbPix({0, 0, 0}), 1, 1);
+    Material::Options mat_opts;
+    mat_opts.reflectivity = 0.2;
+    Material material(std::move(texture), mat_opts);
+    std::unique_ptr<IterableMesh> it_mesh(new IterableSphere(0.5f));
+    BasicMeshIterator mesh_iterator(100, 100);
+    mesh_iterator.SetIterableMesh(std::move(it_mesh));
+    MeshVertices mesh_vert = mesh_iterator.GetMesh();
+    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, material);
+    std::unique_ptr<Model> generated_model(new Model({mesh}));
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    model_mat = glm::translate(model_mat, glm::vec3(2.5, -1.0, 2.0));
     renderer->AddModel(std::move(generated_model), model_mat);
   }
   {

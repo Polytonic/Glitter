@@ -92,6 +92,9 @@ DVec3 RayTracer::Shade(const ShadeablePoint& point, const Camera& camera,
                       ->diff_texture()
                       .Sample(point.shape->GetUv(point.point))
                       .ToFloat();
+  if (!point.shape->material()->apply_shading()) {
+    return diffuse;
+  }
   DVec3 specular = diffuse;
   DVec3 normal = point.shape->GetNormal(point.point);
   DVec3 direct_lighting(0.0);

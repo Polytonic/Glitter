@@ -87,6 +87,9 @@ class Material {
     double transparency = 0.0;
     double index = 1.0003;
     double reflectivity = 0.0;
+
+    // Used for self-luminous objects and skyboxes
+    bool apply_shading = true;
   };
 
   Material(Texture diff_texture);
@@ -97,6 +100,7 @@ class Material {
   double opacity() const { return 1.0 - options_.transparency; }
   bool is_reflective() const { return options_.reflectivity != 0.0; }
   bool is_transparent() const { return options_.transparency != 0.0; }
+  bool apply_shading() const { return options_.apply_shading; }
 
  private:
   Texture diff_texture_;
