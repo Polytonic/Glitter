@@ -1,6 +1,7 @@
 #include "scene/primitives.hpp"
 
 #include <cmath>
+#include <iostream>
 
 DVec3 RgbPix::ToFloat() const { return DVec3(r / 255.0, g / 255.0, b / 255.0); }
 
@@ -45,9 +46,11 @@ RgbPix Texture::Sample(double u, double v) const {
   u = std::modf(u, &unused);
   v = std::modf(v, &unused);
   int x = std::round(u * width);
+  x = std::abs(x);
   x = std::max(x, 0);
   x = std::min(x, width - 1);
   int y = std::round(v * width);
+  y = std::abs(y);
   y = std::max(y, 0);
   y = std::min(y, width - 1);
   unsigned char* pixel = data + (row_alignment * y) + (x * num_components);

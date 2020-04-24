@@ -268,7 +268,7 @@ Material* InterTri::material() const { return material_; }
 DVec2 InterTri::GetUv(DVec3 point) {
   DVec3 weights = GetBarycentricWeights(verts_[0].Position, verts_[1].Position,
                                         verts_[2].Position, point);
-  DVec2 uv;
+  DVec2 uv(0.0);
   for (int i = 0; i < 3; i++) {
     uv += weights[i] * verts_[i].TexCoords;
   }
