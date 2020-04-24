@@ -2,7 +2,7 @@
 #include <cmath>
 
 // Local Headers
-#include "glitter.hpp"
+#include "learnopengl/glitter.hpp"
 
 // System Headers
 #include <GLFW/glfw3.h>
@@ -17,9 +17,9 @@
 #include <sstream>
 #include <string>
 
-#include "example_scenes.hpp"
+#include "scene/example_scenes.hpp"
 #include "learnopengl/filesystem.h"
-#include "rt_renderer.hpp"
+#include "realtime/rt_renderer.hpp"
 #include "tracer/acceleration.hpp"
 #include "tracer/bound.hpp"
 #include "tracer/intersectable.hpp"

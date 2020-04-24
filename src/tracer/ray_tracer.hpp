@@ -7,7 +7,7 @@
 
 #include "learnopengl/camera.h"
 #include "learnopengl/mesh.h"
-#include "primitives.hpp"
+#include "scene/primitives.hpp"
 #include "tracer/bound.hpp"
 #include "tracer/intersectable.hpp"
 

@@ -2,8 +2,8 @@
 
 #include "GLFW/glfw3.h"
 
-#include "tex_canvas.hpp"
-#include "texture_gen.hpp"
+#include "texture/tex_canvas.hpp"
+#include "texture/texture_gen.hpp"
 #include "tracer/acceleration.hpp"
 
 std::unique_ptr<RayTracer> RayTracer::CreateNoAcceleration(

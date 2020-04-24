@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-#include "mesh_iterator.hpp"
+#include "shapes/mesh_iterator.hpp"
 #include "shapes/onion.hpp"
 
 IterableOnion::IterableOnion(double outer_radius,

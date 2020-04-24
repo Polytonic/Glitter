@@ -15,11 +15,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "image.hpp"
+#include "texture/image.hpp"
 #include "learnopengl/mesh.h"
 #include "learnopengl/shader.h"
-#include "renderable.hpp"
-#include "texture_gen.hpp"
+#include "shapes/renderable.hpp"
+#include "texture/texture_gen.hpp"
 
 using namespace std;
 

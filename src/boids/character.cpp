@@ -1,6 +1,6 @@
 #include "boids/character.hpp"
 
-#include "texture_gen.hpp"
+#include "texture/texture_gen.hpp"
 
 namespace {
 

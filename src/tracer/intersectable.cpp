@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "interpolation.hpp"
+#include "shapes/interpolation.hpp"
 
 std::optional<DVec3> IntersectTri(Ray ray, const std::array<DVec3, 3>& verts) {
   ray.dir = glm::normalize(ray.dir);

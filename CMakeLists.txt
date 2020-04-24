@@ -45,15 +45,21 @@ include_directories(src/
 file(GLOB VENDORS_SOURCES Glitter/Vendor/glad/src/glad.c)
 file(GLOB PROJECT_HEADERS src/*.hpp
   src/boids/*.hpp
-  src/shapes/*.hpp
-  src/tracer/*.hpp
   src/learnopengl/*.h
-  src/learnopengl/*.hpp)
+  src/learnopengl/*.hpp
+  src/realtime/*.hpp
+  src/scene/*.hpp
+  src/shapes/*.hpp
+  src/texture/*.hpp
+  src/tracer/*.hpp)
 file(GLOB PROJECT_SOURCES src/*.cpp
   src/boids/*.cpp
+  src/learnopengl/*.cpp
+  src/realtime/*.cpp
+  src/scene/*.cpp
   src/shapes/*.cpp
-  src/tracer/*.cpp
-  src/learnopengl/*.cpp)
+  src/texture/*.cpp
+  src/tracer/*.cpp)
 file(GLOB PROJECT_SHADERS Glitter/Shaders/*.comp
                           Glitter/Shaders/*.frag
                           Glitter/Shaders/*.geom

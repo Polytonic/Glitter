@@ -6,10 +6,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "glitter.hpp"
+#include "learnopengl/glitter.hpp"
 #include "learnopengl/shader.h"
-#include "primitives.hpp"
-#include "renderable.hpp"
+#include "scene/primitives.hpp"
+#include "shapes/renderable.hpp"
 #include "tracer/intersectable.hpp"
 
 #include <fstream>

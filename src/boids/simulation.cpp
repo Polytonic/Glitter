@@ -4,13 +4,13 @@
 #include <iostream>
 
 #include "GLFW/glfw3.h"
-#include "glitter.hpp"
+#include "learnopengl/glitter.hpp"
 
 #include "boids/character.hpp"
-#include "elementary_models.hpp"
+#include "shapes/elementary_models.hpp"
 #include "glm/gtx/quaternion.hpp"
-#include "rt_render_util.hpp"
-#include "texture_gen.hpp"
+#include "realtime/rt_render_util.hpp"
+#include "texture/texture_gen.hpp"
 
 namespace {
 

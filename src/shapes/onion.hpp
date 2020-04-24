@@ -1,7 +1,7 @@
 #ifndef SHAPES_ONION_HPP
 #define SHAPES_ONION_HPP
 
-#include "iterable_mesh.hpp"
+#include "shapes/iterable_mesh.hpp"
 
 class IterableOnion : public IterableMesh {
  public:

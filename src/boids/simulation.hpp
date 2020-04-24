@@ -6,9 +6,10 @@
 #include <unordered_map>
 #include <utility>
 
-#include "glitter.hpp"
+#include "learnopengl/glitter.hpp"
 
-#include "dynamic_renderable.hpp"
+#include "shapes/dynamic_renderable.hpp"
+#include "shapes/renderable.hpp"
 #include "learnopengl/model.h"
 
 DVec3 RandomPosition(std::default_random_engine* random_gen, double axis_min,

@@ -6,8 +6,8 @@
 #include <optional>
 #include <vector>
 
-#include "glitter.hpp"
-#include "primitives.hpp"
+#include "learnopengl/glitter.hpp"
+#include "scene/primitives.hpp"
 
 class AaBox;
 class Intersectable;
