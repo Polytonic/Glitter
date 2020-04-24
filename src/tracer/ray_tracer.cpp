@@ -11,7 +11,7 @@ std::unique_ptr<RayTracer> RayTracer::CreateNoAcceleration(
   double start = glfwGetTime();
   BoundPtr outer_bound = ConstructBoundsNoAcceleration(&inters);
   double elapsed = glfwGetTime() - start;
-  std::cerr << "Accele time: " << elapsed << std::endl;
+  std::cerr << "Acceleration time: " << elapsed << std::endl;
   return std::unique_ptr<RayTracer>(
       new RayTracer(options, std::move(inters), std::move(outer_bound)));
 }
@@ -22,7 +22,7 @@ std::unique_ptr<RayTracer> RayTracer::CreateTopDownTriple(
   BoundPtr outer_bound =
       ConstructBoundsTopDownTriple(BoundTopDownTripleOptions(), &inters);
   double elapsed = glfwGetTime() - start;
-  std::cerr << "Accele time: " << elapsed << std::endl;
+  std::cerr << "Acceleration time: " << elapsed << std::endl;
   return std::unique_ptr<RayTracer>(
       new RayTracer(options, std::move(inters), std::move(outer_bound)));
 }

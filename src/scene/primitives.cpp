@@ -6,9 +6,9 @@ DVec3 RgbPix::ToFloat() const { return DVec3(r / 255.0, g / 255.0, b / 255.0); }
 
 RgbPix RgbPix::Convert(DVec3 vec) {
   return {
-      std::max(std::min((int)std::round(vec.x * 255), 255), 0),
-      std::max(std::min((int)std::round(vec.y * 255), 255), 0),
-      std::max(std::min((int)std::round(vec.z * 255), 255), 0),
+      (unsigned char)std::max(std::min((int)std::round(vec.x * 255), 255), 0),
+      (unsigned char)std::max(std::min((int)std::round(vec.y * 255), 255), 0),
+      (unsigned char)std::max(std::min((int)std::round(vec.z * 255), 255), 0),
   };
 }
 
