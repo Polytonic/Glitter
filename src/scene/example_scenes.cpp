@@ -199,7 +199,7 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     renderer->AddModel(std::move(smooth_generated_model), model_mat);
   }
   {
-    // Lower sphere
+    // Lower back sphere
     Texture texture = GetColorTexture(RgbPix({0, 0, 0}), 1, 1);
     Material::Options mat_opts;
     mat_opts.reflectivity = 0.8;
@@ -212,6 +212,22 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     std::unique_ptr<Model> generated_model(new Model({mesh}));
     glm::mat4 model_mat = glm::mat4(1.0f);
     model_mat = glm::translate(model_mat, glm::vec3(1.5, -2.5, 0.0));
+    renderer->AddModel(std::move(generated_model), model_mat);
+  }
+  {
+    // Lower forward sphere
+    Texture texture = GetColorTexture(RgbPix({0, 0, 0}), 1, 1);
+    Material::Options mat_opts;
+    mat_opts.reflectivity = 0.8;
+    Material material(std::move(texture), mat_opts);
+    std::unique_ptr<IterableMesh> it_mesh(new IterableSphere(0.5f));
+    BasicMeshIterator mesh_iterator(100, 100);
+    mesh_iterator.SetIterableMesh(std::move(it_mesh));
+    MeshVertices mesh_vert = mesh_iterator.GetMesh();
+    Mesh mesh(mesh_vert.vertices, mesh_vert.indices, material);
+    std::unique_ptr<Model> generated_model(new Model({mesh}));
+    glm::mat4 model_mat = glm::mat4(1.0f);
+    model_mat = glm::translate(model_mat, glm::vec3(1.5, -2.5, 1.5));
     renderer->AddModel(std::move(generated_model), model_mat);
   }
   {
