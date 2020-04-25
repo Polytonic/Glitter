@@ -10,6 +10,7 @@ struct ComputedVertex {
 
 class IterableMesh {
  public:
+  virtual ~IterableMesh() = default;
   virtual ComputedVertex GetVertex(double u, double v) = 0;
   virtual bool IsClosed() = 0;
 };

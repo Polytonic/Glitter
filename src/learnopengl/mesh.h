@@ -17,7 +17,10 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
 using namespace std;
+
+class Model;
 
 class Mesh : public Renderable {
  public:
@@ -70,10 +73,15 @@ class Mesh : public Renderable {
 
   glm::mat4 local_model_mat() const { return local_model_mat_; }
 
+  void set_parent(Model* parent) { parent_ = parent; }
+  Model* parent() { return parent_; }
+
  private:
   /*  Render data  */
   unsigned int VBO, EBO;
   glm::mat4 local_model_mat_;
+
+  Model* parent_;
 
   /*  Functions    */
   // initializes all the buffer objects/arrays

@@ -6,7 +6,10 @@
 	],
 	"settings": {
 		"files.associations": {
-			"ostream": "cpp"
+			"ostream": "cpp",
+			"utility": "cpp",
+			"list": "cpp",
+			"limits": "cpp"
 		}
 	}
 }

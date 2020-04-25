@@ -86,6 +86,8 @@ class Material {
   struct Options {
     double transparency = 0.0;
     double index = 1.0003;
+    double absorption_per_unit = 0.0;
+    DVec3 absorption_color = {0.0, 0.0, 0.0};
     double reflectivity = 0.0;
 
     // Used for self-luminous objects and skyboxes

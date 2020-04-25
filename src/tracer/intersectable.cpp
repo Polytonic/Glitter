@@ -223,9 +223,9 @@ std::vector<std::array<DVec3, 3>> AaBox::ToTris() const {
   return tris;
 }
 
-InterTri::InterTri(Material* material, DVertex vert0, DVertex vert1,
+InterTri::InterTri(Material* material, Model* parent, DVertex vert0, DVertex vert1,
                    DVertex vert2)
-    : material_(material) {
+    : material_(material), parent_(parent) {
   verts_[0] = vert0;
   verts_[1] = vert1;
   verts_[2] = vert2;

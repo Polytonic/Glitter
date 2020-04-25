@@ -9,6 +9,6 @@ void Mesh::GetTris(glm::mat4 model_mat, std::vector<InterPtr>* tris) {
     v0.Apply(final_mat);
     v1.Apply(final_mat);
     v2.Apply(final_mat);
-    tris->push_back(InterPtr(new InterTri(&material_, v0, v1, v2)));
+    tris->push_back(InterPtr(new InterTri(&material_, parent_, v0, v1, v2)));
   }
 }

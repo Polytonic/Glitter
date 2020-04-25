@@ -163,6 +163,7 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
   renderer->AddEventHandler(fps);
   renderer->Init("HelixGarlicNanoScene");
   {
+    // Nanosuit
     std::string objects_dir = "resources/objects/";
     std::string model_dir = "nanosuit";
     std::string object_file = model_dir;
@@ -188,7 +189,7 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     BasicMeshIterator mesh_iterator(4, 4);
     mesh_iterator.SetIterableMesh(std::move(it_mesh));
     Material::Options mat_opts;
-    mat_opts.reflectivity = 0.5;
+    // mat_opts.reflectivity = 0.5;
     Material material(std::move(canvas.ToTexture()), mat_opts);
     MeshVertices smooth_mesh_vert = mesh_iterator.GetMesh();
     Mesh smooth_mesh(smooth_mesh_vert.vertices, smooth_mesh_vert.indices,
@@ -247,6 +248,7 @@ std::unique_ptr<RtRenderer> HelixGarlicNanoScene(
     renderer->AddModel(std::move(generated_model), model_mat);
   }
   {
+    // Face box
     Texture texture = TextureFromFile(
         FileSystem::getPath("resources/textures/awesomeface.png"),
         "texture_diffuse");

@@ -23,6 +23,7 @@
 
 using namespace std;
 
+// Represents a closed object via a set of meshes.
 class Model : public Renderable {
  public:
   /*  Model Data */
@@ -33,7 +34,7 @@ class Model : public Renderable {
   string directory;
   bool gammaCorrection = false;
 
-  Model(std::vector<Mesh> meshes) { this->meshes = std::move(meshes); }
+  Model(std::vector<Mesh> meshes);
 
   /*  Functions   */
   // constructor, expects a filepath to a 3D model.

@@ -12,6 +12,7 @@
 class AaBox;
 class Intersectable;
 class Shadeable;
+class Model;
 
 struct InterPoint {
   DVec3 point;
@@ -29,6 +30,7 @@ std::optional<DVec3> IntersectTri(Ray ray, const std::array<DVec3, 3>& verts);
 
 class Intersectable {
  public:
+  virtual ~Intersectable() = default;
   virtual std::optional<ShadeablePoint> Intersect(const Ray& ray) = 0;
   virtual std::optional<DVec3> EarliestIntersect(const Ray& ray) = 0;
   virtual AaBox GetAaBox() const = 0;
@@ -44,6 +46,7 @@ class Shadeable : public Intersectable {
   virtual Material* material() const = 0;
   virtual DVec2 GetUv(DVec3 point) = 0;
   virtual DVec3 GetNormal(DVec3 point) = 0;
+  virtual Model* GetParentModel() = 0;
 };
 
 class AaBox : public Intersectable {
@@ -75,7 +78,7 @@ class AaBox : public Intersectable {
 
 class InterTri : public Shadeable {
  public:
-  InterTri(Material* material, DVertex vert0, DVertex vert1, DVertex vert2);
+  InterTri(Material* material, Model* parent, DVertex vert0, DVertex vert1, DVertex vert2);
   std::optional<ShadeablePoint> Intersect(const Ray& ray) override;
   std::optional<DVec3> EarliestIntersect(const Ray& ray) override;
   AaBox GetAaBox() const override;
@@ -84,9 +87,11 @@ class InterTri : public Shadeable {
   Material* material() const override;
   DVec2 GetUv(DVec3 point) override;
   DVec3 GetNormal(DVec3 point) override;
+  Model* GetParentModel() override { return parent_; }
 
  protected:
   Material* material_;
+  Model* parent_;
   DVertex verts_[3];
 };
 
