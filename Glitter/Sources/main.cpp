@@ -138,6 +138,10 @@ int main(int argc, char* argv[]) {
     gladLoadGL();
     std::cout << "OpenGL" << glGetString(GL_VERSION) << std::endl;
 
+    // configure global opengl state
+    // -----------------------------
+    glEnable(GL_DEPTH_TEST);
+
     // ===============================================================================
 
     Shader shader("vertexshader01.vs", "fragmentshader.fs");
@@ -273,7 +277,7 @@ int main(int argc, char* argv[]) {
 
         // Background Fill Color
         glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // bind textures on corresponding texture units
         glActiveTexture(GL_TEXTURE0);
