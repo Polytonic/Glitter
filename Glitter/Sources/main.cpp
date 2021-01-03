@@ -35,16 +35,17 @@ void loadTexture(unsigned int& texture, std::string source, bool isFlipVerticle,
 // GLOBAL VARIABLES
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX     =   mWidth / 2.0f;
-float lastY     =   mHeight / 2.0f;
-bool firstMouse =   true;
+float lastX                 =   mWidth / 2.0f;
+float lastY                 =   mHeight / 2.0f;
+bool firstMouse             =   true;
+bool cameraDisable          =   false;
 // timing
-float deltaTime =   0.0f;	// Time between current frame and last frame
-float lastFrame =   0.0f; // Time of last frame
+float deltaTime             =   0.0f;	// Time between current frame and last frame
+float lastFrame             =   0.0f; // Time of last frame
 // imgui
-bool show_demo_window = true;
-bool show_another_window = false;
-ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+bool show_demo_window       =   false;
+bool show_another_window    =   false;
+ImVec4 clear_color          =   ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 // -------------------------------------------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
@@ -185,27 +186,28 @@ int main(int argc, char* argv[]) {
     // Rendering Loop
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     while (glfwWindowShouldClose(mWindow) == false) {
-        processInput(mWindow);
-
+        // Background Fill Color
         glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        float currentFrame  =   glfwGetTime();
+        deltaTime           =   currentFrame - lastFrame;
+        lastFrame           =   currentFrame;
+        
+        processInput(mWindow);
 
+        // -----------------------------------------------------------------------------------------------------
         // bind textures on corresponding texture units
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
         
-        // -----------------------------------------------------------------------------------------------------
         // use Shader
         shader.Use();
-
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)mWidth / (float)mHeight, 0.1f, 100.0f);
         glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-        float currentFrame  =   glfwGetTime();
-        deltaTime           =   currentFrame - lastFrame;
-        lastFrame           =   currentFrame;
         // camera/view transformation
         glm::mat4 view = camera.GetViewMatrix();
         shader.setMat4("view", view);
@@ -223,15 +225,17 @@ int main(int argc, char* argv[]) {
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
         
+        // -----------------------------------------------------------------------------------------------------
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         // TODO refactor Imgui to seperate functions
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
+        if (cameraDisable)
             ImGui::ShowDemoWindow(&show_demo_window);
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        /*
         {
             static float f = 0.0f;
             static int counter = 0;
@@ -248,6 +252,7 @@ int main(int argc, char* argv[]) {
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
         }
+        */
         // 3. Show another simple window.
         if (show_another_window)
         {
@@ -258,10 +263,10 @@ int main(int argc, char* argv[]) {
             ImGui::End();
         }
 
-        // -----------------------------------------------------------------------------------------------------
-        // Background Fill Color
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        // -----------------------------------------------------------------------------------------------------
         // Flip Buffers and Draw
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
@@ -284,10 +289,12 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
-        if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
+        cameraDisable = glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED;
+        if (cameraDisable)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         else glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
+    // Movement
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(Camera_Movement::FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -324,7 +331,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
+    if (!cameraDisable)
         camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
@@ -332,11 +339,11 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 // ---------------------------------------------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
+    if (!cameraDisable)
         camera.ProcessMouseScroll(yoffset);
 }
 
-// May need to add more image specific paramenters TODO Make a Texture loading class
+// TODO May need to add more image specific paramenters //  Make a Texture loading class
 void loadTexture(unsigned int &texture, std::string source, bool isFlipVerticle, GLint internalFormat, GLint format)
 {
     std::string texturePath = PROJECT_SOURCE_DIR "\\Glitter\\Shaders\\Assets\\";
