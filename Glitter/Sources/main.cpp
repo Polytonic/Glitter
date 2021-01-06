@@ -30,6 +30,7 @@ void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void loadTexture(unsigned int& texture, std::string source, bool isFlipVerticle, GLint internalFormat, GLint format);
+void imguiWindow();
 
 // -------------------------------------------------------------------------------------------------------------
 // GLOBAL VARIABLES
@@ -190,7 +191,7 @@ int main(int argc, char* argv[]) {
         glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        float currentFrame  =   glfwGetTime();
+        double currentFrame  =   glfwGetTime();
         deltaTime           =   currentFrame - lastFrame;
         lastFrame           =   currentFrame;
         
@@ -230,29 +231,13 @@ int main(int argc, char* argv[]) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        // TODO refactor Imgui to seperate functions
+        /*
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (cameraDisable)
             ImGui::ShowDemoWindow(&show_demo_window);
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-        /*
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
         */
+        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        imguiWindow();
         // 3. Show another simple window.
         if (show_another_window)
         {
@@ -369,4 +354,25 @@ void loadTexture(unsigned int &texture, std::string source, bool isFlipVerticle,
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+void imguiWindow()
+{
+    
+    static float f = 0.0f;
+    static int counter = 0;
+    ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+    ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+    ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+    ImGui::Checkbox("Another Window", &show_another_window);
+    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+    if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+        counter++;
+    ImGui::SameLine();
+    ImGui::Text("counter = %d", counter);
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::End();
+    
 }
