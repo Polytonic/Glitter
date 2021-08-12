@@ -1,3 +1,6 @@
+#ifndef EXECUTIONER_H
+#define EXECUTIONER_H
+
 // Local Headers
 #include "glitter.hpp"
 
@@ -7,5 +10,9 @@
         int run(const int& code);
     private:
         int _run1();
+        int _run2();
 
     };
+
+
+#endif //EXECUTIONER_H
