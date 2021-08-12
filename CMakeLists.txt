@@ -42,7 +42,9 @@ file(GLOB PROJECT_SOURCES Glitter/Sources/*.cpp)
 file(GLOB PROJECT_SHADERS Glitter/Shaders/*.comp
                           Glitter/Shaders/*.frag
                           Glitter/Shaders/*.geom
-                          Glitter/Shaders/*.vert)
+                          Glitter/Shaders/*.vert
+                          Glitter/Shaders/*.vs
+                          Glitter/Shaders/*.fs)
 file(GLOB PROJECT_CONFIGS CMakeLists.txt
                           Readme.md
                          .gitattributes
