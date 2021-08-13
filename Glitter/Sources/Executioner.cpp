@@ -424,14 +424,18 @@ int Executioner::_run3() {
         return -1;
     }
 
+    // Find shaders folder
     std::string shaderFolder = __FILE__;
     int pos = shaderFolder.find_last_of("\\");
+    std::string separator = pos == -1 ? "/" : "\\";
+    pos = shaderFolder.find_last_of(separator);
     shaderFolder = shaderFolder.substr(0, pos);
-    pos = shaderFolder.find_last_of("\\");
+    pos = shaderFolder.find_last_of(separator);
     shaderFolder = shaderFolder.substr(0, pos);
-    std::string vsPath = shaderFolder + "\\Shaders\\hello_world.vs";
-    std::string fsPath = shaderFolder + "\\Shaders\\hello_world.fs";
+    std::string vsPath = shaderFolder + separator + "Shaders" + separator + "hello_world.vs";
+    std::string fsPath = shaderFolder + separator + "Shaders" + separator + "hello_world.fs";
 
+    // load Shaders
     Shader shaders(vsPath.c_str(), fsPath.c_str());
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -452,7 +456,7 @@ int Executioner::_run3() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // 4. then set the vertex attributes pointers
-    // position attribute 
+    // position attribute  
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // color attribute 
