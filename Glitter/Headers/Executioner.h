@@ -12,6 +12,7 @@
         int _run1();
         int _run2();
         int _run3();
+        int _run4();
 
     };
 
