@@ -408,25 +408,6 @@ int Executioner::_run3() {
     gladLoadGL();
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
-    // Define vertex shader 
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-    glShaderSource(vertexShader, 1, &vertexShaderSource2, NULL);
-    glCompileShader(vertexShader);
-
-    // check for compilation success
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" <<
-            infoLog << std::endl;
-        return -1;
-    }
-
     // Find shaders folder
     std::string shaderFolder = __FILE__;
     int pos = shaderFolder.find_last_of("\\");
@@ -521,38 +502,25 @@ int Executioner::_run4() {
     gladLoadGL();
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
-    // Define vertex shader 
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-    glShaderSource(vertexShader, 1, &vertexShaderSource2, NULL);
-    glCompileShader(vertexShader);
-
-    // check for compilation success
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" <<
-            infoLog << std::endl;
-        return -1;
-    }
-
-    // Find shaders folder
-    std::string vsPath = utils::getPath("hello_world.vs", utils::fileType::SHADER);
-    std::string fsPath = utils::getPath("hello_world.fs", utils::fileType::SHADER);
+     // Find shaders folder
+    std::string vsPath = utils::getPath("texture_shader_1.vs", utils::fileType::SHADER);
+    std::string fsPath = utils::getPath("texture_shader_1.fs", utils::fileType::SHADER);
 
     // load Shaders
     Shader shaders(vsPath.c_str(), fsPath.c_str());
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
-    float vertices[] = {
-        // positions         
-        0.5f, -0.5f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        0.0f,  0.5f, 0.0f,   // top 
+    float vertices[] = { 
+        // positions            // colors               // texture coords
+        0.5f, 0.5f, 0.0f,       1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         // top right 
+        0.5f, -0.5f, 0.0f,      0.0f, 1.0f, 0.0f,       1.0f, 0.0f,         // bottom right
+        -0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,       0.0f, 0.0f,         // bottom left 
+        -0.5f, 0.5f, 0.0f,      1.0f, 1.0f, 0.0f,       0.0f, 1.0f          // top left
+    };
+
+    unsigned int indices[] = {
+       0, 1, 3, // first triangle
+       1, 2, 3  // second triangle
     };
 
     // Setup Texture
@@ -573,24 +541,39 @@ int Executioner::_run4() {
     std::string texturePath = utils::getPath("container.jpg", utils::fileType::TEXTURE);
     unsigned char* data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
 
-    unsigned int VBO, VAO;
+    // Generate texture 
+    unsigned int texture; 
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    
+    // free data
+    stbi_image_free(data);
+
+    unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    glGenBuffers(1, &EBO);
+
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    // 4. then set the vertex attributes pointers
-    // position attribute  
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // color attribute 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    // texture coord attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     // as we only have a single shader, we could also just activate our shader once beforehand if we want to 
     shaders.use();
@@ -602,13 +585,16 @@ int Executioner::_run4() {
         if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(mWindow, true);
 
-        // render
+        // clear
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        // bind Texture
+        glBindTexture(GL_TEXTURE_2D, texture);
+
         // render the triangle
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
