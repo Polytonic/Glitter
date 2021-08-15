@@ -10,4 +10,5 @@ namespace utils{
 
 	std::string getPath(const std::string& name, const fileType& type);
 
+	float* getCubePoints(size_t& size);
 }

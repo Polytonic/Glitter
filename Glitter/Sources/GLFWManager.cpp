@@ -52,7 +52,7 @@ void GLFWManager::SetShouldClose(bool close) {
 }
 
 bool GLFWManager::WasKeyPressed(int key) {
-	return glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
+	return glfwGetKey(_window, key) == GLFW_PRESS;
 }
 
 void GLFWManager::PollEvents(){
