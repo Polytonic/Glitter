@@ -22,7 +22,7 @@ namespace Mirage
         // Public Member Functions
         Shader & activate();
         Shader & attach(std::string const & filename);
-        GLuint   get() const { return mProgram; }
+        GLuint   get() { return mProgram; }
         Shader & link();
 
         // Wrap Calls to glUniform
