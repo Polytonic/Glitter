@@ -1,0 +1,29 @@
+name: build-on-push
+on: [push]
+jobs:
+  build_w32_msvc:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - name: CMake
+      run: cmake -G "Visual Studio 17 2022" -A Win32 .
+    - name: Build Debug
+      run: cmake --build . --config Debug
+    - name: Build Release
+      run: cmake --build . --config Release
+  build_w64_msvc:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - name: CMake
+      run: cmake -G "Visual Studio 17 2022" -A x64 .
+    - name: Build Debug
+      run: cmake --build . --config Debug
+    - name: Build Release
+      run: cmake --build . --config Release
