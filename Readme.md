@@ -1,5 +1,5 @@
 # [Glitter](http://polytonic.github.io/Glitter/)
-[![Github workflow status](https://github.com/Polytonic/Glitter/actions/workflows/main.yml/badge.svg)](https://github.com/Polytonic/Glitter/actions/workflows/main.yml)
+[![Github workflow status](https://github.com/Polytonic/Glitter/actions/workflows/build-on-push.yml/badge.svg)](https://github.com/Polytonic/Glitter/actions/workflows/build-on-push.yml)
 ![Screenshot](http://i.imgur.com/MDo2rsy.jpg)
 
 ## Summary
