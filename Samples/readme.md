@@ -11,6 +11,7 @@ Shader shader;
 shader.attach("main.vert")
       .attach("main.frag")
       ... // and so on ...
+shader.link();
 ```
 
 There is some basic error handling to help you out if you get stuck.

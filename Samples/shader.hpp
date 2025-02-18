@@ -22,13 +22,10 @@ namespace Mirage
         // Public Member Functions
         Shader & activate();
         Shader & attach(std::string const & filename);
-        GLuint   create(std::string const & filename);
         GLuint   get() { return mProgram; }
         Shader & link();
 
         // Wrap Calls to glUniform
-        void bind(unsigned int location, float value);
-        void bind(unsigned int location, glm::mat4 const & matrix);
         template<typename T> Shader & bind(std::string const & name, T&& value)
         {
             int location = glGetUniformLocation(mProgram, name.c_str());
@@ -38,6 +35,10 @@ namespace Mirage
         }
 
     private:
+        GLuint   create(std::string const & filename);
+
+        void bind(unsigned int location, float value);
+        void bind(unsigned int location, glm::mat4 const & matrix);
 
         // Disable Copying and Assignment
         Shader(Shader const &) = delete;
